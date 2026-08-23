@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "locale": "fr-CA",
+    "ogLocale": "fr_CA",
+    "nomLangue": "Français",
+    "autreLangue": "English",
+    "basculerLangue": "Voir cette page en anglais"
+  },
+
+  "nav": {
+    "accueil": "Accueil",
+    "projets": "Projets",
+    "parcours": "Parcours",
+    "menu": "Menu",
+    "allerAuContenu": "Aller au contenu principal",
+    "retourAccueil": "Retourner à l'accueil",
+    "theme": "Changer de thème",
+    "themeClair": "Thème clair",
+    "themeSombre": "Thème sombre"
+  },
+
+  "accueil": {
+    "titrePage": "Accueil",
+    "description": "Maxence Veilleux, étudiant en Techniques de l'informatique au Cégep de Sherbrooke. Applications Web et mobiles, de la maquette Figma au déploiement.",
+    "surTitre": "Développeur Web et mobile",
+    "titre": "Maxence Veilleux",
+    "accroche": "Je conçois et je développe des applications Web et mobiles — de la maquette Figma jusqu'au déploiement.",
+    "sousAccroche": "Étudiant en Techniques de l'informatique au Cégep de Sherbrooke, voie Conception et programmation. Diplomation prévue en mai 2027.",
+    "ctaProjets": "Voir les projets",
+    "ctaCv": "Télécharger le CV",
+    "signatureAlt": "Signature manuscrite de Maxence Veilleux",
+
+    "projetsSurTitre": "Réalisations",
+    "projetsTitre": "Projets en vedette",
+    "projetsIntro": "Trois projets qui montrent le mieux comment je travaille. Le reste est sur la page des projets.",
+    "projetsTous": "Tous les projets",
+
+    "stackSurTitre": "Outils",
+    "stackTitre": "Ce avec quoi je travaille",
+    "stackIntro": "Regroupé par usage plutôt que par popularité. Ce qui apparaît ici, je l'ai utilisé dans un projet livré.",
+
+    "aproposSurTitre": "En bref",
+    "aproposTitre": "Qui je suis",
+    "aproposCta": "Voir mon parcours"
+  },
+
+  "projets": {
+    "titrePage": "Projets",
+    "description": "Les projets de développement Web, mobile et jeu vidéo de Maxence Veilleux : applications Laravel et Android, sites Astro, prototypes Unity.",
+    "surTitre": "Réalisations",
+    "titre": "Projets",
+    "intro": "Du travail scolaire, professionnel et personnel. Chaque fiche précise ce que j'ai fait moi-même, parce que c'est la seule information vraiment utile dans un travail d'équipe.",
+    "categories": {
+      "toutes": "Toutes",
+      "pro": "Professionnel",
+      "etudes": "Études",
+      "perso": "Personnel"
+    },
+    "aucun": "Aucun projet dans cette catégorie pour le moment.",
+    "roleLabel": "Mon rôle",
+    "anneeLabel": "Année",
+    "categorieLabel": "Contexte",
+    "technosLabel": "Technologies",
+    "faitsLabel": "Points saillants",
+    "liensLabel": "Liens",
+    "voirProjet": "Voir le projet",
+    "retour": "Tous les projets",
+    "suivant": "Projet suivant",
+    "precedent": "Projet précédent",
+    "typesLien": {
+      "site": "Voir le site",
+      "depot": "Code source",
+      "jeu": "Jouer au jeu",
+      "video": "Voir la vidéo",
+      "document": "Consulter le document"
+    },
+    "lireVideo": "Lire la vidéo",
+    "chargerYoutube": "Charger la vidéo YouTube",
+    "youtubeAvis": "La vidéo se charge depuis YouTube au clic. Rien n'est téléchargé avant."
+  },
+
+  "parcours": {
+    "titrePage": "Parcours",
+    "description": "Formation, expérience en agence et distinctions de Maxence Veilleux, étudiant en Techniques de l'informatique au Cégep de Sherbrooke.",
+    "surTitre": "Le contexte",
+    "titre": "Parcours",
+    "intro": "La formation, le travail rémunéré et ce que je fais quand personne ne me le demande.",
+
+    "formationSurTitre": "Formation",
+    "formationTitre": "Cégep de Sherbrooke",
+    "formationEnCours": "En cours",
+    "coteRLabel": "Cote R",
+    "coteRNote": "Moyenne cumulative au moment de la dernière mise à jour de cette page.",
+
+    "agenceSurTitre": "Expérience",
+    "agenceTitre": "Travail en agence",
+
+    "horsDevSurTitre": "Le reste",
+    "horsDevTitre": "Au-delà du code",
+
+    "distinctionsSurTitre": "Reconnaissances",
+    "distinctionsTitre": "Bourses et distinctions",
+    "distinctionsNote": "Distinctions du parcours secondaire, conservées pour ce qu'elles disent de la constance."
+  },
+
+  "contact": {
+    "surTitre": "La suite",
+    "titre": "Parlons-en",
+    "intro": "Je cherche un stage ou un emploi en développement Web ou mobile. Le plus simple est de m'écrire.",
+    "courriel": "Écrire un courriel",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "itch": "itch.io",
+    "youtube": "YouTube",
+    "cv": "Télécharger le CV",
+    "masqueTitre": "Coordonnées retirées",
+    "masqueTexte": "Les moyens de me joindre sont temporairement retirés de ce site. Mon curriculum vitæ les contient."
+  },
+
+  "pied": {
+    "droits": "Tous droits réservés.",
+    "construit": "Site construit avec Astro. Code, contenu et design de Maxence Veilleux.",
+    "sourceLien": "Voir le code de ce site"
+  },
+
+  "erreur404": {
+    "titrePage": "Page introuvable",
+    "surTitre": "Erreur 404",
+    "titre": "Cette page n'existe pas",
+    "texte": "Le lien est peut-être périmé, ou l'adresse contient une coquille.",
+    "cta": "Retourner à l'accueil"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "nom": "Maxence Veilleux",
+  "contact": {
+    "afficher": false,
+    "courriel": "maxence.veilleux@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/maxence-veilleux-396229297/"
+  },
+  "profils": {
+    "afficherMalgreContactMasque": true,
+    "github": "https://github.com/Maxxev",
+    "itch": "https://maxev.itch.io",
+    "youtube": ""
+  },
+  "cv": {
+    "afficher": false,
+    "url": "/cv-maxence-veilleux.pdf"
+  },
+  "formation": {
+    "etablissement": "Cégep de Sherbrooke",
+    "programme": "Techniques de l'informatique",
+    "voie": "Conception et programmation",
+    "debut": "2024-08",
+    "fin": "2027-05",
+    "coteR": {
+      "afficher": true,
+      "valeur": "34,5"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "locale": "en-CA",
+    "ogLocale": "en_CA",
+    "nomLangue": "English",
+    "autreLangue": "Français",
+    "basculerLangue": "View this page in French"
+  },
+
+  "nav": {
+    "accueil": "Home",
+    "projets": "Projects",
+    "parcours": "Background",
+    "menu": "Menu",
+    "allerAuContenu": "Skip to main content",
+    "retourAccueil": "Back to home",
+    "theme": "Switch theme",
+    "themeClair": "Light theme",
+    "themeSombre": "Dark theme"
+  },
+
+  "accueil": {
+    "titrePage": "Home",
+    "description": "Maxence Veilleux, Computer Science Technology student at Cégep de Sherbrooke. Web and mobile applications, from Figma mockup to deployment.",
+    "surTitre": "Web and mobile developer",
+    "titre": "Maxence Veilleux",
+    "accroche": "I design and build web and mobile applications — from the Figma mockup all the way to deployment.",
+    "sousAccroche": "Computer Science Technology student at Cégep de Sherbrooke, Design and Programming stream. Graduating May 2027.",
+    "ctaProjets": "See the projects",
+    "ctaCv": "Download résumé",
+    "signatureAlt": "Handwritten signature of Maxence Veilleux",
+
+    "projetsSurTitre": "Work",
+    "projetsTitre": "Featured projects",
+    "projetsIntro": "The three projects that best show how I work. The rest are on the projects page.",
+    "projetsTous": "All projects",
+
+    "stackSurTitre": "Tools",
+    "stackTitre": "What I build with",
+    "stackIntro": "Grouped by what it's for rather than by popularity. Everything listed here, I've used on a project I shipped.",
+
+    "aproposSurTitre": "In short",
+    "aproposTitre": "Who I am",
+    "aproposCta": "See my background"
+  },
+
+  "projets": {
+    "titrePage": "Projects",
+    "description": "Web, mobile and game development projects by Maxence Veilleux: Laravel and Android applications, Astro sites, Unity prototypes.",
+    "surTitre": "Work",
+    "titre": "Projects",
+    "intro": "School, professional and personal work. Every entry states what I did myself, because on a team project that's the only genuinely useful information.",
+    "categories": {
+      "toutes": "All",
+      "pro": "Professional",
+      "etudes": "Academic",
+      "perso": "Personal"
+    },
+    "aucun": "No projects in this category yet.",
+    "roleLabel": "My role",
+    "anneeLabel": "Year",
+    "categorieLabel": "Context",
+    "technosLabel": "Technologies",
+    "faitsLabel": "Highlights",
+    "liensLabel": "Links",
+    "voirProjet": "View project",
+    "retour": "All projects",
+    "suivant": "Next project",
+    "precedent": "Previous project",
+    "typesLien": {
+      "site": "Visit the site",
+      "depot": "Source code",
+      "jeu": "Play the game",
+      "video": "Watch the video",
+      "document": "Read the document"
+    },
+    "lireVideo": "Play video",
+    "chargerYoutube": "Load YouTube video",
+    "youtubeAvis": "The video loads from YouTube when you click. Nothing is downloaded before that."
+  },
+
+  "parcours": {
+    "titrePage": "Background",
+    "description": "Education, agency experience and distinctions of Maxence Veilleux, Computer Science Technology student at Cégep de Sherbrooke.",
+    "surTitre": "The context",
+    "titre": "Background",
+    "intro": "The education, the paid work, and what I build when nobody asks me to.",
+
+    "formationSurTitre": "Education",
+    "formationTitre": "Cégep de Sherbrooke",
+    "formationEnCours": "In progress",
+    "coteRLabel": "R score",
+    "coteRNote": "Cumulative average as of the last update to this page.",
+
+    "agenceSurTitre": "Experience",
+    "agenceTitre": "Agency work",
+
+    "horsDevSurTitre": "The rest",
+    "horsDevTitre": "Beyond code",
+
+    "distinctionsSurTitre": "Recognition",
+    "distinctionsTitre": "Scholarships and distinctions",
+    "distinctionsNote": "Distinctions from high school, kept for what they say about consistency."
+  },
+
+  "contact": {
+    "surTitre": "Next",
+    "titre": "Let's talk",
+    "intro": "I'm looking for an internship or a job in web or mobile development. The simplest way is to email me.",
+    "courriel": "Send an email",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "itch": "itch.io",
+    "youtube": "YouTube",
+    "cv": "Download résumé",
+    "masqueTitre": "Contact details removed",
+    "masqueTexte": "Ways to reach me are temporarily removed from this site. My résumé contains them."
+  },
+
+  "pied": {
+    "droits": "All rights reserved.",
+    "construit": "Built with Astro. Code, content and design by Maxence Veilleux.",
+    "sourceLien": "View this site's source"
+  },
+
+  "erreur404": {
+    "titrePage": "Page not found",
+    "surTitre": "Error 404",
+    "titre": "This page doesn't exist",
+    "texte": "The link may be out of date, or the address contains a typo.",
+    "cta": "Back to home"
+  }
+}

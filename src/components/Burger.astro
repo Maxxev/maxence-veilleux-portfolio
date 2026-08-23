@@ -1,0 +1,72 @@
+---
+const { class: className = '', ...rest } = Astro.props;
+---
+
+<button
+  type="button"
+  class={`burger ${className}`}
+  {...rest}
+  aria-label="Afficher/cacher le menu"
+  aria-expanded="false"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.burger');
+
+  burger?.addEventListener('click', () => {
+    const isOpen = burger.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', String(isOpen));
+  });
+</script>
+
+<style>
+  @layer astro-components {
+    .burger {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: none;
+      cursor: pointer;
+
+      span {
+        position: absolute;
+        left: 0;
+        width: 24px;
+        height: 2px;
+        background: var(--text-color);
+        transition: var(--transition-duration);
+      }
+
+      span:nth-child(1) {
+        top: 4px;
+      }
+
+      span:nth-child(2) {
+        top: 11px;
+      }
+
+      span:nth-child(3) {
+        top: 18px;
+      }
+
+      &.is-open {
+        span:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+
+        span:nth-child(2) {
+          opacity: 0;
+        }
+
+        span:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+      }
+    }
+  }
+</style>

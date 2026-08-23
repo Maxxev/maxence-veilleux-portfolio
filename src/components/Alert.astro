@@ -1,0 +1,86 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const VARIANT_ICONS = {
+  info: 'fa6-solid:circle-info',
+  success: 'fa6-solid:circle-check',
+  warning: 'fa6-solid:triangle-exclamation',
+  error: 'fa6-solid:circle-exclamation',
+};
+
+const {
+  variant = 'info',
+  RootTag = 'div',
+  iconName = VARIANT_ICONS[variant],
+  class: className = '',
+  ...rest
+} = Astro.props;
+---
+
+<RootTag class={`alert alert--${variant} ${className}`} {...rest}>
+  <Icon name={iconName} class="alert__icon" />
+  <div class="alert__content">
+    <slot />
+  </div>
+</RootTag>
+
+<style lang="scss">
+  @use '../styles/mixins' as m;
+  @use '../styles/text' as t;
+
+  @layer astro-components {
+    .alert {
+      @include m.box($col: var(--alert-bg), $padding: var(--space-s));
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-xs);
+      border: 1px solid var(--alert-border);
+
+      .alert__icon {
+        flex-shrink: 0;
+        width: 1.4em;
+        height: auto;
+        color: var(--alert-border);
+      }
+
+      .alert__content {
+        @include t.default-text;
+        font-size: var(--text--1);
+
+        :global(strong) {
+          font-weight: 700;
+        }
+      }
+
+      // Les fonds pleins de l'original deviennent illisibles en mode sombre.
+      // Ici la couleur ne vit que dans la teinte : le fond est cette teinte
+      // posée à faible opacité sur la surface, donc il suit le thème tout seul.
+      --alert-bg: hsla(var(--alert-h), var(--alert-s), 50%, 0.1);
+      --alert-border: hsla(var(--alert-h), var(--alert-s), var(--alert-l), 1);
+
+      &.alert--info {
+        --alert-h: 207;
+        --alert-s: 80%;
+        --alert-l: 45%;
+      }
+
+      &.alert--success {
+        --alert-h: 145;
+        --alert-s: 60%;
+        --alert-l: 34%;
+      }
+
+      &.alert--warning {
+        --alert-h: 38;
+        --alert-s: 90%;
+        --alert-l: 42%;
+      }
+
+      &.alert--error {
+        --alert-h: 4;
+        --alert-s: 70%;
+        --alert-l: 48%;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+const { RootTag = 'div', class: className = '', ...rest } = Astro.props;
+---
+
+<RootTag class={`section-container ${className}`} {...rest}><slot /></RootTag>
+
+<style>
+  @layer astro-components {
+    .section-container {
+      margin-inline: auto;
+      width: var(--container-width);
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+</style>

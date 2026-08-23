@@ -1,0 +1,19 @@
+---
+const { RootTag = 'section', class: className = '', ...rest } = Astro.props;
+---
+
+<RootTag class={`section ${className}`} {...rest}><slot /></RootTag>
+
+<style>
+  @layer astro-components {
+    .section {
+      padding-inline: var(--section-inline-padding);
+      padding-block: var(--section-block-padding);
+      background-color: var(--surface-page);
+      display: flex;
+      flex-direction: column;
+
+      overflow-x: clip;
+    }
+  }
+</style>

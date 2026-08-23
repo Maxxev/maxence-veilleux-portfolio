@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const {
+  link = false,
+  outline = false,
+  glow = false,
+  RootTag = 'button',
+  bgColor = 'var(--primary)',
+  bgColorHover = 'var(--white)',
+  color = 'var(--primary-99)',
+  iconName,
+  reverseIcon = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+---
+
+<RootTag
+  class={`button${outline ? ' button--outline' : ''}${glow ? ' button--glow' : ''}${link ? ' button--link' : ''} ${className}`}
+  style={{
+    '--bgColor': bgColor,
+    '--color': color,
+    '--bgColorHover': bgColorHover,
+  }}
+  {...rest}
+>
+  <span class="content">
+    <slot />
+  </span>
+
+  {
+    iconName && (
+      <Icon
+        name={iconName}
+        class="icon content"
+        style={reverseIcon ? { order: -1 } : undefined}
+      />
+    )
+  }
+</RootTag>
+
+<style lang="scss">
+  @use '../styles/button';
+</style>
