@@ -21,6 +21,7 @@ npm run preview    # sert dist/ localement
 | `npm run verifier:traductions` | Refuse un contenu ou une clé qui n'existe que dans une langue |
 | `npm run convertir:medias` | Réencode les médias de l'ancien portfolio (déjà fait, gardé pour trace) |
 | `node scripts/generer-couvertures.js` | Régénère les couvertures abstraites des projets sans capture |
+| `npm run verifier:interface` | Pilote le site dans Chromium : débordements, erreurs console, images, interactions. Demande `npm install --no-save playwright` |
 
 `npx astro build` fait office de vérification de types. N'utilise pas
 `astro check` : il n'est pas installé et propose d'ajouter deux dépendances.
@@ -179,10 +180,31 @@ Utilise les tokens, jamais des valeurs en dur : `--space-*`, `--text-*`,
 
 **Pour les couleurs, utilise la couche sémantique** — `--surface-page`,
 `--surface-raised`, `--surface-sunken`, `--text-color`, `--text-muted`,
-`--heading-color`, `--border-subtle`, `--border-strong`, `--link-color`. Les
-rampes brutes (`--primary-40`, `--secondary-95`) ont une luminosité **absolue**
-et ne s'inversent pas en mode sombre. C'est la seule règle qui compte : tant
-que tu restes sur la couche sémantique, le mode sombre est gratuit.
+`--heading-color`, `--border-subtle`, `--border-strong`, `--link-color`,
+`--on-primary`. Les rampes brutes (`--primary-40`, `--secondary-95`) ont une
+luminosité **absolue** et ne s'inversent pas en mode sombre. C'est la seule
+règle qui compte : tant que tu restes sur la couche sémantique, le mode sombre
+est gratuit.
+
+### La palette, et pourquoi le texte des boutons est foncé
+
+Orange vif `hsl(24, 94%, 56%)` en primaire, neutre chaud à 26° pour toute la
+structure, rose profond en accent pour les dégradés.
+
+Le neutre chaud compte plus que l'orange : un accent orange posé sur des gris
+froids donne un site banal. C'est lui qui produit le fond papier en clair et le
+noir chaud en sombre.
+
+**Le texte sur un aplat orange est foncé, pas blanc** (`--on-primary`). Ce n'est
+pas un goût, c'est une mesure : un orange assez vif pour être la couleur d'un
+site ne dépasse jamais 3:1 avec du blanc. Pour atteindre 4,5:1 il faudrait
+descendre à L≤43 %, et l'orange devient alors une rouille terne. Texte foncé sur
+orange vif : 6,5:1. Même raison pour les liens en thème clair, à `--primary-35`
+et non `-40`.
+
+Si tu changes la teinte primaire, **revalide les contrastes** avant de commiter.
+Les paires qui cassent en premier sont toujours les mêmes : le texte du bouton,
+le sur-titre et le lien en thème clair.
 
 ### Le piège des styles scopés d'Astro
 
