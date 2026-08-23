@@ -2,6 +2,13 @@
 import { Icon } from 'astro-icon/components';
 
 const VARIANT_ICONS = {
+  // « neutre » n'est pas un état du système mais une note explicative — le
+  // bandeau qui dit pourquoi un lien manque, ou pourquoi les coordonnées ont
+  // été retirées. Il porte donc les gris chauds de la structure plutôt qu'une
+  // couleur sémantique. Sur une page entièrement chaude, un encadré bleu était
+  // la seule tache froide et attirait l'œil bien plus que son contenu ne le
+  // méritait.
+  neutre: 'fa6-solid:circle-info',
   info: 'fa6-solid:circle-info',
   success: 'fa6-solid:circle-check',
   warning: 'fa6-solid:triangle-exclamation',
@@ -57,6 +64,15 @@ const {
       // posée à faible opacité sur la surface, donc il suit le thème tout seul.
       --alert-bg: hsla(var(--alert-h), var(--alert-s), 50%, 0.1);
       --alert-border: hsla(var(--alert-h), var(--alert-s), var(--alert-l), 1);
+
+      &.alert--neutre {
+        --alert-bg: var(--surface-sunken);
+        --alert-border: var(--border-strong);
+
+        .alert__icon {
+          color: var(--text-muted);
+        }
+      }
 
       &.alert--info {
         --alert-h: 207;

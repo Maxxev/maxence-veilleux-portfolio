@@ -80,7 +80,7 @@ const entrees: Entree[] = [
 <div class={`contact-links contact-links--${variante} ${className}`}>
   {
     avecAvis && !contactVisible && (
-      <Alert variant="info" class="contact-links__avis">
+      <Alert variant="neutre" class="contact-links__avis">
         <strong>{t.contact.masqueTitre}</strong> — {t.contact.masqueTexte}
       </Alert>
     )
@@ -99,7 +99,7 @@ const entrees: Entree[] = [
                 reverseIcon
                 outline={entree.cle !== 'courriel' && entree.cle !== 'cv'}
                 bgColor="var(--primary)"
-                color="var(--white)"
+                color="var(--on-primary)"
                 target={entree.externe ? '_blank' : undefined}
                 rel={entree.externe ? 'noopener noreferrer' : undefined}
               >

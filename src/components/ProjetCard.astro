@@ -122,13 +122,21 @@ const reste = projet.technos.length - technos.length;
     .projet-card__image--vide {
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, var(--primary-90), var(--surface-sunken));
+      // Repli pour un projet sans couverture. Les rampes brutes seraient un
+      // piège ici : `--primary-90` est un orange pâle en valeur absolue, donc
+      // un bloc clair au milieu d'une page sombre. On passe par la teinte
+      // posée en transparence sur la surface, qui suit le thème.
+      background: linear-gradient(
+        135deg,
+        hsla(var(--primary-h), var(--primary-s), 60%, 0.22),
+        var(--surface-sunken)
+      );
 
       span {
         font-family: var(--heading-font-family);
         font-size: var(--text-6);
         font-weight: 700;
-        color: var(--primary-55);
+        color: var(--link-color);
         text-transform: uppercase;
         letter-spacing: -0.04em;
       }

@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "verifier:traductions": "node scripts/verifier-traductions.js",
-    "convertir:medias": "node scripts/convertir-medias.js"
+    "convertir:medias": "node scripts/convertir-medias.js",
+    "verifier:interface": "node scripts/verifier-interface.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

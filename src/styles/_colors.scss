@@ -4,7 +4,7 @@
 //
 // 1. Les *rampes* — générées par `generate-color-variants`, elles produisent
 //    `--primary-5` … `--primary-99` à luminosité fixe. Elles ne changent
-//    jamais : `--primary-30` est le même bleu en clair comme en sombre.
+//    jamais : `--primary-30` est le même orange en clair comme en sombre.
 // 2. Les *tokens sémantiques* — `--surface-page`, `--text-color`, … Eux
 //    pointent vers un barreau différent de la rampe selon le thème.
 //
@@ -12,12 +12,27 @@
 // gratuit : aucune règle de composant ne mentionne de thème.
 
 :root {
-  // Indigo : la couleur d'action (boutons, liens, accents de titre)
-  @include m.generate-color-variants('primary', 238, 62%, 52%, 1);
-  // Ardoise bleutée : les textes, les fonds, les bordures — la structure
-  @include m.generate-color-variants('secondary', 222, 25%, 22%, 1);
-  // Ambre : un clin d'œil à l'ancien portfolio, réservé aux accents ponctuels
-  @include m.generate-color-variants('accent', 40, 96%, 52%, 1);
+  // Orange vif : la couleur d'action (boutons, liens, accents de titre).
+  //
+  // La luminosité de base (56 %) n'est pas un choix esthétique mais une
+  // conséquence. Un orange vif avec du texte BLANC ne dépasse jamais 3:1 —
+  // il faudrait descendre à L≤43 %, et l'orange devient alors une rouille
+  // terne. En inversant (texte foncé sur orange, voir `--on-primary`), on
+  // obtient 6,5:1 tout en gardant l'orange éclatant. C'est la décision
+  // structurante de cette palette.
+  @include m.generate-color-variants('primary', 24, 94%, 56%, 1);
+
+  // Neutre CHAUD : les textes, les fonds, les bordures — la structure.
+  //
+  // C'est ici que se joue la personnalité du site, plus encore que dans
+  // l'orange. Une ardoise bleutée sous un accent orange rend l'ensemble
+  // banal ; un neutre à 26° donne des gris beiges, un fond papier en clair
+  // et un noir chaud en sombre.
+  @include m.generate-color-variants('secondary', 26, 12%, 24%, 1);
+
+  // Rose profond : la seconde couleur des dégradés du hero et des couvertures
+  // générées. Jamais utilisée pour du texte de contenu.
+  @include m.generate-color-variants('accent', 348, 72%, 54%, 1);
 
   @include m.generate-color-variants('black', 0, 0%, 0%, 1);
   @include m.generate-color-variants('white', 0, 0%, 100%, 1);
@@ -27,34 +42,40 @@
 :root {
   color-scheme: light;
 
-  --surface-page: var(--secondary-99);
-  --surface-raised: var(--white);
-  --surface-sunken: var(--secondary-96);
+  // Un fond papier plutôt qu'un blanc pur : la teinte chaude est à peine
+  // perceptible isolément, mais c'est elle qui empêche le site de ressembler
+  // à tous les autres au premier coup d'œil.
+  --surface-page: var(--secondary-97);
+  --surface-raised: var(--secondary-99);
+  --surface-sunken: var(--secondary-95);
   --surface-inverse: var(--secondary-10);
 
-  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.14);
-  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.28);
+  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.16);
+  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.3);
 
   --text-color: var(--secondary-20);
   --text-muted: var(--secondary-40);
   --text-on-inverse: var(--secondary-95);
   --heading-color: var(--secondary-10);
 
-  --link-color: var(--primary-40);
+  // 35 et non 40 : à 40 %, l'orange tombe à 4,25:1 sur le fond papier, sous
+  // le seuil AA. Un barreau plus bas suffit et donne 5,29:1.
+  --link-color: var(--primary-35);
   --link-color-hover: var(--primary-25);
 
-  --pre-heading-color: var(--primary-45);
+  --pre-heading-color: var(--primary-35);
 
-  // Étiquettes de technologies
-  --tag-bg: var(--primary-97);
-  --tag-color: var(--primary-35);
+  // Ce qu'on pose SUR un aplat orange. Une seule déclaration, pour que le
+  // choix « texte foncé plutôt que blanc » n'ait pas à être répété.
+  --on-primary: var(--secondary-10);
+
+  --tag-bg: var(--primary-96);
+  --tag-color: var(--primary-30);
   --tag-border: var(--primary-90);
 
-  // Les ombres portent la teinte de la structure plutôt qu'un gris neutre
   --shadow-color: var(--secondary-40);
 
-  // `--root-bg` existait dans cccc-maxxev ; conservé en alias pour que les
-  // composants repris de là-bas continuent de fonctionner sans réécriture.
+  // Alias conservé pour les composants repris de cccc-maxxev
   --root-bg: var(--surface-page);
 }
 
@@ -77,16 +98,20 @@
   --text-on-inverse: var(--secondary-15);
   --heading-color: var(--secondary-97);
 
-  // Un indigo à 40 % de luminosité passe le contraste sur blanc mais devient
-  // illisible sur fond sombre : on remonte la rampe.
+  // L'orange à 35 % passe sur fond papier mais disparaît sur fond sombre :
+  // on remonte la rampe.
   --link-color: var(--primary-70);
   --link-color-hover: var(--primary-85);
 
-  --pre-heading-color: var(--primary-70);
+  --pre-heading-color: var(--primary-65);
 
-  --tag-bg: hsla(var(--primary-h), var(--primary-s), 70%, 0.12);
+  // L'aplat orange garde la même luminosité dans les deux thèmes, donc le
+  // texte qu'on y pose reste le même.
+  --on-primary: var(--secondary-10);
+
+  --tag-bg: hsla(var(--primary-h), var(--primary-s), 60%, 0.12);
   --tag-color: var(--primary-80);
-  --tag-border: hsla(var(--primary-h), var(--primary-s), 70%, 0.22);
+  --tag-border: hsla(var(--primary-h), var(--primary-s), 60%, 0.24);
 
   --shadow-color: var(--black);
 }

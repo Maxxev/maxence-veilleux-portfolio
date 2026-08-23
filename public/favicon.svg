@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <style>
     :root { color-scheme: light dark; }
-    .fond { fill: #4338e8; }
-    .lettres { fill: #ffffff; }
+    /* Aplat orange, lettres foncées — la même inversion que les boutons du
+       site : l'orange est trop clair pour porter du blanc lisiblement. */
+    .fond { fill: #f87a25; }
+    .lettres { fill: #1d1916; }
     @media (prefers-color-scheme: dark) {
-      .fond { fill: #7a72f2; }
-      .lettres { fill: #14181f; }
+      .fond { fill: #fa9552; }
     }
   </style>
   <rect class="fond" width="64" height="64" rx="14" />

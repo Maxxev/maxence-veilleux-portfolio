@@ -8,7 +8,10 @@ const {
   RootTag = 'button',
   bgColor = 'var(--primary)',
   bgColorHover = 'var(--white)',
-  color = 'var(--primary-99)',
+  // Texte FONCÉ sur l'aplat orange, et non blanc. Un orange assez vif pour
+  // être la couleur du site n'atteint jamais 4,5:1 avec du blanc ; il y
+  // arrive largement avec `--on-primary`. Voir _colors.scss.
+  color = 'var(--on-primary)',
   iconName,
   reverseIcon = false,
   class: className = '',

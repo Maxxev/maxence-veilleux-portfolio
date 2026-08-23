@@ -27,18 +27,20 @@ mkdirSync(CIBLE, { recursive: true });
 const LARGEUR = 1200;
 const HAUTEUR = 675;
 
-// Les teintes restent dans la famille du site : bleu → indigo → violet.
-// L'ambre du site ne figure pas ici. Elle a été essayée comme teinte de base
-// et le décalage vers la seconde teinte tombait dans le vert — hors palette,
-// et ça se voyait immédiatement à côté d'une carte indigo. Elle ne sert plus
-// que de lueur ponctuelle, ci-dessous.
-// Bornes serrées, et pour une raison précise : sous 218, le décalage vers la
-// seconde teinte atteint le cyan, et une couverture turquoise à côté d'une
-// couverture indigo ne ressemble plus à une série. Un halo ambre avait aussi
-// été essayé par-dessus — sur une base froide, le mélange donne du vert.
-const TEINTES = [238, 248, 262, 230, 222];
-const TEINTE_MIN = 218;
-const TEINTE_MAX = 276;
+// Teintes de base, toutes dans la bande rouge → orange → ambre.
+//
+// Deux bornes apprises à l'œil, et pas déductibles de la théorie :
+//
+//   · au-dessus de ~40°, un jaune assombri ne devient pas « ambre foncé » mais
+//     OLIVE. Le dégradé d'une couverture ambre partait donc dans le vert.
+//   · en dessous de ~350°, on entre dans le magenta, et la couverture cesse de
+//     se lire comme orange — ce qui est précisément ce qu'on cherche à éviter.
+//
+// D'où la règle du dégradé plus bas : la seconde teinte descend TOUJOURS vers
+// le rouge, jamais vers le jaune. Orange → rouge profond s'assombrit
+// proprement ; orange → ambre, non.
+const TEINTES = [24, 12, 34, 2, 18];
+const TEINTE_PLANCHER = 350; // sur l'axe déplié : 350 = -10°
 
 /** Hachage stable d'une chaîne — même slug, même image, à chaque exécution. */
 function graine(texte) {
@@ -121,27 +123,37 @@ function diagonales(rnd, teinte) {
 
 const MOTIFS = [arcs, cartesEmpilees, grillePoints, diagonales];
 
-async function couverture(slug) {
+// `index` sert au choix du motif, `slug` à tout le reste.
+//
+// Le motif était tiré du même flux pseudo-aléatoire que les couleurs, et deux
+// projets sur quatre tombaient sur les diagonales — quatre couvertures dont
+// deux presque identiques. Passer par la position garantit qu'elles diffèrent
+// tant qu'il y a moins de projets que de motifs, et ajouter un projet à la fin
+// de la liste ne change pas les précédents.
+async function couverture(slug, index) {
   const g = graine(slug);
   const rnd = aleatoire(g || 1);
 
   const teinte = TEINTES[g % TEINTES.length];
   // Décalage borné et signé : la seconde teinte reste une voisine de la
   // première, jamais une couleur d'une autre famille.
-  const brut = teinte + (rnd() < 0.5 ? -1 : 1) * (10 + Math.floor(rnd() * 16));
-  const teinte2 = Math.min(TEINTE_MAX, Math.max(TEINTE_MIN, brut));
-  const motif = MOTIFS[Math.floor(rnd() * MOTIFS.length)];
+  // Toujours vers le rouge, jamais vers le jaune. On raisonne sur un axe
+  // déplié pour que la soustraction traverse 0° sans repasser par 359.
+  const deplie = teinte + 360;
+  const brut = deplie - (12 + Math.floor(rnd() * 18));
+  const teinte2 = Math.max(TEINTE_PLANCHER, brut) % 360;
+  const motif = MOTIFS[index % MOTIFS.length];
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${LARGEUR}" height="${HAUTEUR}" viewBox="0 0 ${LARGEUR} ${HAUTEUR}">
     <defs>
       <linearGradient id="fond" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="hsl(${teinte}, 64%, 46%)" />
-        <stop offset="52%" stop-color="hsl(${teinte2}, 60%, 33%)" />
-        <stop offset="100%" stop-color="hsl(${teinte2}, 52%, 19%)" />
+        <stop offset="0%" stop-color="hsl(${teinte}, 82%, 52%)" />
+        <stop offset="52%" stop-color="hsl(${teinte2}, 72%, 36%)" />
+        <stop offset="100%" stop-color="hsl(${teinte2}, 60%, 20%)" />
       </linearGradient>
       <radialGradient id="lueur" cx="74%" cy="22%" r="58%">
-        <stop offset="0%" stop-color="hsl(${teinte}, 88%, 70%)" stop-opacity="0.45" />
-        <stop offset="100%" stop-color="hsl(${teinte}, 88%, 70%)" stop-opacity="0" />
+        <stop offset="0%" stop-color="hsl(${teinte}, 95%, 68%)" stop-opacity="0.5" />
+        <stop offset="100%" stop-color="hsl(${teinte}, 95%, 68%)" stop-opacity="0" />
       </radialGradient>
     </defs>
     <rect width="${LARGEUR}" height="${HAUTEUR}" fill="url(#fond)" />
@@ -158,8 +170,8 @@ async function couverture(slug) {
 // projet a une vraie image — le fichier généré n'a alors plus de raison d'être.
 const SANS_CAPTURE = ['ludix', 'systemes-ia', 'sites-agence', 'amazoom'];
 
-for (const slug of SANS_CAPTURE) {
-  const fichier = await couverture(slug);
+for (const [index, slug] of SANS_CAPTURE.entries()) {
+  const fichier = await couverture(slug, index);
   console.log(`  ✓ ${fichier.replace(RACINE + '/', '')}`);
 }
 console.log('\nCes images sont décoratives. Remplace-les par de vraies captures dès que possible.');
