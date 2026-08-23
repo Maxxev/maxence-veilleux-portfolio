@@ -1,0 +1,52 @@
+---
+titre: 'Amazoom'
+resume: "Une boutique en ligne d'appareils photo — catalogue, panier, commandes et back-office de gestion — écrite en PHP et JavaScript natifs, sans cadriciel."
+categorie: 'etudes'
+annee: '2025'
+role: "Maquette Figma et intégration. Travail d'équipe à trois."
+ordre: 40
+vedette: false
+technos: ['PHP', 'JavaScript', 'HTML', 'CSS', 'Figma']
+faits:
+  - 'Parcours client complet : catalogue de produits, fiches de vente, panier et passage de commande.'
+  - "Back-office où un administrateur crée et gère les fiches de vente."
+  - "Aucun cadriciel : PHP et JavaScript natifs. Le routage, la persistance des sessions et la logique du panier sont écrits à la main."
+  - "J'ai conçu la maquette dans Figma avant l'intégration, comme pour Ludix. Travail à trois."
+couverture:
+  src: '/medias/projets/amazoom.webp'
+  alt: 'Visuel abstrait représentant le projet Amazoom'
+  position: '50% 50%'
+videos: []
+youtube: []
+liens: []
+mention: "Projet scolaire réalisé en équipe au Cégep de Sherbrooke. Le dépôt n'est pas public."
+---
+
+Amazoom est une boutique en ligne spécialisée dans les appareils photo :
+l'utilisateur parcourt le catalogue, ajoute des fiches de vente à son panier et
+passe commande, pendant qu'un administrateur gère l'inventaire depuis un
+back-office.
+
+## Sans cadriciel, exprès
+
+Tout est en PHP et JavaScript natifs. Le routage, les sessions, la persistance
+du panier et les requêtes vers la base de données sont écrits à la main.
+
+C'est plus lent à construire, et c'est le point. Quand on écrit soi-même la
+gestion de session avant d'avoir vu Laravel la faire, on comprend ce que le
+cadriciel fait à notre place — et ça se voit plus tard, quand quelque chose se
+comporte mal et qu'il faut savoir où regarder. Ludix, l'année suivante, est
+passé à Laravel ; le contraste entre les deux projets est la partie la plus
+instructive.
+
+## La maquette d'abord
+
+Comme pour Ludix, j'ai dessiné l'interface dans Figma avant d'écrire du code.
+Sur un projet à trois avec une échéance scolaire, une maquette arrêtée épargne
+la moitié des discussions : on ne débat plus de ce à quoi la page devrait
+ressembler pendant qu'on est en train de l'écrire.
+
+<!-- TODO Maxence : c'est le projet que tu décris comme « très plaisant
+     visuellement ». C'est exactement celui qui perd le plus à ne pas avoir de
+     capture. Une image du catalogue suffirait. Dépose-la dans
+     public/medias/projets/ et renseigne `couverture` ci-dessus. -->
