@@ -24,7 +24,7 @@ const technos = projet.technos.slice(0, MAX_TECHNOS);
 const reste = projet.technos.length - technos.length;
 ---
 
-<li class={`projet-card ${className}`}>
+<li class={`projet-card ${className}`} data-categorie={projet.categorie}>
   <article>
     {
       projet.couverture ? (
