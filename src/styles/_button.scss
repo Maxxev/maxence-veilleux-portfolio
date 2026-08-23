@@ -1,0 +1,94 @@
+@use './mixins' as m;
+
+// Le style du bouton, sorti de `Button.astro` pour que l'interface
+// d'administration puisse le porter elle aussi. Elle n'a pas d'Astro : elle sert
+// une page en dur depuis le Worker, et ne peut donc pas importer un composant.
+//
+// Ce fichier est la seule définition. `Button.astro` le charge — le composant
+// reste le seul point d'entrée côté site, et le mixin `m.button` reste ce qu'il
+// était : un raccourci pour les cas où un vrai bouton ne convient pas.
+@layer astro-components {
+  .button {
+    --currentBg: var(--bgColor);
+    --border-width: 1px;
+
+    font-family: var(--text-font-family);
+    width: fit-content;
+    padding-inline: var(--space-s);
+    padding-block: var(--space-xs);
+    border-radius: var(--space-xxs);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1ch;
+
+    font-weight: 600;
+
+    background: var(--currentBg);
+    border: var(--border-width) solid var(--bgColor);
+    overflow-clip-margin: var(--border-width);
+    color: var(--color);
+    cursor: pointer;
+
+    transition: all var(--transition-duration);
+
+    isolation: isolate;
+    position: relative;
+    overflow: clip;
+
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      inset: calc(-1 * var(--border-width));
+      background-color: var(--bgColorHover);
+      opacity: 0;
+      transition: opacity var(--transition-duration);
+    }
+
+    &:hover {
+      /* --currentBg: color-mix(in srgb, var(--bgColor), var(--white) 25%); */
+      &::before {
+        opacity: 0.25;
+      }
+    }
+
+    .content {
+      z-index: 2;
+    }
+
+    &.button--outline {
+      background: transparent;
+      color: var(--bgColor);
+
+      &:hover {
+        background: var(--bgColor);
+        color: var(--color);
+      }
+    }
+
+    &.button--glow {
+      @include m.elevation(
+        $level: 10,
+        $color: var(--currentBg),
+        $opacityMultiplier: 2
+      );
+    }
+
+    &.button--link {
+      padding: 0;
+      border-radius: 0;
+      &:hover {
+        color: color-mix(in srgb, var(--color) 75%, var(--white));
+      }
+    }
+  }
+
+  .icon {
+    flex-shrink: 0;
+    width: 1.5ch;
+    aspect-ratio: 1;
+    height: auto;
+  }
+}

@@ -1,0 +1,4 @@
+// L'ordre d'importance des règles CSS. Les règles CSS les plus à gauche sont les plus facile à override, celles à droite sont les plus difficile.
+// Attention! !important inverse cette priorité. Voilà pourquoi il est très fortement déconseillé d'utiliser !important dans un layer de style plus global.
+// Tout style ajouté hors d'un layer devrait overrider le style provenant d'un layer.
+@layer reset, properties, theme, base, stylesheet-base, astro-components, mini-components, stylesheet-utilities, utilities;

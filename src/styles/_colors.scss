@@ -1,0 +1,102 @@
+@use 'mixins' as m;
+
+// Deux couches, et l'ordre compte.
+//
+// 1. Les *rampes* — générées par `generate-color-variants`, elles produisent
+//    `--primary-5` … `--primary-99` à luminosité fixe. Elles ne changent
+//    jamais : `--primary-30` est le même bleu en clair comme en sombre.
+// 2. Les *tokens sémantiques* — `--surface-page`, `--text-color`, … Eux
+//    pointent vers un barreau différent de la rampe selon le thème.
+//
+// Un composant n'utilise que la couche 2. C'est ce qui rend le mode sombre
+// gratuit : aucune règle de composant ne mentionne de thème.
+
+:root {
+  // Indigo : la couleur d'action (boutons, liens, accents de titre)
+  @include m.generate-color-variants('primary', 238, 62%, 52%, 1);
+  // Ardoise bleutée : les textes, les fonds, les bordures — la structure
+  @include m.generate-color-variants('secondary', 222, 25%, 22%, 1);
+  // Ambre : un clin d'œil à l'ancien portfolio, réservé aux accents ponctuels
+  @include m.generate-color-variants('accent', 40, 96%, 52%, 1);
+
+  @include m.generate-color-variants('black', 0, 0%, 0%, 1);
+  @include m.generate-color-variants('white', 0, 0%, 100%, 1);
+}
+
+// --- Thème clair (défaut) ---------------------------------------------------
+:root {
+  color-scheme: light;
+
+  --surface-page: var(--secondary-99);
+  --surface-raised: var(--white);
+  --surface-sunken: var(--secondary-96);
+  --surface-inverse: var(--secondary-10);
+
+  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.14);
+  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.28);
+
+  --text-color: var(--secondary-20);
+  --text-muted: var(--secondary-40);
+  --text-on-inverse: var(--secondary-95);
+  --heading-color: var(--secondary-10);
+
+  --link-color: var(--primary-40);
+  --link-color-hover: var(--primary-25);
+
+  --pre-heading-color: var(--primary-45);
+
+  // Étiquettes de technologies
+  --tag-bg: var(--primary-97);
+  --tag-color: var(--primary-35);
+  --tag-border: var(--primary-90);
+
+  // Les ombres portent la teinte de la structure plutôt qu'un gris neutre
+  --shadow-color: var(--secondary-40);
+
+  // `--root-bg` existait dans cccc-maxxev ; conservé en alias pour que les
+  // composants repris de là-bas continuent de fonctionner sans réécriture.
+  --root-bg: var(--surface-page);
+}
+
+// --- Thème sombre -----------------------------------------------------------
+// Écrit une seule fois dans un mixin, puis appliqué aux deux sélecteurs qui
+// doivent le déclencher : le choix explicite et la préférence système.
+@mixin dark-theme {
+  color-scheme: dark;
+
+  --surface-page: var(--secondary-10);
+  --surface-raised: var(--secondary-15);
+  --surface-sunken: var(--secondary-5);
+  --surface-inverse: var(--secondary-96);
+
+  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.12);
+  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.24);
+
+  --text-color: var(--secondary-90);
+  --text-muted: var(--secondary-65);
+  --text-on-inverse: var(--secondary-15);
+  --heading-color: var(--secondary-97);
+
+  // Un indigo à 40 % de luminosité passe le contraste sur blanc mais devient
+  // illisible sur fond sombre : on remonte la rampe.
+  --link-color: var(--primary-70);
+  --link-color-hover: var(--primary-85);
+
+  --pre-heading-color: var(--primary-70);
+
+  --tag-bg: hsla(var(--primary-h), var(--primary-s), 70%, 0.12);
+  --tag-color: var(--primary-80);
+  --tag-border: hsla(var(--primary-h), var(--primary-s), 70%, 0.22);
+
+  --shadow-color: var(--black);
+}
+
+:root[data-theme='dark'] {
+  @include dark-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-theme;
+  }
+}

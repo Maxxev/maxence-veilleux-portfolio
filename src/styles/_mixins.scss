@@ -1,0 +1,228 @@
+@use 'breakpoints' as bp;
+
+// Repris de cccc-maxxev, avec trois divergences volontaires, toutes dues au
+// mode sombre : `elevation`, `box` et `tag-list` prenaient des couleurs
+// absolues (`--secondary-40`, `--white`, `--primary-95`) qui s'inversent mal
+// quand le fond devient foncé. Ici elles passent par la couche sémantique de
+// `_colors.scss`. Le reste du fichier est identique à l'original.
+
+// Générer une ombre en fonction d'un niveau d'élévation
+@mixin elevation($level: null, $color: null, $opacityMultiplier: null) {
+  // Valeurs par défaut permettant le passage de `null`
+  // prettier-ignore
+  $level: if(
+    sass($level == null): 5;
+    else: $level;
+  );
+  // prettier-ignore
+  $color: if(
+    sass($color == null): var(--shadow-color);
+    else: $color;
+  );
+  // prettier-ignore
+  $opacityMultiplier: if(
+    sass($opacityMultiplier == null): 1;
+    else: $opacityMultiplier;
+  );
+
+  // On borne le niveau pour éviter des valeurs absurdes
+  $level: max(0, $level);
+
+  // --- Ombre "key" (précise, proche, contact) ---
+  // Petit décalage vertical, faible flou, spread très légèrement négatif ou nul
+  $key-y: $level * 0.6px;
+  $key-blur: $level * 0.9px;
+  $key-spread: $level * -0.1px;
+  $key-alpha: min(30%, 10% + ($level * 0.8%)) * $opacityMultiplier;
+
+  // --- Ombre "ambient" (diffuse, large, enveloppante) ---
+  // Décalage vertical plus grand, flou important, spread négatif marqué
+  // (le spread négatif "rentre" l'ombre sous l'élément pour un rendu doux, pas un carré flou)
+  $ambient-y: $level * 1.2px;
+  $ambient-blur: $level * 3px;
+  $ambient-spread: $level * -1px;
+  $ambient-alpha: min(0.25%, 0.06% + ($level * 0.006%)) * $opacityMultiplier;
+
+  box-shadow:
+    0 $key-y $key-blur $key-spread
+      color-mix(in hsl, $color $key-alpha, transparent),
+    0 $ambient-y $ambient-blur $ambient-spread
+      color-mix(in hsl, $color $ambient-alpha, transparent);
+}
+
+// À appliquer sur un div ou un container pour lui donner un arrière-plan de style carte aux bords arrondis
+@mixin box(
+  $col: var(--surface-raised),
+  $rad: var(--space-xs),
+  $shadow-elevation: null,
+  $shadow-color: null,
+  $padding: var(--space-s),
+  $offset-margin: false // Faut-il moduler la largeur de la boîte de manière que le contenu de la boîte demeure aligné avec le contenu hors de la boîte? Peut provoquer du x-overflow.
+) {
+  background-color: $col;
+  border-radius: $rad;
+  padding: $padding;
+
+  @include elevation($level: $shadow-elevation, $color: $shadow-color);
+
+  @if $offset-margin == true {
+    width: calc(100% + 2 * #{$padding});
+    margin-left: calc(-1 * #{$padding});
+    margin-block: calc(-1 * #{$padding});
+  }
+}
+.box {
+  @include box;
+}
+
+// Favoriser l'utilisation du composant Button.astro à ce mixin
+@mixin button(
+  $bg-col: var(--primary),
+  $text-col: var(--primary-99),
+  $outline: false
+) {
+  @if $outline == false {
+    background-color: $bg-col;
+    border: none;
+    color: $text-col;
+  } @else {
+    background-color: transparent;
+    border: 1px solid $bg-col;
+    color: $bg-col;
+  }
+  border-radius: var(--space-xs);
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+}
+
+// Liste de petites étiquettes arrondies (ex. les tags d'un événement)
+@mixin tag-list {
+  list-style-type: none;
+  padding-inline-start: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1ch;
+
+  li {
+    padding: 0.3em 0.9em;
+    border-radius: var(--space-xxs);
+    background-color: var(--tag-bg);
+    color: var(--tag-color);
+    border: 1px solid var(--tag-border);
+    font-family: var(--mono-font-family);
+    font-size: var(--text--2);
+    font-weight: 500;
+  }
+}
+
+// Lecteurs d'écran seulement. L'item ne s'affiche pas à l'écran, mais les lecteurs d'écran et les crawlers le liront quand même.
+// Bon pour l'accessibilité et le SEO
+@mixin sr-only {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+.sr-only {
+  @include sr-only;
+}
+
+// Empêche la sélection d'un élément
+@mixin no-select {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.no-select {
+  @include no-select;
+}
+
+// Permet de zoomer dans une image à l'endroit souhaité, et ce, sans dépasser du cadre de l'image.
+// À appliquer sur un div contenant un img
+@mixin image-transform-wrapper {
+  overflow: hidden;
+
+  img {
+    /*
+    Ajouter au niveau de l'élément :
+    --itw_position: 50% 50%;
+    --itw_scale: 1.0;
+    */
+    transform: scale(var(--itw_scale, 1));
+    transform-origin: var(--itw_position, 50% 50%);
+    object-position: var(--itw_position, 50% 50%);
+
+    height: 100%;
+    object-fit: cover;
+    min-width: 100%;
+  }
+}
+
+// Ce mixin SCSS génère plusieurs variables CSS de variations de la couleur HSLA passée en paramètre
+//
+// https://codepen.io/Maxence-GNITIC/pen/RNojRjX
+// Choisir "View compiled CSS" pour copier le CSS brut
+// Ex. @include m.generate-color-variants(primary, 39, 86%, 56%);
+@mixin generate-color-variants(
+  $variable-name,
+  $color-h,
+  $color-s,
+  $color-l,
+  $color-a: 1
+) {
+  --#{$variable-name}-hsl: #{$color-h}, #{$color-s}, #{$color-l};
+  --#{$variable-name}-h: #{$color-h};
+  --#{$variable-name}-s: #{$color-s};
+  --#{$variable-name}-l: #{$color-l};
+  --#{$variable-name}-a: #{$color-a};
+
+  --#{$variable-name}: hsla(#{$color-h}, #{$color-s}, #{$color-l}, #{$color-a});
+
+  --#{$variable-name}-1: hsla(#{$color-h}, #{$color-s}, 1%, #{$color-a});
+  --#{$variable-name}-2: hsla(#{$color-h}, #{$color-s}, 2%, #{$color-a});
+  --#{$variable-name}-3: hsla(#{$color-h}, #{$color-s}, 3%, #{$color-a});
+  --#{$variable-name}-4: hsla(#{$color-h}, #{$color-s}, 4%, #{$color-a});
+  --#{$variable-name}-5: hsla(#{$color-h}, #{$color-s}, 5%, #{$color-a});
+  --#{$variable-name}-10: hsla(#{$color-h}, #{$color-s}, 10%, #{$color-a});
+  --#{$variable-name}-15: hsla(#{$color-h}, #{$color-s}, 15%, #{$color-a});
+  --#{$variable-name}-20: hsla(#{$color-h}, #{$color-s}, 20%, #{$color-a});
+  --#{$variable-name}-25: hsla(#{$color-h}, #{$color-s}, 25%, #{$color-a});
+  --#{$variable-name}-30: hsla(#{$color-h}, #{$color-s}, 30%, #{$color-a});
+  --#{$variable-name}-35: hsla(#{$color-h}, #{$color-s}, 35%, #{$color-a});
+  --#{$variable-name}-40: hsla(#{$color-h}, #{$color-s}, 40%, #{$color-a});
+  --#{$variable-name}-45: hsla(#{$color-h}, #{$color-s}, 45%, #{$color-a});
+  --#{$variable-name}-50: hsla(#{$color-h}, #{$color-s}, 50%, #{$color-a});
+  --#{$variable-name}-55: hsla(#{$color-h}, #{$color-s}, 55%, #{$color-a});
+  --#{$variable-name}-60: hsla(#{$color-h}, #{$color-s}, 60%, #{$color-a});
+  --#{$variable-name}-65: hsla(#{$color-h}, #{$color-s}, 65%, #{$color-a});
+  --#{$variable-name}-70: hsla(#{$color-h}, #{$color-s}, 70%, #{$color-a});
+  --#{$variable-name}-75: hsla(#{$color-h}, #{$color-s}, 75%, #{$color-a});
+  --#{$variable-name}-80: hsla(#{$color-h}, #{$color-s}, 80%, #{$color-a});
+  --#{$variable-name}-85: hsla(#{$color-h}, #{$color-s}, 85%, #{$color-a});
+  --#{$variable-name}-90: hsla(#{$color-h}, #{$color-s}, 90%, #{$color-a});
+  --#{$variable-name}-95: hsla(#{$color-h}, #{$color-s}, 95%, #{$color-a});
+  --#{$variable-name}-96: hsla(#{$color-h}, #{$color-s}, 96%, #{$color-a});
+  --#{$variable-name}-97: hsla(#{$color-h}, #{$color-s}, 97%, #{$color-a});
+  --#{$variable-name}-98: hsla(#{$color-h}, #{$color-s}, 98%, #{$color-a});
+  --#{$variable-name}-99: hsla(#{$color-h}, #{$color-s}, 99%, #{$color-a});
+
+  --#{$variable-name}-ultra-dark: var(--#{$variable-name}-10);
+  --#{$variable-name}-dark: var(--#{$variable-name}-25);
+  --#{$variable-name}-semi-dark: var(--#{$variable-name}-35);
+  --#{$variable-name}-medium: var(--#{$variable-name}-50);
+  --#{$variable-name}-semi-light: var(--#{$variable-name}-65);
+  --#{$variable-name}-light: var(--#{$variable-name}-85);
+  --#{$variable-name}-ultra-light: var(--#{$variable-name}-95);
+}
+
+@mixin grid($col-count: 2, $gap: var(--space-m)) {
+  display: grid;
+  grid-template-columns: repeat($col-count, minmax(0, 1fr));
+  gap: $gap;
+}

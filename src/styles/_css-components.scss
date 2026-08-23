@@ -1,0 +1,44 @@
+@use './mixins' as m;
+@use './text' as t;
+
+// Petits objets réutilisés partout, trop simples pour mériter un composant
+// Astro. Tout ce qui a de la logique ou du balisage à répéter va dans
+// src/components/ à la place.
+@layer css-components {
+  // Liste d'étiquettes de technologies (« Astro », « Laravel », « C# »)
+  .tech-list {
+    @include m.tag-list;
+  }
+
+  // Le fil d'une page de détail : ligne verticale + paires terme/définition
+  .meta-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+
+    dt {
+      @include t.mono-label;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    dd {
+      margin-inline-start: 0;
+      color: var(--text-color);
+    }
+  }
+
+  // Trait de séparation qui s'estompe vers les bords plutôt que de s'arrêter net
+  .fade-rule {
+    height: 1px;
+    border: none;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--border-strong) 15%,
+      var(--border-strong) 85%,
+      transparent
+    );
+  }
+}

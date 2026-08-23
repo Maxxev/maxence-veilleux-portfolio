@@ -1,0 +1,82 @@
+@use './mixins' as m;
+
+@layer stylesheet-base {
+  :root {
+    background-color: var(--surface-page);
+    scroll-behavior: smooth;
+  }
+
+  // Le thème bascule sur un attribut, donc les couleurs changent d'un coup.
+  // Une courte transition évite le clignotement brutal, mais elle ne doit
+  // toucher que les propriétés de couleur — sinon chaque mise en page animée
+  // du site hériterait d'une transition qu'elle n'a pas demandée.
+  :root[data-theme],
+  :root[data-theme] * {
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  * {
+    transition-duration: var(--transition-duration);
+    transition-property: none;
+    scroll-margin-top: calc(var(--header-height) + var(--space-s));
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+    object-fit: contain;
+  }
+
+  a {
+    color: var(--link-color);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--link-color-hover);
+    }
+  }
+
+  // Dans un bloc de prose, un lien doit rester repérable sans la couleur seule
+  .prose a,
+  p > a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  ::selection {
+    background-color: var(--primary-85);
+    color: var(--secondary-10);
+  }
+
+  :is(input, textarea)::placeholder {
+    color: var(--text-muted);
+  }
+
+  // Une seule déclaration de « respecte la préférence système ». Toute
+  // animation du site passe par une classe ou une propriété que ceci neutralise.
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

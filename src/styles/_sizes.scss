@@ -1,0 +1,24 @@
+@use 'sass:math';
+@use 'functions' as f;
+@use 'scss-variables' as g;
+
+:root {
+  --space-xxs: calc(var(--space-xs) / 2);
+  --space-xs: calc(var(--space-s) * pow(2, -1));
+  --space-s: #{f.clamp-calc(0, 1, g.$max-screen-width, 1.5)};
+  --space-m: calc(var(--space-s) * pow(2, 1));
+  --space-l: calc(var(--space-s) * pow(2, 2));
+  --space-xl: calc(var(--space-s) * pow(2, 3));
+  --space-xxl: calc(var(--space-xl) * 2);
+  --section-inline-padding: var(--space-s);
+  --section-block-padding: var(--space-m);
+  --container-width: calc(
+    #{math.div(g.$max-screen-width, g.$px-per-rem)}rem - 2 *
+      var(--section-inline-padding)
+  ); // Un peu moins de 1280px
+
+  --container-l: calc(var(--container-width) * 1.2);
+  --container-s: calc(var(--container-width) * 0.8);
+
+  --transition-duration: 0.25s;
+}

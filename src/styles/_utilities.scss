@@ -1,0 +1,145 @@
+@use 'breakpoints' as bp;
+@use 'scss-variables' as g;
+@use 'sass:math';
+
+@layer stylesheet-utilities {
+  @media (min-width: bp.$xl) {
+    .under-xl {
+      display: none !important;
+    }
+  }
+  @media (min-width: bp.$lg) {
+    .under-lg {
+      display: none !important;
+    }
+  }
+  @media (min-width: bp.$md) {
+    .under-md {
+      display: none !important;
+    }
+  }
+  @media (min-width: bp.$sm) {
+    .under-sm {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: #{math.div(bp.$xl, 1rem) * g.$px-per-rem * 1px - 1px}) {
+    .xl-and-over {
+      display: none !important;
+    }
+  }
+  @media (max-width: #{math.div(bp.$lg, 1rem) * g.$px-per-rem * 1px - 1px}) {
+    .lg-and-over {
+      display: none !important;
+    }
+  }
+  @media (max-width: #{math.div(bp.$md, 1rem) * g.$px-per-rem * 1px - 1px}) {
+    .md-and-over {
+      display: none !important;
+    }
+  }
+  @media (max-width: #{math.div(bp.$sm, 1rem) * g.$px-per-rem * 1px - 1px}) {
+    .sm-and-over {
+      display: none !important;
+    }
+  }
+
+  .text-wrapper {
+    display: block;
+    > * {
+      margin-bottom: 1ex;
+      margin-top: 0.5ex;
+    }
+
+    > .button {
+      margin-block: var(--text-5);
+    }
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .special-font {
+    font-family: var(--special-font-family);
+    color: var(--primary);
+    font-size: 1.1em;
+    display: inline-block;
+    translate: 0 -1px;
+    margin-inline: 0.1ch;
+  }
+}
+
+// --- Apparitions au défilement ---------------------------------------------
+// En CSS pur, via `animation-timeline: view()`. Aucun JavaScript, aucun
+// observateur d'intersection, aucune dépendance. Les navigateurs qui ne
+// connaissent pas la propriété ignorent le bloc : l'élément reste simplement
+// visible, ce qui est exactement le bon repli.
+@layer stylesheet-utilities {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      @keyframes reveal-rise {
+        from {
+          opacity: 0;
+          translate: 0 var(--reveal-distance, 2rem);
+        }
+        to {
+          opacity: 1;
+          translate: 0 0;
+        }
+      }
+
+      .reveal {
+        animation: reveal-rise linear both;
+        animation-timeline: view();
+        // L'élément est pleinement visible bien avant d'atteindre le haut de
+        // l'écran : l'animation se joue sur le premier quart de sa traversée.
+        animation-range: entry 0% cover 22%;
+      }
+
+      // Décalage en cascade pour les enfants d'une grille ou d'une liste
+      .reveal-stagger > * {
+        animation: reveal-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 26%;
+      }
+    }
+  }
+
+  // Bloc de prose : rythme vertical pour du contenu Markdown rendu
+  .prose {
+    max-width: 68ch;
+
+    > * + * {
+      margin-top: 1em;
+    }
+
+    > :is(h2, h3, h4) {
+      margin-top: 1.8em;
+      margin-bottom: 0.6em;
+    }
+
+    ul,
+    ol {
+      padding-inline-start: 1.4em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+    }
+
+    strong {
+      font-weight: 650;
+      color: var(--heading-color);
+    }
+  }
+
+  // Aligne un bloc sur la largeur d'une colonne de lecture confortable
+  .measure {
+    max-width: 62ch;
+  }
+}

@@ -1,0 +1,58 @@
+@use 'sass:math';
+@use './scss-variables' as g;
+
+// Génère différentes tailles de texte qui rapetissent ou grossissent en fonction de la largeur de l'écran
+// $ratio: combien de fois un h1 est-il plus gros qu'un h2?
+// $vw-factor: à quel point la taille de l'écran affecte la taille du texte?
+//
+// Exemple visuel du grossissement d'une police en fonction de la largeur de l'écran (500px à 1280px) :
+//     1280px
+//       /‾‾‾‾‾
+// _____/
+//   500px
+@function fluid-ms(
+  $step,
+  $base: 1rem,
+  $ratio: 1.162,
+  $min-scale: 0.85,
+  $vw-factor: 3,
+  $min-screen-width: 500px
+) {
+  $mult: math.pow($ratio, $step);
+
+  $size: calc(
+    $base * $mult + $vw-factor / 100 *
+      (
+        clamp($min-screen-width, 100vw, #{g.$max-screen-width}px) -
+          $min-screen-width
+      ) *
+      max(0, $mult - 1)
+  );
+
+  @return $size;
+}
+
+// Effectue une interpolation linéaire entre deux valeurs en fonction de la largeur de l'écran
+//
+// $win1: taille de l'écran 1 (en px)
+// $val1: dimension attendue pour la taille de l'écran 1 (en rem)
+// $win2: taille de l'écran 2 (en px)
+// $val1: dimension attendue pour la taille de l'écran 2 (en rem)
+// Ex. @use f.clamp-calc(1920, 100, 1280, 70)
+@function clamp-calc($win1, $val1, $win2, $val2) {
+  $val1: $val1 * g.$px-per-rem;
+  $val2: $val2 * g.$px-per-rem;
+
+  $m: math.div($val2 - $val1, $win2 - $win1);
+  $b: $val1 - $m * $win1;
+
+  $val1: math.div($val1, g.$px-per-rem);
+  $val2: math.div($val2, g.$px-per-rem);
+  $b: math.div($b, g.$px-per-rem);
+
+  @return clamp(
+    #{math.min($val1, $val2)}rem,
+    #{$m * 100}vw + #{$b}rem,
+    #{math.max($val1, $val2)}rem
+  );
+}

@@ -1,0 +1,16 @@
+@use 'breakpoints' as bp;
+
+// Ce n'est pas vraiment nécessaire de modifier la valeur de ces variables. Elles existent seulement pour des redimensionnements futurs plus faciles.
+$DEFAULT-PX-PER-REM: 16;
+$px-per-rem: 16;
+
+// Au-delà d'un écran d'une largeur de 1280px, la disposition du contenu devrait rester très similaire.
+// Le texte devrait cesser de grossir. Les conteneurs de taille normale devraient cesser s'élargir. Etc.
+$max-screen-width: 1280;
+
+// Ratios pour le dimensionnement des polices d'écriture
+$minor-second: 1.067;
+$major-second: 1.125;
+$minor-third: 1.2;
+$major-third: 1.25;
+$perfect-fourth: 1.333;
