@@ -6,7 +6,6 @@
     "autreLangue": "English",
     "basculerLangue": "Voir cette page en anglais"
   },
-
   "nav": {
     "accueil": "Accueil",
     "projets": "Projets",
@@ -18,7 +17,6 @@
     "themeClair": "Thème clair",
     "themeSombre": "Thème sombre"
   },
-
   "accueil": {
     "titrePage": "Accueil",
     "description": "Maxence Veilleux, étudiant en Techniques de l'informatique au Cégep de Sherbrooke. Applications Web et mobiles, de la maquette Figma au déploiement.",
@@ -29,21 +27,26 @@
     "ctaProjets": "Voir les projets",
     "ctaCv": "Télécharger le CV",
     "signatureAlt": "Signature manuscrite de Maxence Veilleux",
-
+    "carteTitre": "En un coup d'œil",
+    "carteStatut": "Statut",
+    "carteStatutValeur": "Étudiant · diplomation mai 2027",
+    "carteEtablissement": "Établissement",
+    "carteRecherche": "Recherche",
+    "carteRechercheValeur": "Stage ou emploi en développement Web ou mobile",
+    "carteLangues": "Langues",
+    "carteLanguesValeur": "Français, anglais",
+    "carteTechnos": "Principaux outils",
     "projetsSurTitre": "Réalisations",
     "projetsTitre": "Projets en vedette",
     "projetsIntro": "Trois projets qui montrent le mieux comment je travaille. Le reste est sur la page des projets.",
     "projetsTous": "Tous les projets",
-
     "stackSurTitre": "Outils",
     "stackTitre": "Ce avec quoi je travaille",
     "stackIntro": "Regroupé par usage plutôt que par popularité. Ce qui apparaît ici, je l'ai utilisé dans un projet livré.",
-
     "aproposSurTitre": "En bref",
     "aproposTitre": "Qui je suis",
     "aproposCta": "Voir mon parcours"
   },
-
   "projets": {
     "titrePage": "Projets",
     "description": "Les projets de développement Web, mobile et jeu vidéo de Maxence Veilleux : applications Laravel et Android, sites Astro, prototypes Unity.",
@@ -78,31 +81,25 @@
     "chargerYoutube": "Charger la vidéo YouTube",
     "youtubeAvis": "La vidéo se charge depuis YouTube au clic. Rien n'est téléchargé avant."
   },
-
   "parcours": {
     "titrePage": "Parcours",
     "description": "Formation, expérience en agence et distinctions de Maxence Veilleux, étudiant en Techniques de l'informatique au Cégep de Sherbrooke.",
     "surTitre": "Le contexte",
     "titre": "Parcours",
     "intro": "La formation, le travail rémunéré et ce que je fais quand personne ne me le demande.",
-
     "formationSurTitre": "Formation",
     "formationTitre": "Cégep de Sherbrooke",
     "formationEnCours": "En cours",
     "coteRLabel": "Cote R",
     "coteRNote": "Moyenne cumulative au moment de la dernière mise à jour de cette page.",
-
     "agenceSurTitre": "Expérience",
     "agenceTitre": "Travail en agence",
-
     "horsDevSurTitre": "Le reste",
     "horsDevTitre": "Au-delà du code",
-
     "distinctionsSurTitre": "Reconnaissances",
     "distinctionsTitre": "Bourses et distinctions",
     "distinctionsNote": "Distinctions du parcours secondaire, conservées pour ce qu'elles disent de la constance."
   },
-
   "contact": {
     "surTitre": "La suite",
     "titre": "Parlons-en",
@@ -116,13 +113,11 @@
     "masqueTitre": "Coordonnées retirées",
     "masqueTexte": "Les moyens de me joindre sont temporairement retirés de ce site. Mon curriculum vitæ les contient."
   },
-
   "pied": {
     "droits": "Tous droits réservés.",
     "construit": "Site construit avec Astro. Code, contenu et design de Maxence Veilleux.",
     "sourceLien": "Voir le code de ce site"
   },
-
   "erreur404": {
     "titrePage": "Page introuvable",
     "surTitre": "Erreur 404",

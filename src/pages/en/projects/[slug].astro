@@ -1,0 +1,17 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PageProjet from '../../../components/pages/PageProjet.astro';
+import { projets, slugDe } from '../../../utils/projets.ts';
+
+export const getStaticPaths = (async () => {
+  const entrees = await projets('en');
+  return entrees.map((entree) => ({
+    params: { slug: slugDe(entree) },
+    props: { entree },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entree } = Astro.props;
+---
+
+<PageProjet entree={entree} langue="en" />

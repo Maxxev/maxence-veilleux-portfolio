@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../Section.astro';
+import Container from '../Container.astro';
+import PageHero from '../PageHero.astro';
+import ProjetsGrid from '../ProjetsGrid.astro';
+
+import { traductions, type Langue } from '../../i18n/index.ts';
+import { projets } from '../../utils/projets.ts';
+import { CATEGORIES } from '../../schemas/projets.ts';
+
+interface Props {
+  langue: Langue;
+}
+
+const { langue } = Astro.props;
+const t = traductions(langue);
+
+const entrees = await projets(langue);
+
+// On ne propose que les catégories réellement peuplées : un filtre qui ne
+// renvoie jamais rien est un bouton qui ment.
+const categoriesPresentes = CATEGORIES.filter((categorie) =>
+  entrees.some((entree) => entree.data.categorie === categorie),
+);
+---
+
+<BaseLayout langue={langue} titrePage={t.projets.titrePage} description={t.projets.description}>
+  <PageHero surTitre={t.projets.surTitre} titre={t.projets.titre} intro={t.projets.intro} />
+
+  <Section>
+    <Container>
+      {
+        categoriesPresentes.length > 1 && (
+          <div class="filtres" role="group" aria-label={t.projets.categorieLabel}>
+            <button type="button" class="filtres__bouton est-actif" data-filtre="toutes">
+              {t.projets.categories.toutes}
+            </button>
+            {categoriesPresentes.map((categorie) => (
+              <button type="button" class="filtres__bouton" data-filtre={categorie}>
+                {t.projets.categories[categorie]}
+              </button>
+            ))}
+          </div>
+        )
+      }
+
+      <ProjetsGrid entrees={entrees} langue={langue} class="projets-page__grille" />
+
+      {/* Annonce le résultat du filtrage aux lecteurs d'écran, qui ne voient
+          pas les cartes disparaître. */}
+      <p class="sr-only" role="status" aria-live="polite" data-filtre-statut></p>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../../styles/text' as tx;
+
+  .filtres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xxs);
+    margin-bottom: var(--space-m);
+  }
+
+  .filtres__bouton {
+    @include tx.mono-label;
+    padding: 0.45em 1.1em;
+    border-radius: 999px;
+    border: 1px solid var(--border-subtle);
+    background-color: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      color var(--transition-duration),
+      background-color var(--transition-duration),
+      border-color var(--transition-duration);
+
+    &:hover {
+      color: var(--link-color);
+      border-color: var(--border-strong);
+    }
+
+    &.est-actif {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: var(--white);
+    }
+  }
+</style>
+
+<script>
+  // Filtrage côté client : les cartes sont déjà rendues, on ne fait que les
+  // masquer. Aucune requête, aucun rechargement, et la page reste entièrement
+  // fonctionnelle sans JavaScript — sans lui, tous les projets sont affichés,
+  // ce qui est le bon état par défaut.
+  function initialiserFiltres(): void {
+    const boutons = document.querySelectorAll<HTMLButtonElement>('.filtres__bouton');
+    const grille = document.querySelector('.projets-page__grille');
+    const statut = document.querySelector<HTMLElement>('[data-filtre-statut]');
+    if (boutons.length === 0 || !grille) return;
+
+    boutons.forEach((bouton) => {
+      bouton.addEventListener('click', () => {
+        const filtre = bouton.dataset.filtre ?? 'toutes';
+
+        boutons.forEach((autre) => autre.classList.toggle('est-actif', autre === bouton));
+
+        let visibles = 0;
+        grille.querySelectorAll<HTMLElement>('.projet-card').forEach((carte) => {
+          const categorie = carte.dataset.categorie;
+          const garde = filtre === 'toutes' || categorie === filtre;
+          carte.hidden = !garde;
+          if (garde) visibles += 1;
+        });
+
+        if (statut) {
+          statut.textContent = `${visibles} / ${grille.children.length}`;
+        }
+      });
+    });
+  }
+
+  // `astro:page-load` couvre aussi le tout premier chargement quand
+  // ClientRouter est monté : un appel direct en plus doublerait les écouteurs
+  // et chaque clic serait traité deux fois.
+  document.addEventListener('astro:page-load', initialiserFiltres);
+</script>

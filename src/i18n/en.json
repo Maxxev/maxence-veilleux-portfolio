@@ -6,7 +6,6 @@
     "autreLangue": "Français",
     "basculerLangue": "View this page in French"
   },
-
   "nav": {
     "accueil": "Home",
     "projets": "Projects",
@@ -18,7 +17,6 @@
     "themeClair": "Light theme",
     "themeSombre": "Dark theme"
   },
-
   "accueil": {
     "titrePage": "Home",
     "description": "Maxence Veilleux, Computer Science Technology student at Cégep de Sherbrooke. Web and mobile applications, from Figma mockup to deployment.",
@@ -29,21 +27,26 @@
     "ctaProjets": "See the projects",
     "ctaCv": "Download résumé",
     "signatureAlt": "Handwritten signature of Maxence Veilleux",
-
+    "carteTitre": "At a glance",
+    "carteStatut": "Status",
+    "carteStatutValeur": "Student · graduating May 2027",
+    "carteEtablissement": "Institution",
+    "carteRecherche": "Looking for",
+    "carteRechercheValeur": "An internship or a job in web or mobile development",
+    "carteLangues": "Languages",
+    "carteLanguesValeur": "French, English",
+    "carteTechnos": "Main tools",
     "projetsSurTitre": "Work",
     "projetsTitre": "Featured projects",
     "projetsIntro": "The three projects that best show how I work. The rest are on the projects page.",
     "projetsTous": "All projects",
-
     "stackSurTitre": "Tools",
     "stackTitre": "What I build with",
     "stackIntro": "Grouped by what it's for rather than by popularity. Everything listed here, I've used on a project I shipped.",
-
     "aproposSurTitre": "In short",
     "aproposTitre": "Who I am",
     "aproposCta": "See my background"
   },
-
   "projets": {
     "titrePage": "Projects",
     "description": "Web, mobile and game development projects by Maxence Veilleux: Laravel and Android applications, Astro sites, Unity prototypes.",
@@ -78,31 +81,25 @@
     "chargerYoutube": "Load YouTube video",
     "youtubeAvis": "The video loads from YouTube when you click. Nothing is downloaded before that."
   },
-
   "parcours": {
     "titrePage": "Background",
     "description": "Education, agency experience and distinctions of Maxence Veilleux, Computer Science Technology student at Cégep de Sherbrooke.",
     "surTitre": "The context",
     "titre": "Background",
     "intro": "The education, the paid work, and what I build when nobody asks me to.",
-
     "formationSurTitre": "Education",
     "formationTitre": "Cégep de Sherbrooke",
     "formationEnCours": "In progress",
     "coteRLabel": "R score",
     "coteRNote": "Cumulative average as of the last update to this page.",
-
     "agenceSurTitre": "Experience",
     "agenceTitre": "Agency work",
-
     "horsDevSurTitre": "The rest",
     "horsDevTitre": "Beyond code",
-
     "distinctionsSurTitre": "Recognition",
     "distinctionsTitre": "Scholarships and distinctions",
     "distinctionsNote": "Distinctions from high school, kept for what they say about consistency."
   },
-
   "contact": {
     "surTitre": "Next",
     "titre": "Let's talk",
@@ -116,13 +113,11 @@
     "masqueTitre": "Contact details removed",
     "masqueTexte": "Ways to reach me are temporarily removed from this site. My résumé contains them."
   },
-
   "pied": {
     "droits": "All rights reserved.",
     "construit": "Built with Astro. Code, content and design by Maxence Veilleux.",
     "sourceLien": "View this site's source"
   },
-
   "erreur404": {
     "titrePage": "Page not found",
     "surTitre": "Error 404",

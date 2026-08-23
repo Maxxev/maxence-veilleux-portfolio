@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../Section.astro';
+import Container from '../Container.astro';
+import PageHero from '../PageHero.astro';
+import SectionHeader from '../SectionHeader.astro';
+import ContactLinks from '../ContactLinks.astro';
+
+import { traductions, moisAnnee, type Langue } from '../../i18n/index.ts';
+import { bloc } from '../../utils/blocs.ts';
+import { reglages } from '../../utils/reglages.ts';
+import { DISTINCTIONS } from '../../data/distinctions.ts';
+
+interface Props {
+  langue: Langue;
+}
+
+const { langue } = Astro.props;
+const t = traductions(langue);
+
+const agence = await bloc('agence', langue);
+const horsDev = await bloc('hors-dev', langue);
+
+const { formation } = reglages;
+const debut = moisAnnee(formation.debut, langue);
+const fin = moisAnnee(formation.fin, langue);
+---
+
+<BaseLayout langue={langue} titrePage={t.parcours.titrePage} description={t.parcours.description}>
+  <PageHero surTitre={t.parcours.surTitre} titre={t.parcours.titre} intro={t.parcours.intro} />
+
+  <Section>
+    <Container>
+      <SectionHeader
+        surTitre={t.parcours.formationSurTitre}
+        titre={t.parcours.formationTitre}
+      />
+
+      <div class="formation">
+        <p class="formation__programme">{formation.programme}</p>
+        <p class="formation__voie">{formation.voie}</p>
+        <p class="formation__dates">
+          <time datetime={formation.debut}>{debut}</time>
+          <span aria-hidden="true">→</span>
+          <time datetime={formation.fin}>{fin}</time>
+          <span class="formation__statut">{t.parcours.formationEnCours}</span>
+        </p>
+
+        {
+          formation.coteR.afficher && (
+            <p class="formation__cote">
+              <span class="formation__cote-etiquette">{t.parcours.coteRLabel}</span>
+              <strong class="formation__cote-valeur">{formation.coteR.valeur}</strong>
+              <span class="formation__cote-note">{t.parcours.coteRNote}</span>
+            </p>
+          )
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {
+    agence && (
+      <Section class="parcours-agence">
+        <Container>
+          <SectionHeader surTitre={t.parcours.agenceSurTitre} titre={t.parcours.agenceTitre} />
+          <div class="prose">
+            <agence.Content />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {
+    horsDev && (
+      <Section>
+        <Container>
+          <SectionHeader surTitre={t.parcours.horsDevSurTitre} titre={t.parcours.horsDevTitre} />
+          <div class="prose">
+            <horsDev.Content />
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  <Section class="parcours-distinctions">
+    <Container>
+      <SectionHeader
+        surTitre={t.parcours.distinctionsSurTitre}
+        titre={t.parcours.distinctionsTitre}
+        intro={t.parcours.distinctionsNote}
+      />
+
+      <ol class="distinctions">
+        {
+          DISTINCTIONS.map((distinction) => (
+            <li class="distinction">
+              <span class="distinction__annee">{distinction.annee}</span>
+              <span class="distinction__corps">
+                <span class="distinction__titre">
+                  {distinction.url ? (
+                    <a href={distinction.url} target="_blank" rel="noopener noreferrer">
+                      {distinction.titre[langue]}
+                    </a>
+                  ) : (
+                    distinction.titre[langue]
+                  )}
+                </span>
+                <span class="distinction__etablissement">{distinction.etablissement}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </Container>
+  </Section>
+
+  <Section class="parcours-contact">
+    <Container>
+      <SectionHeader surTitre={t.contact.surTitre} titre={t.contact.titre} />
+      <ContactLinks langue={langue} avecAvis />
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../../styles/breakpoints' as bp;
+  @use '../../styles/mixins' as m;
+  @use '../../styles/text' as tx;
+
+  .formation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4ex;
+    padding-left: var(--space-s);
+    border-left: 2px solid var(--primary);
+
+    .formation__programme {
+      font-family: var(--heading-font-family);
+      font-size: var(--text-1);
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+
+    .formation__voie {
+      color: var(--text-color);
+    }
+
+    .formation__dates {
+      @include tx.mono-label;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.8ch;
+      margin-top: 0.6ex;
+      color: var(--text-muted);
+    }
+
+    .formation__statut {
+      padding: 0.15em 0.7em;
+      border-radius: 999px;
+      background-color: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--tag-color);
+    }
+
+    .formation__cote {
+      margin-top: var(--space-xs);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.8ch;
+    }
+
+    .formation__cote-etiquette {
+      @include tx.mono-label;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .formation__cote-valeur {
+      font-family: var(--heading-font-family);
+      font-size: var(--text-2);
+      color: var(--primary);
+    }
+
+    .formation__cote-note {
+      font-size: var(--text--2);
+      color: var(--text-muted);
+    }
+  }
+
+  .parcours-agence {
+    background-color: var(--surface-sunken);
+  }
+
+  .parcours-distinctions {
+    background-color: var(--surface-sunken);
+  }
+
+  .distinctions {
+    list-style: none;
+    padding-inline-start: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .distinction {
+    display: flex;
+    gap: var(--space-s);
+    padding-block: var(--space-xs);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .distinction__annee {
+      @include tx.mono-label;
+      flex-shrink: 0;
+      min-width: 4ch;
+      padding-top: 0.25ex;
+      color: var(--primary);
+    }
+
+    .distinction__corps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1ex;
+    }
+
+    .distinction__titre {
+      color: var(--heading-color);
+      font-weight: 500;
+
+      a {
+        color: inherit;
+
+        &:hover {
+          color: var(--link-color);
+        }
+      }
+    }
+
+    .distinction__etablissement {
+      font-size: var(--text--1);
+      color: var(--text-muted);
+    }
+  }
+</style>

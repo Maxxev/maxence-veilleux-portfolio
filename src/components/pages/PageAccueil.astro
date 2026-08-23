@@ -1,0 +1,353 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../Section.astro';
+import Container from '../Container.astro';
+import Button from '../Button.astro';
+import SectionHeader from '../SectionHeader.astro';
+import ProjetsGrid from '../ProjetsGrid.astro';
+import StackGrid from '../StackGrid.astro';
+import Signature from '../Signature.astro';
+import ContactLinks from '../ContactLinks.astro';
+
+import { traductions, chemin, type Langue } from '../../i18n/index.ts';
+import { projetsVedettes } from '../../utils/projets.ts';
+import { bloc } from '../../utils/blocs.ts';
+import { reglages, cvVisible, contactVisible } from '../../utils/reglages.ts';
+import { STACK } from '../../data/stack.ts';
+
+interface Props {
+  langue: Langue;
+}
+
+const { langue } = Astro.props;
+const t = traductions(langue);
+
+const vedettes = await projetsVedettes(langue);
+
+// Les outils affichés dans la carte du hero : le premier de chaque groupe du
+// stack, plutôt qu'une liste écrite en double. Ajouter une techno dans
+// src/data/stack.ts suffit donc à la voir remonter ici si elle passe en tête.
+const technosPrincipales = STACK.map((groupe) => groupe.items[0]);
+const apropos = await bloc('a-propos', langue);
+---
+
+<BaseLayout langue={langue} titrePage={t.accueil.titrePage} description={t.accueil.description}>
+  <Section class="hero">
+    <Container class="hero__container">
+      <div class="hero__principal">
+      <Signature langue={langue} class="hero__signature" />
+
+      <hgroup class="hero__titre">
+        <p class="pre-heading">{t.accueil.surTitre}</p>
+        <h1>{t.accueil.titre}</h1>
+      </hgroup>
+
+      <p class="hero__accroche">{t.accueil.accroche}</p>
+      <p class="hero__sous-accroche">{t.accueil.sousAccroche}</p>
+
+      <div class="hero__actions">
+        <Button RootTag="a" href={chemin('projets', langue)} glow iconName="fa6-solid:arrow-right">
+          {t.accueil.ctaProjets}
+        </Button>
+        {
+          cvVisible && (
+            <Button
+              RootTag="a"
+              href={reglages.cv.url}
+              outline
+              iconName="fa6-solid:file-arrow-down"
+              reverseIcon
+            >
+              {t.accueil.ctaCv}
+            </Button>
+          )
+        }
+      </div>
+      </div>
+
+      {/*
+        La colonne de droite. Elle existe d'abord parce que le hero laissait
+        les deux tiers de l'écran vides à 1440 px, mais son contenu n'est pas
+        du remplissage : ce sont les quatre questions qu'un employeur se pose
+        avant de lire quoi que ce soit d'autre — où il en est, où il étudie,
+        ce qu'il cherche, avec quoi il travaille.
+      */}
+      <aside class="hero__carte">
+        <p class="hero__carte-titre">{t.accueil.carteTitre}</p>
+        <dl class="meta-list">
+          <div>
+            <dt>{t.accueil.carteStatut}</dt>
+            <dd>{t.accueil.carteStatutValeur}</dd>
+          </div>
+          <div>
+            <dt>{t.accueil.carteEtablissement}</dt>
+            <dd>{reglages.formation.etablissement}</dd>
+          </div>
+          <div>
+            <dt>{t.accueil.carteRecherche}</dt>
+            <dd>{t.accueil.carteRechercheValeur}</dd>
+          </div>
+          <div>
+            <dt>{t.accueil.carteLangues}</dt>
+            <dd>{t.accueil.carteLanguesValeur}</dd>
+          </div>
+          <div>
+            <dt>{t.accueil.carteTechnos}</dt>
+            <dd>
+              <ul class="tech-list">
+                {technosPrincipales.map((techno) => <li>{techno}</li>)}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </aside>
+    </Container>
+  </Section>
+
+  <Section class="accueil-projets">
+    <Container>
+      <SectionHeader
+        surTitre={t.accueil.projetsSurTitre}
+        titre={t.accueil.projetsTitre}
+        intro={t.accueil.projetsIntro}
+        lienUrl={chemin('projets', langue)}
+        lienLibelle={t.accueil.projetsTous}
+      />
+      <ProjetsGrid entrees={vedettes} langue={langue} />
+    </Container>
+  </Section>
+
+  <Section class="accueil-stack">
+    <Container>
+      <SectionHeader
+        surTitre={t.accueil.stackSurTitre}
+        titre={t.accueil.stackTitre}
+        intro={t.accueil.stackIntro}
+      />
+      <StackGrid langue={langue} />
+    </Container>
+  </Section>
+
+  {
+    apropos && (
+      <Section class="accueil-apropos">
+        <Container>
+          <SectionHeader surTitre={t.accueil.aproposSurTitre} titre={t.accueil.aproposTitre} />
+          <div class="prose">
+            <apropos.Content />
+          </div>
+          <Button
+            RootTag="a"
+            href={chemin('parcours', langue)}
+            link
+            bgColor="transparent"
+            color="var(--link-color)"
+            iconName="fa6-solid:arrow-right"
+            class="accueil-apropos__lien"
+          >
+            {t.accueil.aproposCta}
+          </Button>
+        </Container>
+      </Section>
+    )
+  }
+
+  <Section class="accueil-contact">
+    <Container class="accueil-contact__container">
+      <SectionHeader
+        surTitre={t.contact.surTitre}
+        titre={t.contact.titre}
+        intro={contactVisible ? t.contact.intro : undefined}
+      />
+      <ContactLinks langue={langue} avecAvis />
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../../styles/breakpoints' as bp;
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--space-xl) var(--space-l);
+    overflow: clip;
+
+    // Deux halos de couleur qui dérivent lentement derrière le titre. Pas
+    // d'image, pas de bibliothèque : deux dégradés radiaux et une animation de
+    // translation. Neutralisés par la préférence de mouvement réduit, définie
+    // une seule fois dans _base.scss.
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &::before {
+      width: min(38rem, 90vw);
+      aspect-ratio: 1.4;
+      top: -18%;
+      left: -12%;
+      background: radial-gradient(
+        circle,
+        hsla(var(--primary-h), var(--primary-s), 55%, 0.4),
+        transparent 68%
+      );
+      animation: hero-derive-a 22s ease-in-out infinite alternate;
+    }
+
+    &::after {
+      width: min(30rem, 80vw);
+      aspect-ratio: 1;
+      top: 8%;
+      right: -10%;
+      background: radial-gradient(
+        circle,
+        hsla(var(--accent-h), var(--accent-s), 55%, 0.24),
+        transparent 66%
+      );
+      animation: hero-derive-b 28s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes hero-derive-a {
+    to {
+      translate: 8% 12%;
+      scale: 1.12;
+    }
+  }
+
+  @keyframes hero-derive-b {
+    to {
+      translate: -10% 8%;
+      scale: 0.92;
+    }
+  }
+
+  .hero__container {
+    gap: var(--space-m);
+    align-items: start;
+  }
+
+  .hero__principal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    align-items: start;
+  }
+
+  .hero__carte {
+    width: 100%;
+    padding: var(--space-s);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--space-xs);
+    background-color: color-mix(in srgb, var(--surface-raised) 70%, transparent);
+    backdrop-filter: blur(8px);
+
+    .hero__carte-titre {
+      font-family: var(--mono-font-family);
+      font-size: var(--text--2);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--pre-heading-color);
+      padding-bottom: var(--space-xs);
+      margin-bottom: var(--space-xs);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .meta-list > div + div {
+      margin-top: var(--space-xs);
+    }
+  }
+
+  .hero__signature {
+    color: var(--primary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .hero__titre {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxs);
+
+    h1 {
+      // Le nom occupe la ligne : plus gros que l'échelle par défaut, parce que
+      // c'est la première chose que doit confirmer un employeur arrivant du CV.
+      font-size: clamp(2.6rem, 9vw, 5.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+    }
+  }
+
+  .hero__accroche {
+    font-size: var(--text-2);
+    font-family: var(--heading-font-family);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--heading-color);
+    text-wrap: balance;
+    max-width: 34ch;
+  }
+
+  .hero__sous-accroche {
+    color: var(--text-muted);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+
+  .hero__actions {
+    margin-top: var(--space-xs);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .accueil-stack,
+  .accueil-apropos {
+    background-color: var(--surface-sunken);
+  }
+
+  .accueil-apropos__lien {
+    margin-top: var(--space-s);
+  }
+
+  .accueil-contact {
+    padding-block: var(--space-l);
+  }
+
+  @media (min-width: bp.$md) {
+    .hero {
+      padding-block: calc(var(--space-xl) * 1.2) var(--space-xl);
+    }
+
+    .hero__carte {
+      width: fit-content;
+      min-width: 22rem;
+    }
+
+    .hero__accroche {
+      font-size: var(--text-3);
+      max-width: 26ch;
+    }
+  }
+
+  @media (min-width: bp.$lg) {
+    .hero__container {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      column-gap: var(--space-l);
+      align-items: center;
+    }
+
+    .hero__carte {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,8 @@
+---
+// Les fichiers de src/pages/ ne font que déclarer une URL et une langue. Toute
+// la page vit dans src/components/pages/, partagée entre le français et
+// l'anglais — c'est ce qui empêche les deux versions de diverger.
+import PageAccueil from '../components/pages/PageAccueil.astro';
+---
+
+<PageAccueil langue="fr" />

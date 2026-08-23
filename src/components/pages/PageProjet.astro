@@ -1,0 +1,413 @@
+---
+import { Icon } from 'astro-icon/components';
+import { render } from 'astro:content';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../Section.astro';
+import Container from '../Container.astro';
+import Button from '../Button.astro';
+import Alert from '../Alert.astro';
+import LiteVideo from '../LiteVideo.astro';
+import LiteYouTube from '../LiteYouTube.astro';
+
+import { traductions, chemin, cheminProjet, type Langue } from '../../i18n/index.ts';
+import { slugDe, voisins, type EntreeProjet } from '../../utils/projets.ts';
+
+interface Props {
+  entree: EntreeProjet;
+  langue: Langue;
+}
+
+const { entree, langue } = Astro.props;
+const t = traductions(langue);
+const projet = entree.data;
+const slug = slugDe(entree);
+
+const { Content } = await render(entree);
+const autour = await voisins(slug, langue);
+
+const ICONES_LIEN = {
+  site: 'fa6-solid:up-right-from-square',
+  depot: 'fa6-brands:github',
+  jeu: 'fa6-solid:gamepad',
+  video: 'fa6-brands:youtube',
+  document: 'fa6-solid:file-pdf',
+} as const;
+---
+
+<BaseLayout
+  langue={langue}
+  titrePage={projet.titre}
+  description={projet.resume}
+  image={projet.couverture?.src}
+  slugProjet={slug}
+>
+  <Section class="projet-hero">
+    <Container>
+      <a class="projet-hero__retour" href={chemin('projets', langue)}>
+        <Icon name="fa6-solid:arrow-left" aria-hidden="true" />
+        <span>{t.projets.retour}</span>
+      </a>
+
+      <hgroup class="projet-hero__titre">
+        <p class="pre-heading">
+          {t.projets.categories[projet.categorie]} · {projet.annee}
+        </p>
+        <h1 transition:name={`titre-${slug}`}>{projet.titre}</h1>
+      </hgroup>
+
+      <p class="projet-hero__resume measure">{projet.resume}</p>
+
+      {
+        projet.liens.length > 0 && (
+          <div class="projet-hero__liens">
+            {projet.liens.map((lien) => (
+              <Button
+                RootTag="a"
+                href={lien.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                outline={lien.type !== 'site' && lien.type !== 'jeu'}
+                iconName={ICONES_LIEN[lien.type]}
+                reverseIcon
+              >
+                {lien.libelle ?? t.projets.typesLien[lien.type]}
+              </Button>
+            ))}
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+
+  {
+    projet.couverture && (
+      <Section class="projet-couverture">
+        <Container>
+          <img
+            src={projet.couverture.src}
+            alt={projet.couverture.alt}
+            style={`object-position: ${projet.couverture.position};`}
+            transition:name={`couverture-${slug}`}
+            loading="eager"
+            decoding="async"
+          />
+        </Container>
+      </Section>
+    )
+  }
+
+  <Section class="projet-corps">
+    <Container class="projet-corps__container">
+      <div class="projet-corps__texte">
+        {projet.mention && <Alert variant="info" class="projet-corps__mention">{projet.mention}</Alert>}
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          projet.faits.length > 0 && (
+            <div class="projet-faits">
+              <h2>{t.projets.faitsLabel}</h2>
+              <ul>
+                {projet.faits.map((fait) => (
+                  <li>{fait}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+
+      {/* La colonne de métadonnées : ce qu'un employeur pressé lit en premier,
+          d'où sa position en haut sur mobile et collante sur grand écran. */}
+      <aside class="projet-meta">
+        <dl class="meta-list">
+          <div>
+            <dt>{t.projets.roleLabel}</dt>
+            <dd>{projet.role}</dd>
+          </div>
+          <div>
+            <dt>{t.projets.anneeLabel}</dt>
+            <dd>{projet.annee}</dd>
+          </div>
+          <div>
+            <dt>{t.projets.categorieLabel}</dt>
+            <dd>{t.projets.categories[projet.categorie]}</dd>
+          </div>
+          <div>
+            <dt>{t.projets.technosLabel}</dt>
+            <dd>
+              <ul class="tech-list">
+                {projet.technos.map((techno) => <li>{techno}</li>)}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </aside>
+    </Container>
+  </Section>
+
+  {
+    (projet.videos.length > 0 || projet.youtube.length > 0) && (
+      <Section class="projet-medias">
+        <Container>
+          <div class="projet-medias__grille">
+            {projet.videos.map((video) => (
+              <LiteVideo
+                src={video.src}
+                poster={video.poster}
+                titre={video.titre}
+                langue={langue}
+              />
+            ))}
+            {projet.youtube.map((video) => (
+              <LiteYouTube id={video.id} titre={video.titre} langue={langue} />
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {
+    autour && (
+      <Section class="projet-voisins">
+        <Container>
+          <nav class="projet-voisins__nav" aria-label={t.projets.retour}>
+            <a class="projet-voisins__lien" href={cheminProjet(slugDe(autour.precedent), langue)}>
+              <span class="projet-voisins__etiquette">
+                <Icon name="fa6-solid:arrow-left" aria-hidden="true" />
+                {t.projets.precedent}
+              </span>
+              <span class="projet-voisins__titre">{autour.precedent.data.titre}</span>
+            </a>
+            <a
+              class="projet-voisins__lien projet-voisins__lien--suivant"
+              href={cheminProjet(slugDe(autour.suivant), langue)}
+            >
+              <span class="projet-voisins__etiquette">
+                {t.projets.suivant}
+                <Icon name="fa6-solid:arrow-right" aria-hidden="true" />
+              </span>
+              <span class="projet-voisins__titre">{autour.suivant.data.titre}</span>
+            </a>
+          </nav>
+        </Container>
+      </Section>
+    )
+  }
+</BaseLayout>
+
+<style lang="scss">
+  @use '../../styles/breakpoints' as bp;
+  @use '../../styles/mixins' as m;
+  @use '../../styles/text' as tx;
+
+  .projet-hero {
+    padding-block: var(--space-m) var(--space-s);
+
+    .projet-hero__retour {
+      @include tx.mono-label;
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+      width: fit-content;
+      margin-bottom: var(--space-s);
+      color: var(--text-muted);
+
+      &:hover {
+        color: var(--link-color);
+      }
+
+      [data-icon] {
+        width: 0.9em;
+        height: auto;
+      }
+    }
+
+    .projet-hero__titre {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xxs);
+    }
+
+    .projet-hero__resume {
+      margin-top: var(--space-xs);
+      color: var(--text-muted);
+      font-size: var(--text-1);
+      text-wrap: pretty;
+    }
+
+    .projet-hero__liens {
+      margin-top: var(--space-s);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+  }
+
+  .projet-couverture {
+    padding-block: var(--space-s);
+
+    img {
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      object-fit: cover;
+      border-radius: var(--space-xs);
+      border: 1px solid var(--border-subtle);
+      @include m.elevation(10);
+    }
+  }
+
+  .projet-corps {
+    padding-block: var(--space-m);
+
+    .projet-corps__container {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-m);
+    }
+
+    .projet-corps__texte {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-m);
+      // La colonne de texte vient après les métadonnées sur mobile
+      order: 2;
+    }
+  }
+
+  .projet-faits {
+    h2 {
+      font-size: var(--h4);
+      margin-bottom: var(--space-xs);
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      padding-inline-start: 0;
+      list-style: none;
+
+      li {
+        position: relative;
+        padding-left: 1.6em;
+        color: var(--text-color);
+        text-wrap: pretty;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0.35em;
+          top: 0.62em;
+          width: 0.42em;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          background-color: var(--primary);
+        }
+      }
+    }
+  }
+
+  .projet-meta {
+    order: 1;
+    @include m.box($col: var(--surface-sunken), $padding: var(--space-s), $shadow-elevation: 0);
+    border: 1px solid var(--border-subtle);
+    height: fit-content;
+
+    .meta-list > div + div {
+      margin-top: var(--space-s);
+    }
+  }
+
+  .projet-medias {
+    padding-block: var(--space-m);
+    background-color: var(--surface-sunken);
+
+    .projet-medias__grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+      gap: var(--space-m);
+    }
+  }
+
+  .projet-voisins {
+    padding-block: var(--space-m);
+    border-top: 1px solid var(--border-subtle);
+
+    .projet-voisins__nav {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-s);
+    }
+
+    .projet-voisins__lien {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3ex;
+      padding: var(--space-s);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--space-xs);
+      transition:
+        border-color var(--transition-duration),
+        background-color var(--transition-duration);
+
+      &:hover {
+        border-color: var(--border-strong);
+        background-color: var(--surface-sunken);
+      }
+    }
+
+    .projet-voisins__lien--suivant {
+      text-align: right;
+
+      .projet-voisins__etiquette {
+        justify-content: flex-end;
+      }
+    }
+
+    .projet-voisins__etiquette {
+      @include tx.mono-label;
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+      color: var(--text-muted);
+
+      [data-icon] {
+        width: 0.9em;
+        height: auto;
+      }
+    }
+
+    .projet-voisins__titre {
+      font-family: var(--heading-font-family);
+      font-size: var(--text-1);
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+  }
+
+  @media (min-width: bp.$lg) {
+    .projet-corps .projet-corps__container {
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+      gap: var(--space-l);
+    }
+
+    .projet-corps .projet-corps__texte {
+      order: 1;
+    }
+
+    .projet-meta {
+      order: 2;
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-s));
+    }
+
+    .projet-voisins .projet-voisins__nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

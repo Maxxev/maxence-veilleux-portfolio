@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    :root { color-scheme: light dark; }
+    .fond { fill: #4338e8; }
+    .lettres { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .fond { fill: #7a72f2; }
+      .lettres { fill: #14181f; }
+    }
+  </style>
+  <rect class="fond" width="64" height="64" rx="14" />
+  <text
+    class="lettres"
+    x="32" y="43"
+    text-anchor="middle"
+    font-family="'Space Grotesk', 'Archivo', Helvetica, Arial, sans-serif"
+    font-size="30"
+    font-weight="700"
+    letter-spacing="-1.5"
+  >MV</text>
+</svg>

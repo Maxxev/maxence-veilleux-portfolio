@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../Section.astro';
+import Container from '../Container.astro';
+import Button from '../Button.astro';
+
+import { traductions, chemin, LANGUES, type Langue } from '../../i18n/index.ts';
+
+interface Props {
+  langue: Langue;
+}
+
+const { langue } = Astro.props;
+const t = traductions(langue);
+
+// Le 404 est la seule page dont on ne connaît pas la langue du visiteur : le
+// chemin demandé n'existe pas, donc il ne dit rien de fiable. On affiche donc
+// les deux langues plutôt que d'en deviner une.
+const autre: Langue = langue === 'fr' ? 'en' : 'fr';
+const tAutre = traductions(autre);
+---
+
+<BaseLayout langue={langue} titrePage={t.erreur404.titrePage} description={t.erreur404.texte}>
+  <Section class="erreur">
+    <Container class="erreur__container">
+      <p class="pre-heading">{t.erreur404.surTitre}</p>
+      <h1>{t.erreur404.titre}</h1>
+      <p class="erreur__texte">{t.erreur404.texte}</p>
+
+      <div class="erreur__actions">
+        <Button RootTag="a" href={chemin('accueil', langue)} iconName="fa6-solid:arrow-right">
+          {t.erreur404.cta}
+        </Button>
+      </div>
+
+      <p class="erreur__autre" lang={autre === 'fr' ? 'fr-CA' : 'en-CA'}>
+        {tAutre.erreur404.titre}. <a href={chemin('accueil', autre)}>{tAutre.erreur404.cta}</a>
+      </p>
+    </Container>
+  </Section>
+</BaseLayout>
+
+<style lang="scss">
+  .erreur {
+    flex-grow: 1;
+    justify-content: center;
+    padding-block: var(--space-xl);
+  }
+
+  .erreur__container {
+    gap: var(--space-xs);
+    align-items: start;
+  }
+
+  .erreur__texte {
+    color: var(--text-muted);
+    max-width: 50ch;
+  }
+
+  .erreur__actions {
+    margin-top: var(--space-s);
+  }
+
+  .erreur__autre {
+    margin-top: var(--space-m);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--border-subtle);
+    font-size: var(--text--1);
+    color: var(--text-muted);
+  }
+</style>
