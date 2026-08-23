@@ -1,0 +1,212 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { EntreeProjet } from '../utils/projets.ts';
+import { slugDe } from '../utils/projets.ts';
+import { traductions, cheminProjet, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  entree: EntreeProjet;
+  langue: Langue;
+  class?: string;
+}
+
+const { entree, langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+const projet = entree.data;
+const slug = slugDe(entree);
+const url = cheminProjet(slug, langue);
+
+// Quatre étiquettes au maximum sur la carte : au-delà, elles passent sur trois
+// lignes en mobile et la carte perd sa lisibilité. La liste complète est sur
+// la page de détail.
+const MAX_TECHNOS = 4;
+const technos = projet.technos.slice(0, MAX_TECHNOS);
+const reste = projet.technos.length - technos.length;
+---
+
+<li class={`projet-card ${className}`}>
+  <article>
+    {
+      projet.couverture ? (
+        <div class="projet-card__image">
+          <img
+            src={projet.couverture.src}
+            alt={projet.couverture.alt}
+            style={`object-position: ${projet.couverture.position};`}
+            loading="lazy"
+            decoding="async"
+            transition:name={`couverture-${slug}`}
+          />
+        </div>
+      ) : (
+        /* Sans image, un aplat portant les initiales du titre plutôt qu'un
+           cadre vide : une carte trouée saute aux yeux dans une grille. */
+        <div class="projet-card__image projet-card__image--vide" aria-hidden="true">
+          <span>{projet.titre.slice(0, 2)}</span>
+        </div>
+      )
+    }
+
+    <div class="projet-card__corps">
+      <p class="projet-card__meta">
+        <span class="projet-card__categorie">{t.projets.categories[projet.categorie]}</span>
+        <span class="projet-card__separateur">·</span>
+        <span>{projet.annee}</span>
+      </p>
+
+      <h3 class="projet-card__titre">
+        {/* Le lien couvre toute la carte via ::after, mais reste ancré sur le
+            titre : c'est lui que doit annoncer un lecteur d'écran. */}
+        <a href={url} transition:name={`titre-${slug}`}>{projet.titre}</a>
+      </h3>
+
+      <p class="projet-card__resume">{projet.resume}</p>
+
+      <ul class="tech-list projet-card__technos">
+        {technos.map((techno) => <li>{techno}</li>)}
+        {reste > 0 && <li class="projet-card__reste">+{reste}</li>}
+      </ul>
+
+      <p class="projet-card__lire">
+        <span>{t.projets.voirProjet}</span>
+        <Icon name="fa6-solid:arrow-right" class="projet-card__fleche" aria-hidden="true" />
+      </p>
+    </div>
+  </article>
+</li>
+
+<style lang="scss">
+  @use '../styles/mixins' as m;
+  @use '../styles/text' as tx;
+
+  .projet-card {
+    // La désaturation des cartes non survolées est pilotée par ProjetsGrid :
+    // le sélecteur traverse la frontière entre les deux composants et ne peut
+    // donc vivre que dans le parent.
+    @include m.box($col: var(--surface-raised), $padding: 0, $shadow-elevation: 3);
+    overflow: clip;
+    border: 1px solid var(--border-subtle);
+    transition-property: box-shadow, transform, border-color;
+
+    &:hover {
+      @include m.elevation(14);
+      border-color: var(--border-strong);
+      transform: translateY(-3px);
+    }
+
+    article {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .projet-card__image {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background-color: var(--surface-sunken);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: scale var(--transition-duration) ease-out;
+      }
+    }
+
+    &:hover .projet-card__image img {
+      scale: 1.03;
+    }
+
+    .projet-card__image--vide {
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary-90), var(--surface-sunken));
+
+      span {
+        font-family: var(--heading-font-family);
+        font-size: var(--text-6);
+        font-weight: 700;
+        color: var(--primary-55);
+        text-transform: uppercase;
+        letter-spacing: -0.04em;
+      }
+    }
+
+    .projet-card__corps {
+      padding: var(--space-s);
+      display: flex;
+      flex-direction: column;
+      gap: 1ex;
+      flex-grow: 1;
+    }
+
+    .projet-card__meta {
+      @include tx.mono-label;
+      display: flex;
+      gap: 0.8ch;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .projet-card__separateur {
+      opacity: 0.5;
+    }
+
+    .projet-card__titre {
+      font-size: var(--h4);
+
+      a {
+        color: var(--heading-color);
+
+        // Le lien s'étend à toute la carte : la cible de clic est la carte
+        // entière, mais le nom accessible du lien reste le titre seul.
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+        }
+
+        &:hover {
+          color: var(--link-color);
+        }
+      }
+    }
+
+    .projet-card__resume {
+      color: var(--text-muted);
+      font-size: var(--text--1);
+    }
+
+    .projet-card__technos {
+      margin-top: 0.5ex;
+    }
+
+    .projet-card__reste {
+      background-color: transparent;
+      border-style: dashed;
+    }
+
+    .projet-card__lire {
+      @include tx.mono-label;
+      margin-top: auto;
+      padding-top: var(--space-xs);
+      display: flex;
+      align-items: center;
+      gap: 0.8ch;
+      color: var(--link-color);
+    }
+
+    .projet-card__fleche {
+      width: 1em;
+      height: auto;
+      transition: translate var(--transition-duration) ease-out;
+    }
+
+    &:hover .projet-card__fleche {
+      translate: 0.35ch 0;
+    }
+  }
+</style>

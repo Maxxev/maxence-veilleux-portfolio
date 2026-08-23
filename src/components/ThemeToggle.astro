@@ -1,0 +1,148 @@
+---
+import { Icon } from 'astro-icon/components';
+import { traductions, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  langue: Langue;
+  class?: string;
+}
+
+const { langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+---
+
+{/*
+  Trois états, pas deux : « système », « clair », « sombre ». Un simple
+  interrupteur binaire enferme le visiteur dans un choix qu'il ne peut plus
+  rendre au système. Le bouton affiche l'icône de ce vers quoi il bascule.
+*/}
+<button
+  type="button"
+  class={`theme-toggle ${className}`}
+  aria-label={t.nav.theme}
+  title={t.nav.theme}
+  data-theme-toggle
+>
+  <Icon name="fa6-solid:sun" class="theme-toggle__icon theme-toggle__icon--clair" />
+  <Icon name="fa6-solid:moon" class="theme-toggle__icon theme-toggle__icon--sombre" />
+</button>
+
+<style lang="scss">
+  @layer astro-components {
+    .theme-toggle {
+      display: grid;
+      place-items: center;
+      width: 2.25rem;
+      aspect-ratio: 1;
+      flex-shrink: 0;
+      padding: 0;
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition:
+        color var(--transition-duration),
+        border-color var(--transition-duration),
+        background-color var(--transition-duration);
+
+      &:hover {
+        color: var(--link-color);
+        border-color: var(--border-strong);
+        background-color: var(--surface-sunken);
+      }
+
+      .theme-toggle__icon {
+        // Les deux icônes occupent la même cellule de grille : aucune
+        // recomposition au changement de thème, donc aucun saut de l'en-tête.
+        grid-area: 1 / 1;
+        width: 0.95rem;
+        height: auto;
+        transition:
+          opacity var(--transition-duration),
+          rotate var(--transition-duration);
+      }
+    }
+
+    // En clair, le bouton propose le sombre : c'est la lune qu'on montre.
+    .theme-toggle__icon--clair {
+      opacity: 0;
+      rotate: -90deg;
+    }
+    .theme-toggle__icon--sombre {
+      opacity: 1;
+      rotate: 0deg;
+    }
+  }
+</style>
+
+<style is:global lang="scss">
+  // Ces règles doivent être globales : un style scopé ne peut pas atteindre
+  // `:root`, qui porte l'attribut de thème.
+  //
+  // L'ordre fait la décision, pas la spécificité : `:root:not([data-theme='light'])`
+  // et `:root[data-theme='dark']` pèsent exactement le même poids (0,2,0). Les
+  // choix explicites viennent donc après la préférence système pour la battre.
+  @layer astro-components {
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) .theme-toggle {
+        .theme-toggle__icon--clair {
+          opacity: 1;
+          rotate: 0deg;
+        }
+        .theme-toggle__icon--sombre {
+          opacity: 0;
+          rotate: 90deg;
+        }
+      }
+    }
+
+    :root[data-theme='dark'] .theme-toggle {
+      .theme-toggle__icon--clair {
+        opacity: 1;
+        rotate: 0deg;
+      }
+      .theme-toggle__icon--sombre {
+        opacity: 0;
+        rotate: 90deg;
+      }
+    }
+
+    :root[data-theme='light'] .theme-toggle {
+      .theme-toggle__icon--clair {
+        opacity: 0;
+        rotate: -90deg;
+      }
+      .theme-toggle__icon--sombre {
+        opacity: 1;
+        rotate: 0deg;
+      }
+    }
+  }
+</style>
+
+<script>
+  // Délégation sur le document plutôt qu'un écouteur sur le bouton : avec les
+  // transitions de vue, le bouton est remplacé à chaque navigation, et un
+  // écouteur attaché à l'ancien élément serait perdu en silence.
+  document.addEventListener('click', (evenement) => {
+    const cible = evenement.target as HTMLElement | null;
+    if (!cible?.closest('[data-theme-toggle]')) return;
+
+    const racine = document.documentElement;
+    const actuel = racine.dataset.theme;
+    const systemeEstSombre = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Sans choix explicite, on part de ce que le système affiche déjà, pour
+    // que le premier clic inverse toujours ce que le visiteur a sous les yeux.
+    const effectif = actuel ?? (systemeEstSombre ? 'dark' : 'light');
+    const suivant = effectif === 'dark' ? 'light' : 'dark';
+
+    racine.dataset.theme = suivant;
+    try {
+      localStorage.setItem('theme', suivant);
+    } catch {
+      /* stockage bloqué : le choix vaut pour la page courante seulement */
+    }
+  });
+</script>

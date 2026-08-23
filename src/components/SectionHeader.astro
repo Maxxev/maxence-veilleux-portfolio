@@ -1,0 +1,82 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  surTitre?: string;
+  titre: string;
+  intro?: string;
+  // Le bouton « voir tout » à droite du titre, quand la section est un aperçu.
+  lienUrl?: string;
+  lienLibelle?: string;
+  class?: string;
+}
+
+const {
+  surTitre,
+  titre,
+  intro,
+  lienUrl,
+  lienLibelle,
+  class: className = '',
+} = Astro.props;
+---
+
+{/*
+  L'en-tête d'une section : sur-titre, titre, intro, et éventuellement un lien
+  « voir tout » aligné à droite du titre. Un seul composant pour toutes les
+  sections du site — c'est ce qui garantit qu'elles gardent le même rythme.
+*/}
+<div class={`section-header ${className}`}>
+  <div class="section-header__haut">
+    <hgroup>
+      {surTitre && <p class="pre-heading">{surTitre}</p>}
+      <h2>{titre}</h2>
+    </hgroup>
+    {
+      lienUrl && lienLibelle && (
+        <Button
+          RootTag="a"
+          href={lienUrl}
+          outline
+          iconName="fa6-solid:arrow-right"
+          class="section-header__lien"
+        >
+          {lienLibelle}
+        </Button>
+      )
+    }
+  </div>
+  {intro && <p class="section-header__intro measure">{intro}</p>}
+</div>
+
+<style lang="scss">
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-m);
+
+    .section-header__haut {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: var(--space-xs) var(--space-m);
+    }
+
+    hgroup {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xxs);
+    }
+
+    .section-header__lien {
+      flex-shrink: 0;
+    }
+
+    .section-header__intro {
+      color: var(--text-muted);
+      text-wrap: pretty;
+    }
+  }
+</style>

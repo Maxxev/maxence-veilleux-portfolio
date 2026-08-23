@@ -1,0 +1,95 @@
+---
+import { traductions, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  langue: Langue;
+  class?: string;
+}
+
+const { langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+---
+
+{/*
+  La signature, tracée au chargement.
+
+  Ce n'est pas une image : c'est un aplat de couleur découpé par deux masques
+  superposés. Le premier est la signature elle-même (WebP à canal alpha), le
+  second un dégradé qui balaie de gauche à droite. Leur intersection donne
+  l'effet d'écriture — la même impression que le GIF de 375 ko de l'ancien
+  site, pour 12 ko et sans image animée.
+
+  Le bénéfice caché du masque : la couleur vient de `currentColor`, donc la
+  signature suit le thème. Un PNG noir aurait disparu sur fond sombre.
+
+  Le dégradé est animé via une propriété enregistrée avec `@property` — sans
+  ce typage, les navigateurs ne savent pas interpoler un pourcentage dans un
+  `linear-gradient` et l'animation saute d'un état à l'autre.
+*/}
+<div
+  class={`signature ${className}`}
+  role="img"
+  aria-label={t.accueil.signatureAlt}
+>
+</div>
+
+<style lang="scss">
+  @layer properties {
+    @property --signature-progression {
+      syntax: '<percentage>';
+      inherits: false;
+      initial-value: 0%;
+    }
+  }
+
+  .signature {
+    --signature-progression: 0%;
+
+    width: min(100%, 15rem);
+    aspect-ratio: 640 / 293;
+    background-color: currentColor;
+    color: var(--heading-color);
+
+    mask-image:
+      url('/medias/signature.webp'),
+      linear-gradient(
+        to right,
+        black calc(var(--signature-progression) - 6%),
+        transparent var(--signature-progression)
+      );
+    mask-size: contain, 100% 100%;
+    mask-repeat: no-repeat;
+    mask-position: left center;
+    // L'intersection des deux masques : on ne voit que la portion du tracé
+    // déjà atteinte par le dégradé.
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+
+    animation: signature-tracer 1.6s 0.25s cubic-bezier(0.5, 0, 0.35, 1) forwards;
+  }
+
+  @keyframes signature-tracer {
+    from {
+      --signature-progression: 0%;
+    }
+    to {
+      --signature-progression: 106%;
+    }
+  }
+
+  // Sans `@property`, l'animation ne peut pas interpoler : on affiche
+  // simplement la signature complète plutôt qu'un clignotement.
+  @supports not (background: paint(x)) {
+    .signature {
+      --signature-progression: 106%;
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .signature {
+      --signature-progression: 106%;
+      animation: none;
+    }
+  }
+</style>

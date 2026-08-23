@@ -15,11 +15,35 @@ const { class: className = '', ...rest } = Astro.props;
 </button>
 
 <script>
-  const burger = document.querySelector<HTMLButtonElement>('.burger');
+  // Délégation sur le document : les transitions de vue remplacent le bouton à
+  // chaque navigation, et un écouteur attaché à l'ancien élément serait perdu
+  // sans que rien ne le signale.
+  document.addEventListener('click', (evenement) => {
+    const cible = evenement.target as HTMLElement | null;
+    const burger = cible?.closest<HTMLButtonElement>('.burger');
+    if (!burger) return;
 
-  burger?.addEventListener('click', () => {
-    const isOpen = burger.classList.toggle('is-open');
-    burger.setAttribute('aria-expanded', String(isOpen));
+    const ouvert = burger.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', String(ouvert));
+  });
+
+  // Le menu doit se refermer quand on choisit une destination — sans quoi il
+  // reste déployé par-dessus la page d'arrivée.
+  document.addEventListener('astro:after-swap', () => {
+    document.querySelectorAll('.burger.is-open').forEach((burger) => {
+      burger.classList.remove('is-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Échap referme le menu : attendu de tout ce qui se superpose au contenu.
+  document.addEventListener('keydown', (evenement) => {
+    if (evenement.key !== 'Escape') return;
+    document.querySelectorAll<HTMLButtonElement>('.burger.is-open').forEach((burger) => {
+      burger.classList.remove('is-open');
+      burger.setAttribute('aria-expanded', 'false');
+      burger.focus();
+    });
   });
 </script>
 

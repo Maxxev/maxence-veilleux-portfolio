@@ -1,0 +1,49 @@
+---
+import ProjetCard from './ProjetCard.astro';
+import type { EntreeProjet } from '../utils/projets.ts';
+import { traductions, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  entrees: EntreeProjet[];
+  langue: Langue;
+  class?: string;
+}
+
+const { entrees, langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+---
+
+{
+  entrees.length > 0 ? (
+    <ul class={`projets-grid reveal-stagger ${className}`}>
+      {entrees.map((entree) => (
+        <ProjetCard entree={entree} langue={langue} />
+      ))}
+    </ul>
+  ) : (
+    <p class="projets-grid__vide">{t.projets.aucun}</p>
+  )
+}
+
+<style lang="scss">
+  .projets-grid {
+    list-style-type: none;
+    padding-inline-start: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+    column-gap: var(--space-s);
+    row-gap: var(--space-m);
+
+    // Doit rester ici : le <li> porte aussi le scope de cette grille, ce qui ne
+    // serait pas le cas depuis la feuille de ProjetCard. Écrite dans l'enfant
+    // avec :global(), cette règle ne produirait aucun CSS du tout.
+    &:has(.projet-card:hover) .projet-card:not(:hover) {
+      opacity: 0.62;
+    }
+  }
+
+  .projets-grid__vide {
+    color: var(--text-muted);
+  }
+</style>

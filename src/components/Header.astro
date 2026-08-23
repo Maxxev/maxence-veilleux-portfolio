@@ -1,0 +1,253 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import Burger from './Burger.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import LangSwitcher from './LangSwitcher.astro';
+
+import { traductions, chemin, type Langue } from '../i18n/index.ts';
+import { navigationPrincipale } from '../utils/navigation.ts';
+import { nom } from '../utils/reglages.ts';
+
+interface Props {
+  langue: Langue;
+  slugProjet?: string;
+}
+
+const { langue, slugProjet } = Astro.props;
+const t = traductions(langue);
+const liens = navigationPrincipale(t);
+
+// Le lien actif se déduit du chemin, pas d'une propriété passée par chaque
+// page : une page qui oublierait de la passer perdrait silencieusement son
+// indicateur, et personne ne s'en apercevrait.
+const cheminActuel = Astro.url.pathname.endsWith('/')
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+
+function estActif(cible: string): boolean {
+  if (cible === chemin('accueil', langue)) return cheminActuel === cible;
+  return cheminActuel.startsWith(cible);
+}
+
+// Les initiales servent de logo. Pas d'image : deux lettres en Space Grotesk
+// pèsent zéro octet de plus que la page et restent nettes à tout zoom.
+const initiales = nom
+  .split(' ')
+  .map((mot) => mot[0])
+  .join('');
+---
+
+<header class="header">
+  <Section RootTag="div" class="header__section">
+    <Container class="header__container">
+      <a class="header__home" href={chemin('accueil', langue)} aria-label={t.nav.retourAccueil}>
+        <span class="header__initiales" aria-hidden="true">{initiales}</span>
+        <span class="header__nom">{nom}</span>
+      </a>
+
+      <nav id="nav-principale" class="header__nav" aria-label={t.nav.menu}>
+        <ul>
+          {
+            liens.map((lien) => (
+              <li>
+                <a
+                  href={chemin(lien.cle, langue)}
+                  aria-current={estActif(chemin(lien.cle, langue)) ? 'page' : undefined}
+                >
+                  {lien.libelle}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <ThemeToggle langue={langue} />
+        <LangSwitcher langue={langue} slugProjet={slugProjet} />
+        <Burger class="header__burger" aria-controls="nav-principale" />
+      </div>
+    </Container>
+  </Section>
+</header>
+
+<style lang="scss">
+  @use '../styles/breakpoints' as bp;
+  @use '../styles/text' as t;
+
+  @layer astro-components {
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: color-mix(in srgb, var(--surface-page) 88%, transparent);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition:
+        height 0s var(--transition-duration),
+        border-color var(--transition-duration);
+
+      .header__section {
+        padding-block: 0;
+        background-color: transparent;
+      }
+
+      .header__container {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-s);
+        min-height: var(--header-height);
+      }
+
+      .header__home {
+        display: flex;
+        align-items: baseline;
+        gap: 0.6ch;
+        margin-right: auto;
+        color: var(--heading-color);
+        font-family: var(--heading-font-family);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+
+        &:hover {
+          color: var(--link-color);
+        }
+      }
+
+      .header__initiales {
+        font-size: var(--text-1);
+        color: var(--primary);
+      }
+
+      .header__nom {
+        font-size: var(--text-0);
+        // Le nom complet cède la place aux initiales quand l'espace manque ;
+        // les initiales, elles, ne disparaissent jamais.
+        display: none;
+      }
+
+      .header__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-xxs);
+        flex-shrink: 0;
+      }
+
+      // --- Navigation, état replié (mobile) ---
+      .header__nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--surface-page);
+        border-bottom: 1px solid var(--border-subtle);
+        overflow: clip;
+        height: 0;
+        // `height: 0` seul laisse les liens focusables au clavier : sans
+        // `visibility`, la tabulation part dans un menu invisible.
+        visibility: hidden;
+        transition:
+          height var(--transition-duration),
+          visibility var(--transition-duration);
+
+        ul {
+          list-style-type: none;
+          padding: var(--space-s) var(--section-inline-padding);
+          margin-inline: auto;
+          width: var(--container-width);
+          max-width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+
+        li a {
+          display: block;
+          padding-block: 0.7ex;
+          color: var(--text-color);
+          font-family: var(--heading-font-family);
+          font-size: var(--text-1);
+          font-weight: 500;
+
+          &:hover,
+          &[aria-current='page'] {
+            color: var(--link-color);
+          }
+        }
+      }
+    }
+
+    @media (min-width: bp.$xs) {
+      .header .header__nom {
+        display: inline;
+      }
+    }
+
+    // --- Navigation, état déployé (bureau) ---
+    @media (min-width: bp.$md) {
+      .header {
+        .header__burger {
+          display: none;
+        }
+
+        .header__nav {
+          position: static;
+          height: auto;
+          visibility: visible;
+          overflow: visible;
+          background-color: transparent;
+          border-bottom: none;
+
+          ul {
+            flex-direction: row;
+            gap: var(--space-s);
+            padding: 0;
+            width: auto;
+          }
+
+          li a {
+            position: relative;
+            padding-block: 0;
+            font-size: var(--text-0);
+            text-wrap: nowrap;
+
+            // Le soulignement pousse depuis la gauche au survol, et reste
+            // affiché sur la page courante.
+            &::after {
+              content: '';
+              position: absolute;
+              left: 0;
+              top: calc(100% + 3px);
+              height: 2px;
+              width: 0;
+              background-color: var(--primary);
+              transition: width var(--transition-duration) ease-out;
+            }
+
+            &:hover::after,
+            &[aria-current='page']::after {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<style is:global lang="scss">
+  @layer astro-components {
+    :root {
+      --header-height: 3.75rem;
+    }
+
+    // Le menu déplié : la hauteur passe à `fit-content` quand le burger est
+    // ouvert. Cette règle doit être globale — elle traverse la frontière entre
+    // Header et Burger, deux composants aux styles scopés séparément.
+    .header:has(.burger.is-open) .header__nav {
+      height: fit-content;
+      visibility: visible;
+    }
+  }
+</style>

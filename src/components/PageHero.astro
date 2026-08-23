@@ -1,0 +1,70 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+
+interface Props {
+  surTitre?: string;
+  titre: string;
+  intro?: string;
+  class?: string;
+}
+
+const { surTitre, titre, intro, class: className = '' } = Astro.props;
+---
+
+{/*
+  L'en-tête des pages intérieures. Pas de photo de bannière : sur un portfolio
+  de développeur, une image d'illustration générique coûte du chargement et ne
+  dit rien. Le titre porte seul, sur un dégradé discret.
+*/}
+<Section class={`page-hero ${className}`}>
+  <Container class="page-hero__container">
+    <hgroup>
+      {surTitre && <p class="pre-heading">{surTitre}</p>}
+      <h1>{titre}</h1>
+    </hgroup>
+    {intro && <p class="page-hero__intro measure">{intro}</p>}
+    <slot />
+  </Container>
+</Section>
+
+<style lang="scss">
+  @layer astro-components {
+    .page-hero {
+      padding-block: var(--space-l) var(--space-m);
+      position: relative;
+      isolation: isolate;
+      border-bottom: 1px solid var(--border-subtle);
+
+      // Un halo indigo très dilué derrière le titre, qui remplace la photo de
+      // bannière sans peser un octet.
+      &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        background: radial-gradient(
+          80% 120% at 12% 0%,
+          hsla(var(--primary-h), var(--primary-s), 55%, 0.13),
+          transparent 62%
+        );
+      }
+
+      .page-hero__container {
+        gap: var(--space-s);
+      }
+
+      hgroup {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xxs);
+      }
+
+      .page-hero__intro {
+        color: var(--text-muted);
+        font-size: var(--text-1);
+        text-wrap: pretty;
+      }
+    }
+  }
+</style>

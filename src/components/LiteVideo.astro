@@ -1,0 +1,131 @@
+---
+import { Icon } from 'astro-icon/components';
+import { traductions, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  src: string;
+  poster: string;
+  titre: string;
+  langue: Langue;
+  class?: string;
+}
+
+const { src, poster, titre, langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+---
+
+{/*
+  Une vidéo qui ne se télécharge pas avant qu'on la demande.
+
+  L'ancien portfolio lançait quatre vidéos en `autoplay` au chargement, dont
+  une bannière de 10,8 Mo. `preload="none"` plus une image d'affiche ramènent
+  le coût initial au poids du JPEG, et les contrôles n'apparaissent qu'à la
+  lecture. La vidéo reste une vraie balise <video> : elle fonctionne sans
+  JavaScript, le bouton ne fait que déclencher `play()`.
+*/}
+<figure class={`lite-video ${className}`}>
+  <div class="lite-video__cadre">
+    <video
+      class="lite-video__media"
+      src={src}
+      poster={poster}
+      preload="none"
+      controls
+      playsinline
+      loop
+      muted
+      aria-label={titre}></video>
+
+    <button type="button" class="lite-video__bouton" data-lite-video-play>
+      <Icon name="fa6-solid:play" class="lite-video__icone" aria-hidden="true" />
+      <span class="sr-only">{t.projets.lireVideo} — {titre}</span>
+    </button>
+  </div>
+  <figcaption>{titre}</figcaption>
+</figure>
+
+<style lang="scss">
+  @use '../styles/mixins' as m;
+
+  .lite-video {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1ex;
+
+    .lite-video__cadre {
+      position: relative;
+      isolation: isolate;
+      border-radius: var(--space-xs);
+      overflow: clip;
+      border: 1px solid var(--border-subtle);
+      background-color: var(--surface-sunken);
+      @include m.elevation(6);
+    }
+
+    .lite-video__media {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .lite-video__bouton {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border: none;
+      background-color: hsla(var(--black-hsl), 0.28);
+      cursor: pointer;
+      transition: background-color var(--transition-duration);
+
+      &:hover {
+        background-color: hsla(var(--black-hsl), 0.42);
+      }
+
+      &:hover .lite-video__icone {
+        scale: 1.08;
+      }
+    }
+
+    // Une fois lancée, le voile disparaît et les contrôles natifs prennent le relais
+    .lite-video__cadre.est-lancee .lite-video__bouton {
+      display: none;
+    }
+
+    .lite-video__icone {
+      width: 3.2rem;
+      height: auto;
+      color: var(--white);
+      filter: drop-shadow(0 2px 8px hsla(var(--black-hsl), 0.5));
+      transition: scale var(--transition-duration) ease-out;
+    }
+
+    figcaption {
+      color: var(--text-muted);
+      font-size: var(--text--2);
+    }
+  }
+</style>
+
+<script>
+  // Délégation : les transitions de vue remplacent les boutons à chaque
+  // navigation, un écouteur direct serait perdu.
+  document.addEventListener('click', (evenement) => {
+    const cible = evenement.target as HTMLElement | null;
+    const bouton = cible?.closest<HTMLButtonElement>('[data-lite-video-play]');
+    if (!bouton) return;
+
+    const cadre = bouton.closest('.lite-video__cadre');
+    const video = cadre?.querySelector('video');
+    if (!cadre || !video) return;
+
+    cadre.classList.add('est-lancee');
+    // Muette au départ pour que la lecture soit autorisée sans geste préalable ;
+    // le clic EST le geste, on peut donc rendre le son.
+    video.muted = false;
+    void video.play();
+  });
+</script>

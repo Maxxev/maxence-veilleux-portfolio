@@ -1,0 +1,63 @@
+---
+import { traductions, cheminTraduit, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  langue: Langue;
+  slugProjet?: string;
+  class?: string;
+}
+
+const { langue, slugProjet, class: className = '' } = Astro.props;
+const t = traductions(langue);
+
+const autre: Langue = langue === 'fr' ? 'en' : 'fr';
+const url = cheminTraduit(Astro.url.pathname, autre, slugProjet);
+---
+
+{/*
+  Le sélecteur pointe vers l'équivalent exact de la page courante, jamais vers
+  l'accueil : renvoyer quelqu'un à la racine parce qu'il a changé de langue est
+  le défaut d'i18n le plus courant, et le plus agaçant.
+
+  `hreflang` sur le lien, et `lang` sur le libellé, parce que « English » au
+  milieu d'une page française doit être prononcé en anglais par un lecteur
+  d'écran.
+*/}
+<a
+  class={`lang-switcher ${className}`}
+  href={url}
+  hreflang={autre === 'fr' ? 'fr-CA' : 'en-CA'}
+  aria-label={t.meta.basculerLangue}
+>
+  <span lang={autre === 'fr' ? 'fr-CA' : 'en-CA'}>{autre.toUpperCase()}</span>
+</a>
+
+<style lang="scss">
+  @use '../styles/text' as t;
+
+  @layer astro-components {
+    .lang-switcher {
+      @include t.mono-label;
+      display: grid;
+      place-items: center;
+      height: 2.25rem;
+      min-width: 2.25rem;
+      padding-inline: 0.55rem;
+      flex-shrink: 0;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition:
+        color var(--transition-duration),
+        border-color var(--transition-duration),
+        background-color var(--transition-duration);
+
+      &:hover {
+        color: var(--link-color);
+        border-color: var(--border-strong);
+        background-color: var(--surface-sunken);
+      }
+    }
+  }
+</style>

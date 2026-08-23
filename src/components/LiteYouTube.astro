@@ -1,0 +1,159 @@
+---
+import { Icon } from 'astro-icon/components';
+import { traductions, type Langue } from '../i18n/index.ts';
+
+interface Props {
+  id: string;
+  titre: string;
+  langue: Langue;
+  class?: string;
+}
+
+const { id, titre, langue, class: className = '' } = Astro.props;
+const t = traductions(langue);
+
+// L'image d'affiche vient du domaine sans cookie de YouTube. `hqdefault` existe
+// pour toutes les vidéos ; `maxresdefault` manque sur les plus anciennes et
+// renvoie alors une vignette grise, ce qui ne se voit qu'en production.
+const affiche = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const urlVideo = `https://www.youtube.com/watch?v=${id}`;
+---
+
+{/*
+  Façade YouTube : une image et un bouton. L'iframe n'est créée qu'au clic.
+
+  L'ancien portfolio chargeait deux iframes YouTube et trois modules Facebook
+  au premier rendu — environ 1,5 Mo de scripts tiers et une douzaine de cookies
+  pour du contenu que la plupart des visiteurs ne regardent pas. Ici, le coût
+  avant clic est celui d'un JPEG.
+
+  `nocookie` et le lien de repli : sans JavaScript, la vignette reste un lien
+  vers YouTube, donc la vidéo demeure atteignable.
+*/}
+<figure class={`lite-yt ${className}`} data-lite-yt={id} data-titre={titre}>
+  <div class="lite-yt__cadre">
+    <img
+      class="lite-yt__affiche"
+      src={affiche}
+      alt=""
+      width="480"
+      height="360"
+      loading="lazy"
+      decoding="async"
+    />
+    <a class="lite-yt__bouton" href={urlVideo} target="_blank" rel="noopener noreferrer">
+      <Icon name="fa6-brands:youtube" class="lite-yt__icone" aria-hidden="true" />
+      <span class="sr-only">{t.projets.chargerYoutube} — {titre}</span>
+    </a>
+  </div>
+  <figcaption>
+    <span>{titre}</span>
+    <small>{t.projets.youtubeAvis}</small>
+  </figcaption>
+</figure>
+
+<style lang="scss">
+  @use '../styles/mixins' as m;
+
+  .lite-yt {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1ex;
+
+    .lite-yt__cadre {
+      position: relative;
+      isolation: isolate;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--space-xs);
+      overflow: clip;
+      border: 1px solid var(--border-subtle);
+      background-color: var(--surface-sunken);
+      @include m.elevation(6);
+    }
+
+    .lite-yt__affiche {
+      width: 100%;
+      height: 100%;
+      // `hqdefault` est en 4/3 avec des bandes noires : on recadre en 16/9
+      // plutôt que d'afficher les bandes.
+      object-fit: cover;
+    }
+
+    .lite-yt__bouton {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background-color: hsla(var(--black-hsl), 0.22);
+      transition: background-color var(--transition-duration);
+
+      &:hover {
+        background-color: hsla(var(--black-hsl), 0.4);
+      }
+
+      &:hover .lite-yt__icone {
+        scale: 1.08;
+        color: hsl(0, 78%, 54%);
+      }
+    }
+
+    .lite-yt__icone {
+      width: 4rem;
+      height: auto;
+      color: var(--white);
+      filter: drop-shadow(0 2px 8px hsla(var(--black-hsl), 0.5));
+      transition:
+        scale var(--transition-duration) ease-out,
+        color var(--transition-duration);
+    }
+
+    :global(iframe) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    figcaption {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2ex;
+      color: var(--text-muted);
+      font-size: var(--text--2);
+
+      small {
+        font-size: 0.85em;
+        opacity: 0.75;
+      }
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('click', (evenement) => {
+    const cible = evenement.target as HTMLElement | null;
+    const bouton = cible?.closest<HTMLAnchorElement>('.lite-yt__bouton');
+    if (!bouton) return;
+
+    const figure = bouton.closest<HTMLElement>('[data-lite-yt]');
+    const cadre = bouton.closest('.lite-yt__cadre');
+    const id = figure?.dataset.liteYt;
+    if (!figure || !cadre || !id) return;
+
+    // Seulement maintenant : le clic remplace la navigation vers YouTube par
+    // une lecture sur place.
+    evenement.preventDefault();
+
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+    iframe.title = figure.dataset.titre ?? '';
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+
+    cadre.replaceChildren(iframe);
+    iframe.focus();
+  });
+</script>

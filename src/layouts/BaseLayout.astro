@@ -1,0 +1,195 @@
+---
+import '../styles/global.scss';
+import { ClientRouter } from 'astro:transitions';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+import { traductions, cheminTraduit, type Langue } from '../i18n/index.ts';
+import { nom, reglages, contactVisible } from '../utils/reglages.ts';
+
+interface Props {
+  langue: Langue;
+  titrePage: string;
+  // Repris tel quel dans `meta description` et les balises Open Graph :
+  // garder sous ~160 caractères.
+  description: string;
+  // Chemin absolu depuis la racine du site vers l'image de partage social.
+  image?: string;
+  // Le slug du projet courant, s'il y en a un : c'est ce qui permet au
+  // sélecteur de langue de rester sur la même fiche plutôt que de renvoyer
+  // le lecteur à l'accueil.
+  slugProjet?: string;
+  class?: string;
+}
+
+const DEFAULT_IMAGE = '/medias/og/apercu.png';
+
+const {
+  langue,
+  titrePage,
+  description,
+  image = DEFAULT_IMAGE,
+  slugProjet,
+  class: className = '',
+} = Astro.props;
+
+const t = traductions(langue);
+
+const titreComplet = `${titrePage} · ${nom}`;
+const urlCanonique = new URL(Astro.url.pathname, Astro.site);
+const urlImage = new URL(image, Astro.site);
+
+const autreLangue: Langue = langue === 'fr' ? 'en' : 'fr';
+const urlAutreLangue = new URL(
+  cheminTraduit(Astro.url.pathname, autreLangue, slugProjet),
+  Astro.site,
+);
+
+// Données structurées. Le courriel n'y figure que si les coordonnées sont
+// affichées — un JSON-LD est du texte comme un autre, et le masquer dans le
+// balisage tout en le laissant ici ne masquerait rien du tout.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: nom,
+  url: Astro.site?.toString(),
+  jobTitle: t.accueil.surTitre,
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: reglages.formation.etablissement,
+  },
+  knowsLanguage: ['fr-CA', 'en-CA'],
+  ...(contactVisible
+    ? {
+        email: `mailto:${reglages.contact.courriel}`,
+        sameAs: [reglages.contact.linkedin, reglages.profils.github].filter(Boolean),
+      }
+    : {
+        sameAs: [reglages.profils.github].filter(Boolean),
+      }),
+};
+---
+
+<html lang={t.meta.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{titreComplet}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={urlCanonique} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" sizes="any" />
+
+    <link rel="alternate" hreflang={langue === 'fr' ? 'fr-CA' : 'en-CA'} href={urlCanonique} />
+    <link
+      rel="alternate"
+      hreflang={autreLangue === 'fr' ? 'fr-CA' : 'en-CA'}
+      href={urlAutreLangue}
+    />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={t.meta.ogLocale} />
+    <meta property="og:site_name" content={nom} />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={urlCanonique} />
+    <meta property="og:image" content={urlImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titreComplet} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={urlImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+    {/*
+      Le thème, appliqué avant le premier rendu.
+
+      Ce script est volontairement `is:inline` et placé dans le <head> : s'il
+      était différé, la page peindrait le thème clair une frame avant de
+      basculer, et ce clignotement blanc est exactement ce qu'un mode sombre
+      est censé éviter.
+
+      `astro:after-swap` le rejoue : les transitions de vue remplacent
+      l'élément <html>, donc l'attribut posé par ce script disparaîtrait à
+      chaque navigation.
+    */}
+    <script is:inline>
+      (function () {
+        function appliquer() {
+          try {
+            var choix = localStorage.getItem('theme');
+            if (choix === 'dark' || choix === 'light') {
+              document.documentElement.dataset.theme = choix;
+            } else {
+              delete document.documentElement.dataset.theme;
+            }
+          } catch (e) {
+            /* navigation privée, stockage bloqué : la préférence système suffit */
+          }
+        }
+        appliquer();
+        document.addEventListener('astro:after-swap', appliquer);
+      })();
+    </script>
+
+    <ClientRouter />
+  </head>
+
+  <body class={className}>
+    <a class="skip-link" href="#contenu">{t.nav.allerAuContenu}</a>
+    <Header langue={langue} slugProjet={slugProjet} />
+    <main id="contenu">
+      <slot />
+    </main>
+    <Footer langue={langue} />
+  </body>
+
+  <style lang="scss">
+    body {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--surface-page);
+    }
+
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    // Le lien d'évitement : invisible jusqu'à ce qu'on l'atteigne au clavier.
+    // Sur un site à navigation répétée, c'est ce qui évite de retraverser
+    // l'en-tête à chaque page.
+    .skip-link {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      translate: -50% -150%;
+      z-index: 2000;
+      padding: var(--space-xs) var(--space-s);
+      border-radius: 0 0 var(--space-xxs) var(--space-xxs);
+      background-color: var(--primary);
+      color: var(--white);
+      font-weight: 600;
+      transition: translate var(--transition-duration);
+
+      &:focus-visible {
+        translate: -50% 0;
+      }
+    }
+  </style>
+</html>

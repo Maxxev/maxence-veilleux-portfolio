@@ -1,0 +1,138 @@
+---
+import Container from './Container.astro';
+import Section from './Section.astro';
+import ContactLinks from './ContactLinks.astro';
+
+import { traductions, chemin, type Langue } from '../i18n/index.ts';
+import { navigationPrincipale } from '../utils/navigation.ts';
+import { nom, reglages } from '../utils/reglages.ts';
+
+interface Props {
+  langue: Langue;
+}
+
+const { langue } = Astro.props;
+const t = traductions(langue);
+const liens = navigationPrincipale(t);
+const annee = new Date().getFullYear();
+---
+
+<Section RootTag="footer" class="footer">
+  <Container class="footer__container">
+    <div class="footer__brand">
+      <p class="footer__nom">{nom}</p>
+      <p class="footer__role">{t.accueil.surTitre}</p>
+    </div>
+
+    <nav class="footer__nav" aria-label={t.nav.menu}>
+      <ul>
+        {
+          liens.map((lien) => (
+            <li>
+              <a href={chemin(lien.cle, langue)}>{lien.libelle}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ContactLinks langue={langue} variante="discret" class="footer__contact" />
+
+    <div class="footer__bas">
+      <p>&copy; {annee} {nom}. {t.pied.droits}</p>
+      <p class="footer__credit">
+        {
+          reglages.profils.github ? (
+            <a
+              href={`${reglages.profils.github}/maxence-veilleux-portfolio`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.pied.construit}
+            </a>
+          ) : (
+            <span>{t.pied.construit}</span>
+          )
+        }
+      </p>
+    </div>
+  </Container>
+</Section>
+
+<style lang="scss">
+  @use '../styles/breakpoints' as bp;
+
+  @layer astro-components {
+    .footer {
+      margin-top: auto;
+      padding-block: var(--space-l) var(--space-m);
+      background-color: var(--surface-sunken);
+      border-top: 1px solid var(--border-subtle);
+
+      .footer__container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-m);
+      }
+
+      .footer__nom {
+        font-family: var(--heading-font-family);
+        font-weight: 700;
+        font-size: var(--text-1);
+        color: var(--heading-color);
+        letter-spacing: -0.02em;
+      }
+
+      .footer__role {
+        color: var(--text-muted);
+        font-size: var(--text--1);
+      }
+
+      .footer__nav ul {
+        list-style-type: none;
+        padding-inline-start: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1ex;
+
+        a {
+          width: fit-content;
+          color: var(--text-muted);
+          font-weight: 400;
+          font-size: var(--text--1);
+
+          &:hover {
+            color: var(--link-color);
+          }
+        }
+      }
+
+      .footer__bas {
+        grid-column: 1 / -1;
+        padding-top: var(--space-s);
+        border-top: 1px solid var(--border-subtle);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: var(--space-xs) var(--space-s);
+        color: var(--text-muted);
+        font-size: var(--text--2);
+
+        a {
+          color: inherit;
+          font-weight: 400;
+
+          &:hover {
+            color: var(--link-color);
+          }
+        }
+      }
+    }
+
+    @media (min-width: bp.$sm) {
+      .footer .footer__container {
+        grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr));
+      }
+    }
+  }
+</style>

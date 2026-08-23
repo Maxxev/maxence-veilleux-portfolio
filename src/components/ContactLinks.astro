@@ -1,0 +1,171 @@
+---
+import { Icon } from 'astro-icon/components';
+import Button from './Button.astro';
+import Alert from './Alert.astro';
+
+import { traductions, type Langue } from '../i18n/index.ts';
+import {
+  reglages,
+  contactVisible,
+  profilsRenseignes,
+  cvVisible,
+} from '../utils/reglages.ts';
+
+interface Props {
+  langue: Langue;
+  // `boutons` pour le bloc d'appel à l'action, `discret` pour le pied de page.
+  variante?: 'boutons' | 'discret';
+  // N'afficher l'explication du masquage qu'une fois par page.
+  avecAvis?: boolean;
+  class?: string;
+}
+
+const {
+  langue,
+  variante = 'boutons',
+  avecAvis = false,
+  class: className = '',
+} = Astro.props;
+const t = traductions(langue);
+
+const ICONES = {
+  courriel: 'fa6-solid:envelope',
+  linkedin: 'fa6-brands:linkedin-in',
+  github: 'fa6-brands:github',
+  itch: 'fa6-brands:itch-io',
+  youtube: 'fa6-brands:youtube',
+  cv: 'fa6-solid:file-arrow-down',
+} as const;
+
+type Entree = { cle: keyof typeof ICONES; libelle: string; url: string; externe: boolean };
+
+// Une seule liste, construite une fois. Les coordonnées n'y entrent que si
+// l'interrupteur `contact.afficher` le permet : c'est le seul endroit du site
+// où un courriel peut être rendu, ce qui rend le masquage vérifiable.
+const entrees: Entree[] = [
+  ...(contactVisible
+    ? ([
+        {
+          cle: 'courriel',
+          libelle: t.contact.courriel,
+          url: `mailto:${reglages.contact.courriel}`,
+          externe: false,
+        },
+        ...(reglages.contact.linkedin
+          ? [
+              {
+                cle: 'linkedin' as const,
+                libelle: t.contact.linkedin,
+                url: reglages.contact.linkedin,
+                externe: true,
+              },
+            ]
+          : []),
+      ] satisfies Entree[])
+    : []),
+  ...profilsRenseignes().map(
+    (profil): Entree => ({
+      cle: profil.cle,
+      libelle: t.contact[profil.cle],
+      url: profil.url,
+      externe: true,
+    }),
+  ),
+  ...(cvVisible
+    ? ([{ cle: 'cv', libelle: t.contact.cv, url: reglages.cv.url, externe: false }] satisfies Entree[])
+    : []),
+];
+---
+
+<div class={`contact-links contact-links--${variante} ${className}`}>
+  {
+    avecAvis && !contactVisible && (
+      <Alert variant="info" class="contact-links__avis">
+        <strong>{t.contact.masqueTitre}</strong> — {t.contact.masqueTexte}
+      </Alert>
+    )
+  }
+
+  {
+    entrees.length > 0 && (
+      <ul class="contact-links__liste">
+        {entrees.map((entree) =>
+          variante === 'boutons' ? (
+            <li>
+              <Button
+                RootTag="a"
+                href={entree.url}
+                iconName={ICONES[entree.cle]}
+                reverseIcon
+                outline={entree.cle !== 'courriel' && entree.cle !== 'cv'}
+                bgColor="var(--primary)"
+                color="var(--white)"
+                target={entree.externe ? '_blank' : undefined}
+                rel={entree.externe ? 'noopener noreferrer' : undefined}
+              >
+                {entree.libelle}
+              </Button>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={entree.url}
+                target={entree.externe ? '_blank' : undefined}
+                rel={entree.externe ? 'noopener noreferrer' : undefined}
+              >
+                <Icon name={ICONES[entree.cle]} class="contact-links__icone" aria-hidden="true" />
+                <span>{entree.libelle}</span>
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+    )
+  }
+</div>
+
+<style lang="scss">
+  @layer astro-components {
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-s);
+
+      .contact-links__liste {
+        list-style-type: none;
+        padding-inline-start: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+      }
+    }
+
+    .contact-links--discret {
+      .contact-links__liste {
+        flex-direction: column;
+        gap: 1ex;
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 1ch;
+        width: fit-content;
+        color: var(--text-muted);
+        font-weight: 400;
+        font-size: var(--text--1);
+
+        &:hover {
+          color: var(--link-color);
+        }
+      }
+
+      .contact-links__icone {
+        width: 1em;
+        height: auto;
+        flex-shrink: 0;
+      }
+    }
+  }
+</style>
