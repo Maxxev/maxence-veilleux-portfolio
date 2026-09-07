@@ -81,7 +81,9 @@
   font-weight: 800;
   font-variation-settings: 'wdth' $largeur;
   line-height: 0.86;
-  letter-spacing: -0.045em;
+  // Réglable de l'extérieur, sans toucher au mixin : voir `.hero__nom` dans
+  // PageAccueil.astro, qui documente la valeur et ses repères.
+  letter-spacing: var(--display-letter-spacing, -0.045em);
   text-transform: uppercase;
 }
 

@@ -251,6 +251,31 @@ const motsDuTitre = t.accueil.titre.split(' ');
 
   // --- Le nom ---------------------------------------------------------------
   .hero__nom {
+    // ---- RÉGLAGE : l'espacement des lettres du nom -------------------------
+    //
+    // Négatif = lettres plus serrées. Positif = plus aérées. 0 = l'espacement
+    // dessiné par le créateur de la police.
+    //
+    // Repères, du plus serré au plus lâche :
+    //   -0.06em   très serré, les lettres se touchent presque
+    //   -0.045em  la valeur actuelle
+    //   -0.02em   resserrement léger
+    //    0        neutre
+    //   +0.02em   aéré
+    //
+    // L'unité `em` est volontaire : elle suit la taille du texte, donc un
+    // seul réglage vaut du téléphone au grand écran. En pixels, il faudrait
+    // le refaire à chaque palier de taille.
+    //
+    // À ne pas confondre avec le crénage, qui est le rattrapage que la police
+    // applique à certaines PAIRES de lettres (le « AX » de MAXENCE, par
+    // exemple). Celui-là vient de Bricolage Grotesque et il est déjà actif ;
+    // si c'est une paire précise qui te dérange plutôt que l'ensemble, dis-le,
+    // ça se corrige autrement.
+    --display-letter-spacing: -0.045em;
+
+    // La largeur des lettres se règle ici, dans le même esprit : 75 très
+    // étroit, 100 normal, tout l'intervalle est disponible.
     @include txt.display($largeur: 100);
     // `1lh` cale la taille sur la hauteur de ligne réelle : le titre remplit
     // la largeur disponible sans qu'on ait à deviner un nombre de caractères.
