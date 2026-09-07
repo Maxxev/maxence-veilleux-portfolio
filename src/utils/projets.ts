@@ -2,7 +2,7 @@
 //
 // Toutes les pages passent par ici : l'accueil, la grille et les pages de
 // détail. C'est ce qui garantit qu'un aperçu et sa page complète affichent les
-// mêmes projets dans le même ordre — la façon la plus simple de les empêcher
+// mêmes projets dans le même ordre : la façon la plus simple de les empêcher
 // de diverger.
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Langue } from '../i18n/routes.ts';

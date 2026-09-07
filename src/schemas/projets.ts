@@ -3,7 +3,7 @@
 // Un projet = un fichier Markdown par langue :
 //   src/content/projets/fr/<slug>.md
 //   src/content/projets/en/<slug>.md
-// Le slug doit être identique dans les deux langues — c'est lui qui relie les
+// Le slug doit être identique dans les deux langues : c'est lui qui relie les
 // deux versions et qui permet au sélecteur de langue de rester sur la même
 // page. `npm run verifier:traductions` échoue si une traduction manque.
 import { z } from 'astro/zod';
@@ -13,13 +13,13 @@ export const CATEGORIES = ['pro', 'etudes', 'perso'] as const;
 
 export const projetSchema = z.strictObject({
   titre: z.string(),
-  // Une phrase, affichée sur la carte. Vise 100–160 caractères : plus court
+  // Une phrase, affichée sur la carte. Vise 100 à 160 caractères : plus court
   // ne dit rien, plus long déborde de la carte sur mobile.
   resume: z.string(),
 
   categorie: z.enum(CATEGORIES),
 
-  // Année ou intervalle affiché tel quel (« 2025 », « 2024–2025 »)
+  // Année ou intervalle affiché tel quel (« 2025 », « 2024-2025 »)
   annee: z.string(),
 
   // Ce que TU as fait, à distinguer de ce que le projet est. C'est la ligne

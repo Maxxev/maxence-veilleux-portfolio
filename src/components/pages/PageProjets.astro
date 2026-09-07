@@ -93,7 +93,7 @@ const categoriesPresentes = CATEGORIES.filter((categorie) =>
 <script>
   // Filtrage côté client : les cartes sont déjà rendues, on ne fait que les
   // masquer. Aucune requête, aucun rechargement, et la page reste entièrement
-  // fonctionnelle sans JavaScript — sans lui, tous les projets sont affichés,
+  // fonctionnelle sans JavaScript : sans lui, tous les projets sont affichés,
   // ce qui est le bon état par défaut.
   function initialiserFiltres(): void {
     const boutons = document.querySelectorAll<HTMLButtonElement>('.filtres__bouton');

@@ -1,6 +1,6 @@
 // Un bloc de prose : un titre optionnel et un corps en Markdown.
 //
-// Sert aux textes qui contiennent des liens — la bio de l'accueil, le
+// Sert aux textes qui contiennent des liens : la bio de l'accueil, le
 // paragraphe « Au-delà du code », le mot sur le travail en agence. Le corps est
 // rendu avec la classe `.prose`, qui lui donne son rythme vertical.
 //

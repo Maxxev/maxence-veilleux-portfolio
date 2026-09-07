@@ -33,7 +33,7 @@ export function cheminProjet(slug: string, langue: Langue): string {
 /**
  * L'équivalent de l'URL courante dans l'autre langue.
  *
- * Le sélecteur de langue doit garder le lecteur sur la même page — le renvoyer
+ * Le sélecteur de langue doit garder le lecteur sur la même page : le renvoyer
  * à l'accueil à chaque bascule est le défaut d'i18n le plus courant. On
  * reconnaît donc la page à partir de son chemin plutôt que de le supposer.
  */

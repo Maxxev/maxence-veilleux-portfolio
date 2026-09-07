@@ -7,7 +7,7 @@
 // décodé, ni de ce qui se passe au clic. Ce script sert le dossier `dist/` et
 // affirme ce que les captures cachent, puis les enregistre pour l'œil humain.
 //
-// Playwright n'est volontairement pas une dépendance du projet — il ne sert
+// Playwright n'est volontairement pas une dépendance du projet : il ne sert
 // qu'ici. `npm install --no-save playwright` avant de lancer.
 import { createServer } from 'node:http';
 import { existsSync, statSync } from 'node:fs';
@@ -134,10 +134,10 @@ for (const [nom, chemin] of PAGES) {
     const debordement = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
-    verifier(debordement <= 0, `${nom} @${largeur} — aucun débordement horizontal (${debordement}px)`);
+    verifier(debordement <= 0, `${nom} @${largeur} : aucun débordement horizontal (${debordement}px)`);
     verifier(
       erreurs.length === 0,
-      `${nom} @${largeur} — aucune erreur console${erreurs.length ? ' : ' + erreurs[0] : ''}`,
+      `${nom} @${largeur} : aucune erreur console${erreurs.length ? ' (' + erreurs[0] + ')' : ''}`,
     );
 
     if (largeur === 1440) {
@@ -149,7 +149,7 @@ for (const [nom, chemin] of PAGES) {
       );
       verifier(
         cassees.length === 0,
-        `${nom} — toutes les images décodées${cassees.length ? ' : ' + cassees[0] : ''}`,
+        `${nom} : toutes les images décodées${cassees.length ? ' (' + cassees[0] + ')' : ''}`,
       );
       await page.screenshot({ path: join(CAPTURES, `${nom}-clair.png`), fullPage: true });
     }
@@ -168,7 +168,7 @@ for (const [nom, chemin] of [['accueil', '/'], ['projet-ludix', '/projets/ludix/
   await page.goto(`${BASE}${chemin}`, { waitUntil: 'networkidle' });
 
   const fond = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  verifier(!/rgb\(2[45][0-9]/.test(fond), `${nom} sombre — le fond n'est pas resté clair (${fond})`);
+  verifier(!/rgb\(2[45][0-9]/.test(fond), `${nom} sombre : le fond n'est pas resté clair (${fond})`);
 
   await chargerLesImages(page);
   await page.screenshot({ path: join(CAPTURES, `${nom}-sombre.png`), fullPage: true });
@@ -188,10 +188,10 @@ for (const [nom, chemin] of [['accueil', '/'], ['projet-ludix', '/projets/ludix/
   await page.click('[data-theme-toggle]');
   await page.waitForTimeout(350);
   const apres = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  verifier(avant !== apres, `bascule de thème — le fond change (${avant} → ${apres})`);
+  verifier(avant !== apres, `bascule de thème : le fond change (${avant} → ${apres})`);
   verifier(
     ['dark', 'light'].includes(await page.evaluate(() => localStorage.getItem('theme'))),
-    'bascule de thème — le choix est mémorisé',
+    'bascule de thème : le choix est mémorisé',
   );
 
   await page.goto(`${BASE}/projets/ludix/`, { waitUntil: 'networkidle' });
@@ -201,7 +201,7 @@ for (const [nom, chemin] of [['accueil', '/'], ['projet-ludix', '/projets/ludix/
   await page.waitForURL('**/en/projects/ludix/', { timeout: 5000 }).catch(() => {});
   verifier(
     page.url().endsWith('/en/projects/ludix/'),
-    `sélecteur de langue — reste sur la même fiche (${page.url()})`,
+    `sélecteur de langue : reste sur la même fiche (${page.url()})`,
   );
 
   await page.goto(`${BASE}/projets/`, { waitUntil: 'networkidle' });
@@ -209,16 +209,16 @@ for (const [nom, chemin] of [['accueil', '/'], ['projet-ludix', '/projets/ludix/
   await page.click('[data-filtre="etudes"]');
   await page.waitForTimeout(150);
   const filtres = await page.locator('.projet-card:visible').count();
-  verifier(filtres > 0 && filtres < total, `filtres — « Études » réduit la grille (${total} → ${filtres})`);
+  verifier(filtres > 0 && filtres < total, `filtres : « Études » réduit la grille (${total} → ${filtres})`);
 
   await page.goto(`${BASE}/projets/answerit/`, { waitUntil: 'networkidle' });
   verifier(
     (await page.locator('video').first().getAttribute('preload')) === 'none',
-    'vidéo — aucun préchargement avant le clic',
+    'vidéo : aucun préchargement avant le clic',
   );
   verifier(
     (await page.locator('.lite-yt iframe').count()) === 0,
-    'YouTube — aucune iframe avant le clic',
+    'YouTube : aucune iframe avant le clic',
   );
 
   const mobile = await navigateur.newContext({
@@ -231,7 +231,7 @@ for (const [nom, chemin] of [['accueil', '/'], ['projet-ludix', '/projets/ludix/
   await pageMobile.click('.burger');
   await pageMobile.waitForTimeout(350);
   const deploye = await pageMobile.locator('#nav-principale').evaluate((n) => n.getBoundingClientRect().height);
-  verifier(deploye > replie, `menu mobile — s'ouvre au clic (${replie.toFixed(0)}px → ${deploye.toFixed(0)}px)`);
+  verifier(deploye > replie, `menu mobile : s'ouvre au clic (${replie.toFixed(0)}px → ${deploye.toFixed(0)}px)`);
   await pageMobile.screenshot({ path: join(CAPTURES, 'accueil-mobile-menu.png') });
   await mobile.close();
 

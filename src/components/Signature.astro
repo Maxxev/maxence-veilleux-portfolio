@@ -16,13 +16,13 @@ const t = traductions(langue);
   Ce n'est pas une image : c'est un aplat de couleur découpé par deux masques
   superposés. Le premier est la signature elle-même (WebP à canal alpha), le
   second un dégradé qui balaie de gauche à droite. Leur intersection donne
-  l'effet d'écriture — la même impression que le GIF de 375 ko de l'ancien
+  l'effet d'écriture : la même impression que le GIF de 375 ko de l'ancien
   site, pour 12 ko et sans image animée.
 
   Le bénéfice caché du masque : la couleur vient de `currentColor`, donc la
   signature suit le thème. Un PNG noir aurait disparu sur fond sombre.
 
-  Le dégradé est animé via une propriété enregistrée avec `@property` — sans
+  Le dégradé est animé via une propriété enregistrée avec `@property` : sans
   ce typage, les navigateurs ne savent pas interpoler un pourcentage dans un
   `linear-gradient` et l'animation saute d'un état à l'autre.
 */}

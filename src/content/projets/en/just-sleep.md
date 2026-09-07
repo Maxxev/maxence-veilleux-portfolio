@@ -11,7 +11,7 @@ faits:
   - 'I led a team of three participants who were new to game development.'
   - 'Imposed theme: "innocence".'
   - 'Unity development in C#, and pixel art animation in Krita.'
-  - 'Leading beginners over 48 hours forces you to break work into genuinely achievable tasks — planning mattered as much as code.'
+  - 'Leading beginners over 48 hours forces you to break work into genuinely achievable tasks.'
 couverture:
   src: '/medias/videos/just-sleep.webp'
   alt: 'Pixel art gameplay from Just Sleep'
@@ -30,7 +30,6 @@ mention: null
 My first game jam, and the first time I led anything. The other three team
 members had never touched Unity.
 
-That changed the nature of the problem. In 48 hours with beginners, the
-difficulty isn't technical: it's breaking the work into tasks someone learning
-the tool can actually finish, and recognising quickly when a task was badly
-broken down. The game shipped on time, which was not a given.
+In 48 hours with beginners, the difficulty isn't technical: you have to break
+the work into tasks someone learning the tool can finish, and recognise quickly
+when a task was badly broken down. The game shipped on time.

@@ -59,7 +59,7 @@ mkdirSync(CIBLE, { recursive: true });
 // dernière : l'animation d'écriture est refaite en CSS, par un masque qui
 // balaie l'image de gauche à droite (voir src/components/Signature.astro).
 // Résultat : ~10 ko, et la signature prend la couleur du texte, donc elle
-// reste visible en mode sombre — ce qu'un PNG noir ne ferait pas.
+// reste visible en mode sombre, ce qu'un PNG noir ne ferait pas.
 async function signature() {
   const sortie = join(CIBLE, 'signature.webp');
   if (!aFaire(sortie)) return;

@@ -30,8 +30,7 @@ mention: null
 *Oups!* est né d'une contrainte de 48 heures et d'un thème tiré au sort :
 « réaction en chaîne ». Nous étions deux.
 
-Une game jam n'apprend pas à bien coder — elle apprend à **couper**. La moitié
+Une game jam n'apprend pas à bien coder. Elle apprend à **couper**. La moitié
 du travail consiste à reconnaître, vers la trentième heure, quelles idées ne
 survivront pas à l'échéance, et à les abandonner assez tôt pour que le reste
-tienne debout. C'est probablement la compétence la plus transférable que
-j'en ai tirée.
+tienne debout.

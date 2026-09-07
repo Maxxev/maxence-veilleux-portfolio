@@ -27,7 +27,7 @@ const { class: className = '', ...rest } = Astro.props;
     burger.setAttribute('aria-expanded', String(ouvert));
   });
 
-  // Le menu doit se refermer quand on choisit une destination — sans quoi il
+  // Le menu doit se refermer quand on choisit une destination, sans quoi il
   // reste déployé par-dessus la page d'arrivée.
   document.addEventListener('astro:after-swap', () => {
     document.querySelectorAll('.burger.is-open').forEach((burger) => {
