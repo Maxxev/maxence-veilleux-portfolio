@@ -6,7 +6,6 @@ import Button from '../Button.astro';
 import SectionHeader from '../SectionHeader.astro';
 import ProjetsGrid from '../ProjetsGrid.astro';
 import StackGrid from '../StackGrid.astro';
-import Signature from '../Signature.astro';
 import ContactLinks from '../ContactLinks.astro';
 
 import { traductions, chemin, type Langue } from '../../i18n/index.ts';
@@ -47,9 +46,22 @@ const motsDuTitre = t.accueil.titre.split(' ');
     <div class="hero__fond" aria-hidden="true"></div>
 
     <Container class="hero__container">
-      <div class="hero__principal">
-        <Signature langue={langue} class="hero__signature" />
+      {/*
+        Le hero portait aussi la signature manuscrite et une sous-accroche.
+        Les deux ont été retirées pour la même raison : elles répétaient une
+        information déjà présente à l'écran.
 
+        La sous-accroche donnait l'établissement et l'année de diplomation, que
+        la carte « en un coup d'œil » énonce deux lignes plus loin.
+
+        La signature était la marque d'identité du site tant qu'il n'y en avait
+        pas d'autre. Depuis que le logo est dans l'en-tête, le haut de page
+        annonçait l'identité trois fois : le logo, la signature, puis le nom en
+        grand. Le composant Signature existe toujours et n'est monté nulle
+        part ; il attend une place où il ne fera pas doublon, le pied de page
+        ou la section « qui je suis » étant les deux candidates.
+      */}
+      <div class="hero__principal">
         <p class="pre-heading hero__surtitre">{t.accueil.surTitre}</p>
 
         <h1 class="hero__nom">
@@ -57,7 +69,6 @@ const motsDuTitre = t.accueil.titre.split(' ');
         </h1>
 
         <p class="hero__accroche">{t.accueil.accroche}</p>
-        <p class="hero__sous-accroche">{t.accueil.sousAccroche}</p>
 
         <div class="hero__actions">
           <Button RootTag="a" href={chemin('projets', langue)} glow iconName="fa6-solid:arrow-right">
@@ -240,11 +251,6 @@ const motsDuTitre = t.accueil.titre.split(' ');
     gap: var(--space-xs);
   }
 
-  .hero__signature {
-    color: var(--heading-color);
-    margin-bottom: var(--space-xxs);
-  }
-
   .hero__surtitre {
     margin: 0;
   }
@@ -302,12 +308,6 @@ const motsDuTitre = t.accueil.titre.split(' ');
     color: var(--heading-color);
     text-wrap: balance;
     max-width: 34ch;
-  }
-
-  .hero__sous-accroche {
-    color: var(--text-muted);
-    max-width: 52ch;
-    text-wrap: pretty;
   }
 
   .hero__actions {
