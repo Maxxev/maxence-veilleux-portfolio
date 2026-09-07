@@ -29,25 +29,39 @@ const { surTitre, titre, intro, class: className = '' } = Astro.props;
 </Section>
 
 <style lang="scss">
+  @use '../styles/texture' as tx;
+  @use '../styles/text' as txt;
+
   @layer astro-components {
     .page-hero {
-      padding-block: var(--space-l) var(--space-m);
       position: relative;
       isolation: isolate;
       border-bottom: 1px solid var(--border-subtle);
 
-      // Un halo indigo très dilué derrière le titre, qui remplace la photo de
-      // bannière sans peser un octet.
+      // Comme le hero de l'accueil, l'en-tête de page remonte sous la barre de
+      // navigation : c'est ce qui évite un bandeau uni au-dessus des nappes et
+      // donne à la barre de verre quelque chose à flouter.
+      margin-top: calc(-1 * var(--header-height));
+      padding-block: calc(var(--header-height) + var(--space-m)) var(--space-m);
+
+      // La même nappe que l'accueil, à force réduite. C'est ce qui fait qu'une
+      // page intérieure appartient au même site : la matière est identique,
+      // seule l'intensité change. À pleine force, quatre halos saturés
+      // derrière un paragraphe d'introduction le rendent pénible à lire.
+      --aurora-force: 0.45;
+
       &::before {
         content: '';
         position: absolute;
         z-index: -1;
         inset: 0;
-        background: radial-gradient(
-          80% 120% at 12% 0%,
-          hsla(var(--primary-h), var(--primary-s), 55%, 0.13),
-          transparent 62%
-        );
+        @include tx.aurora;
+      }
+
+      @include tx.grain('after');
+
+      &::after {
+        z-index: -1;
       }
 
       .page-hero__container {
@@ -57,7 +71,16 @@ const { surTitre, titre, intro, class: className = '' } = Astro.props;
       hgroup {
         display: flex;
         flex-direction: column;
-        gap: var(--space-xxs);
+        gap: var(--space-xs);
+      }
+
+      // Le même registre d'affiche que le nom de l'accueil, un cran plus bas.
+      // Ce composant ne sert qu'aux deux pages d'index, dont les titres tiennent
+      // en un mot : « Projets », « Parcours ». Une fiche de projet, dont le
+      // titre peut faire huit mots, a son propre en-tête et n'hérite pas de ça.
+      h1 {
+        @include txt.display($largeur: 100);
+        font-size: clamp(2.5rem, 7vw, 4.5rem);
       }
 
       .page-hero__intro {

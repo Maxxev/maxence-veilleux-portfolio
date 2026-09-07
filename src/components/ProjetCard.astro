@@ -78,20 +78,27 @@ const reste = projet.technos.length - technos.length;
 <style lang="scss">
   @use '../styles/mixins' as m;
   @use '../styles/text' as tx;
+  @use '../styles/texture' as txt;
 
   .projet-card {
     // La désaturation des cartes non survolées est pilotée par ProjetsGrid :
     // le sélecteur traverse la frontière entre les deux composants et ne peut
     // donc vivre que dans le parent.
-    @include m.box($col: var(--surface-raised), $padding: 0, $shadow-elevation: 3);
+    //
+    // Du verre et non du relief : une carte de projet est d'abord un cadre
+    // autour d'une capture d'écran. Un contour net découpe l'image ; un
+    // contour en relief la laisse fondre dans la page et lui fait perdre ce
+    // qu'elle a de plus utile, sa netteté.
+    @include txt.verre($rayon: var(--radius-l), $fond: var(--glass-bg-fort));
     overflow: clip;
-    border: 1px solid var(--border-subtle);
-    transition-property: box-shadow, transform, border-color;
+    transition-property: box-shadow, transform, border-color, background-color;
 
     &:hover {
-      @include m.elevation(14);
-      border-color: var(--border-strong);
-      transform: translateY(-3px);
+      border-color: var(--glass-reflet);
+      transform: translateY(-4px);
+      box-shadow:
+        inset 0 1px 0 0 var(--glass-reflet),
+        0 26px 52px -24px var(--glass-ombre);
     }
 
     article {
@@ -126,11 +133,8 @@ const reste = projet.technos.length - technos.length;
       // piège ici : `--primary-90` est un orange pâle en valeur absolue, donc
       // un bloc clair au milieu d'une page sombre. On passe par la teinte
       // posée en transparence sur la surface, qui suit le thème.
-      background: linear-gradient(
-        135deg,
-        hsla(var(--primary-h), var(--primary-s), 60%, 0.22),
-        var(--surface-sunken)
-      );
+      background-image: var(--gradient-signature-doux);
+      background-color: var(--surface-sunken);
 
       span {
         font-family: var(--heading-font-family);

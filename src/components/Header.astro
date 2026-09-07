@@ -30,8 +30,9 @@ function estActif(cible: string): boolean {
   return cheminActuel.startsWith(cible);
 }
 
-// Les initiales servent de logo. Pas d'image : deux lettres en Space Grotesk
-// pèsent zéro octet de plus que la page et restent nettes à tout zoom.
+// Les initiales servent de logo. Pas d'image : deux lettres en Bricolage
+// Grotesque, portant le dégradé du CV, pèsent zéro octet de plus que la page
+// et restent nettes à tout zoom.
 const initiales = nom
   .split(' ')
   .map((mot) => mot[0])
@@ -75,15 +76,21 @@ const initiales = nom
 <style lang="scss">
   @use '../styles/breakpoints' as bp;
   @use '../styles/text' as t;
+  @use '../styles/texture' as tx;
 
   @layer astro-components {
     .header {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background-color: color-mix(in srgb, var(--surface-page) 88%, transparent);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-subtle);
+      // L'en-tête flotte au-dessus des nappes du hero, qui remontent sous lui.
+      // C'est l'endroit du site où le verre dépoli est le plus justifié : la
+      // barre laisse deviner la couleur qui défile dessous au lieu de la
+      // masquer, et le contenu reste lisible parce que le voile est dense.
+      background-color: var(--glass-bg-lisible);
+      -webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+      backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+      border-bottom: 1px solid var(--glass-border);
       transition:
         height 0s var(--transition-duration),
         border-color var(--transition-duration);
@@ -117,7 +124,7 @@ const initiales = nom
 
       .header__initiales {
         font-size: var(--text-1);
-        color: var(--primary);
+        @include tx.texte-degrade;
       }
 
       .header__nom {
@@ -140,8 +147,10 @@ const initiales = nom
         top: 100%;
         left: 0;
         right: 0;
-        background-color: var(--surface-page);
-        border-bottom: 1px solid var(--border-subtle);
+        background-color: var(--glass-bg-lisible);
+        -webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+        backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+        border-bottom: 1px solid var(--glass-border);
         overflow: clip;
         height: 0;
         // `height: 0` seul laisse les liens focusables au clavier : sans
@@ -221,7 +230,8 @@ const initiales = nom
               top: calc(100% + 3px);
               height: 2px;
               width: 0;
-              background-color: var(--primary);
+              border-radius: 2px;
+              background-image: var(--gradient-signature);
               transition: width var(--transition-duration) ease-out;
             }
 
@@ -243,7 +253,7 @@ const initiales = nom
     }
 
     // Le menu déplié : la hauteur passe à `fit-content` quand le burger est
-    // ouvert. Cette règle doit être globale — elle traverse la frontière entre
+    // ouvert. Cette règle doit être globale : elle traverse la frontière entre
     // Header et Burger, deux composants aux styles scopés séparément.
     .header:has(.burger.is-open) .header__nav {
       height: fit-content;
