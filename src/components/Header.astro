@@ -137,7 +137,10 @@ const initiales = nom
       .header__actions {
         display: flex;
         align-items: center;
-        gap: var(--space-xxs);
+        // Un cran au-dessus de `--space-xxs` : trois contrôles ronds collés
+        // se lisaient comme un seul objet segmenté plutôt que comme trois
+        // boutons distincts.
+        gap: var(--space-xs);
         flex-shrink: 0;
       }
 
