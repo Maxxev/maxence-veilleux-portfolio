@@ -45,6 +45,23 @@ const t = traductions(langue);
   .signature {
     --signature-progression: 0%;
 
+    // Rogne un pixel sur tout le pourtour.
+    //
+    // Sans ça, un liseré clair d'un pixel entoure la signature. Ce n'est pas
+    // le masque qui déborde : son canal alpha est à zéro sur tout le
+    // pourtour, vérifié au pixel. C'est l'aplat `currentColor` de l'élément
+    // qui déborde du masque quand les deux sont rastérisés à des tailles
+    // arrondies différemment.
+    //
+    // Mesuré : le défaut n'existe QUE dans Chromium à densité d'affichage
+    // fractionnaire, c'est-à-dire un écran Windows à 125 % ou 150 %. À
+    // densité 1 et 2, et dans Firefox à toutes les densités, il est absent.
+    // Écart de luminance au bord : +11,6 à densité 1,5, +0 après ce rognage.
+    //
+    // Le tracé dispose de 3 px de marge vide à la taille d'affichage, donc
+    // rogner 1 px ne coupe rien du dessin.
+    clip-path: inset(1px);
+
     width: min(100%, 15rem);
     aspect-ratio: 640 / 293;
     background-color: currentColor;
