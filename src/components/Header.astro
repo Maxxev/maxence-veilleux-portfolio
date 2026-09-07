@@ -80,10 +80,34 @@ function estActif(cible: string): boolean {
       // C'est l'endroit du site où le verre dépoli est le plus justifié : la
       // barre laisse deviner la couleur qui défile dessous au lieu de la
       // masquer, et le contenu reste lisible parce que le voile est dense.
-      background-color: var(--glass-bg-lisible);
-      -webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturation));
-      backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+      //
+      // Le voile et son flou sont portés par un PSEUDO-ÉLÉMENT, et non par
+      // `.header` elle-même. Ce n'est pas un détour gratuit.
+      //
+      // Un élément qui porte un `backdrop-filter` devient une « racine
+      // d'arrière-plan » : ses descendants ne peuvent plus échantillonner que
+      // ce qui est peint à l'intérieur de lui, jamais la page derrière. Le
+      // tiroir de navigation mobile est un descendant de `.header` et porte
+      // son propre flou. Tant que `.header` était floutée, ce flou s'appliquait
+      // au vide, et le contenu de la page restait parfaitement net sous le
+      // menu déplié, au point de rendre les liens difficiles à lire.
+      //
+      // Déplacé sur `::before`, le flou couvre exactement la même surface,
+      // mais `.header` cesse d'être une racine d'arrière-plan et le tiroir
+      // retrouve la page à flouter.
+      background-color: transparent;
       border-bottom: 1px solid var(--glass-border);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background-color: var(--glass-bg-lisible);
+        -webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+        backdrop-filter: blur(14px) saturate(var(--glass-saturation));
+      }
       transition:
         height 0s var(--transition-duration),
         border-color var(--transition-duration);
