@@ -83,6 +83,25 @@ const t = traductions(langue);
     -webkit-mask-composite: source-in;
 
     animation: signature-tracer 1.6s 0.25s cubic-bezier(0.5, 0, 0.35, 1) forwards;
+
+    // La signature vit dans le pied de page, donc sous la ligne de flottaison.
+    // Une animation minutée s'y jouerait pendant qu'on lit le haut de page, et
+    // le visiteur n'arriverait que devant un tracé déjà fini.
+    //
+    // Là où la timeline de vue existe, l'animation est donc rattachée au
+    // défilement : le tracé se dessine à mesure que la signature entre dans
+    // l'écran. Le reste du site utilise déjà ce mécanisme pour les apparitions.
+    //
+    // Les navigateurs qui l'ignorent gardent l'animation minutée ci-dessus,
+    // qui reste un repli correct : la signature est simplement déjà tracée
+    // quand on descend.
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        animation-timeline: view();
+        animation-delay: 0s;
+        animation-range: entry 15% cover 32%;
+      }
+    }
   }
 
   @keyframes signature-tracer {
