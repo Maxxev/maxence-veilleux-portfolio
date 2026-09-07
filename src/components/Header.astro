@@ -207,6 +207,14 @@ const initiales = nom
           overflow: visible;
           background-color: transparent;
           border-bottom: none;
+          // Le flou du tiroir mobile doit être annulé explicitement.
+          // `background-color: transparent` ne suffit pas : un
+          // `backdrop-filter` actif reste visible sans aucun fond, puisqu'il
+          // agit sur ce qui est DERRIÈRE l'élément. Il dessinait donc un
+          // rectangle flouté et sursaturé autour des liens, qui sautait aux
+          // yeux dès que le hero passait une couleur claire dessous.
+          -webkit-backdrop-filter: none;
+          backdrop-filter: none;
 
           ul {
             flex-direction: row;
