@@ -1,5 +1,6 @@
 ---
 import Container from './Container.astro';
+import Logo from './Logo.astro';
 import Section from './Section.astro';
 import Burger from './Burger.astro';
 import ThemeToggle from './ThemeToggle.astro';
@@ -30,20 +31,13 @@ function estActif(cible: string): boolean {
   return cheminActuel.startsWith(cible);
 }
 
-// Les initiales servent de logo. Pas d'image : deux lettres en Bricolage
-// Grotesque, portant le dégradé du CV, pèsent zéro octet de plus que la page
-// et restent nettes à tout zoom.
-const initiales = nom
-  .split(' ')
-  .map((mot) => mot[0])
-  .join('');
 ---
 
 <header class="header">
   <Section RootTag="div" class="header__section">
     <Container class="header__container">
       <a class="header__home" href={chemin('accueil', langue)} aria-label={t.nav.retourAccueil}>
-        <span class="header__initiales" aria-hidden="true">{initiales}</span>
+        <Logo class="header__logo" />
         <span class="header__nom">{nom}</span>
       </a>
 
@@ -76,7 +70,6 @@ const initiales = nom
 <style lang="scss">
   @use '../styles/breakpoints' as bp;
   @use '../styles/text' as t;
-  @use '../styles/texture' as tx;
 
   @layer astro-components {
     .header {
@@ -109,8 +102,10 @@ const initiales = nom
 
       .header__home {
         display: flex;
-        align-items: baseline;
-        gap: 0.6ch;
+        // `center` et non `baseline` : un SVG n'a pas de ligne de base, et
+        // l'alignement sur celle du nom le posait de travers.
+        align-items: center;
+        gap: 0.7ch;
         margin-right: auto;
         color: var(--heading-color);
         font-family: var(--heading-font-family);
@@ -122,9 +117,8 @@ const initiales = nom
         }
       }
 
-      .header__initiales {
-        font-size: var(--text-1);
-        @include tx.texte-degrade;
+      .header__logo {
+        height: 1.6rem;
       }
 
       .header__nom {

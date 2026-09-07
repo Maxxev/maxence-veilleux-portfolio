@@ -1,24 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <style>
-    :root { color-scheme: light dark; }
-    /* Aplat corail, lettres foncées : la même inversion que les boutons du
-       site, où l'orange est trop clair pour porter du blanc lisiblement.
-       Les valeurs sont les tokens de _colors.scss convertis en hexadécimal,
-       primary hsl(16, 96%, 58%) et secondary hsl(272, 24%, 10%). */
-    .fond { fill: #fb642d; }
-    .lettres { fill: #1a1320; }
-    @media (prefers-color-scheme: dark) {
-      .fond { fill: #fb7e50; }
-    }
-  </style>
-  <rect class="fond" width="64" height="64" rx="16" />
-  <text
-    class="lettres"
-    x="32" y="43"
-    text-anchor="middle"
-    font-family="'Bricolage Grotesque', 'Archivo', Helvetica, Arial, sans-serif"
-    font-size="30"
-    font-weight="800"
-    letter-spacing="-1.5"
-  >MV</text>
+  <!--
+    Le logo MV sur le violet foncé du site.
+
+    Le fond est un aplat et non le dégradé : à 16 px, un dégradé sur une
+    surface aussi petite se réduit à une couleur moyenne et fait perdre au
+    logo son contraste avec ce qu'il y a derrière. Le dégradé reste sur le
+    dessin, qui est ce qu'on doit reconnaître dans une barre d'onglets.
+  -->
+  <defs>
+    <radialGradient
+      id="favicon-mv"
+      cx="0" cy="0" r="1"
+      gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(-21.9883 1100.5) rotate(-31.467) scale(2137.9 2033.26)"
+    >
+      <stop stop-color="#FB642D" />
+      <stop offset="0.5" stop-color="#F73B9F" />
+      <stop offset="1" stop-color="#9849F3" />
+    </radialGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="#1a1320" />
+
+  <g transform="translate(1.8 9) scale(0.034)">
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="url(#favicon-mv)"
+      d="M968.012 209.268L784.645 234.207V1212.37L1556.42 129.242L1324.21 160.824L968.012 659.5V209.268Z" />
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="url(#favicon-mv)"
+      d="M536.512 1156.95L704.989 1211.61V245.041L531.258 268.669L401.512 544.5L268.26 304.438L100.012 327.32V1015.31L258.025 1066.59V594.743L401.512 859L536.512 582.5V1156.95Z" />
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="url(#favicon-mv)"
+      d="M0.0117188 240L0 1088.52L808.692 1351.28L1775.01 0L0.0117188 240ZM50.0117 283.5L1664.22 64.1201L868.236 1181.22L789.035 1290.78L51.465 1051.13L50.0117 283.5Z" />
+  </g>
 </svg>
