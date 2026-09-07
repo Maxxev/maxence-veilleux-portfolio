@@ -1,6 +1,6 @@
 ---
 titre: 'AnswerIt'
-resume: "Un réseau social minimal — publication, réponses, comptes — construit comme projet final du cours CS50x de HarvardX."
+resume: "Un réseau social minimal : publication, réponses, comptes. Construit comme projet final du cours CS50x de HarvardX."
 categorie: 'perso'
 annee: '2023'
 role: "Seul développeur : conception, base de données, back-end Flask et interface."
@@ -10,7 +10,7 @@ technos: ['Python', 'Flask', 'SQLite', 'JavaScript', 'HTML', 'CSS']
 faits:
   - "Projet final de CS50x, le cours d'introduction à l'informatique de HarvardX, suivi en ligne et complété en entier."
   - "Comptes utilisateurs avec authentification, publication de contenu et interaction avec les publications des autres."
-  - "Schéma relationnel en SQLite, requêté depuis Flask — mon premier contact avec la conception d'un schéma qui doit survivre à ses propres données."
+  - "Premier schéma relationnel conçu de bout en bout : SQLite, requêté depuis Flask."
 couverture:
   src: '/medias/videos/answerit.webp'
   alt: "Page d'accueil d'AnswerIt affichant un fil de publications"
@@ -34,8 +34,7 @@ les publications des autres. C'était mon projet final pour **CS50x**, le cours
 d'introduction à l'informatique de HarvardX, que j'ai suivi en ligne et
 complété en entier.
 
-Rétrospectivement, ce qui compte dans ce projet n'est pas le code — il date de
-2023 et je l'écrirais autrement aujourd'hui. C'est que c'est là que j'ai
+Le code date de 2023 et je l'écrirais autrement aujourd'hui. C'est là que j'ai
 touché pour la première fois à tout l'empilement d'un coup : un schéma
 relationnel, un serveur qui l'interroge, et une interface qui doit refléter un
 état qu'elle ne contrôle pas.

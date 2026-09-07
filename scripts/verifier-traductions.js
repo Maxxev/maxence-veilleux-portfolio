@@ -2,7 +2,7 @@
 //
 // Un site bilingue pourrit toujours de la même façon : on ajoute un projet en
 // français, on remet l'anglais à plus tard, et « plus tard » n'arrive jamais.
-// Rien dans la compilation ne s'en plaint — la page anglaise affiche
+// Rien dans la compilation ne s'en plaint : la page anglaise affiche
 // simplement un projet de moins, ce qui ne se voit pas.
 //
 //   npm run verifier:traductions

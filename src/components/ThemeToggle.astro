@@ -28,7 +28,12 @@ const t = traductions(langue);
 </button>
 
 <style lang="scss">
+  @use '../styles/texture' as tx;
+
   @layer astro-components {
+    // Un galet en relief, comme les boutons ronds de la référence #2. C'est
+    // le contrôle du site qui se prête le mieux à l'effet : petit, rond, sans
+    // texte, et fait pour être pressé.
     .theme-toggle {
       display: grid;
       place-items: center;
@@ -36,20 +41,19 @@ const t = traductions(langue);
       aspect-ratio: 1;
       flex-shrink: 0;
       padding: 0;
-      border: 1px solid var(--border-subtle);
-      border-radius: 50%;
-      background-color: transparent;
+      @include tx.relief($rayon: 50%, $force: 0.8);
       color: var(--text-muted);
       cursor: pointer;
       transition:
         color var(--transition-duration),
-        border-color var(--transition-duration),
-        background-color var(--transition-duration);
+        box-shadow var(--transition-duration);
 
       &:hover {
         color: var(--link-color);
-        border-color: var(--border-strong);
-        background-color: var(--surface-sunken);
+      }
+
+      &:active {
+        @include tx.relief-enfonce($force: 0.9);
       }
 
       .theme-toggle__icon {
@@ -64,50 +68,30 @@ const t = traductions(langue);
       }
     }
 
-    // En clair, le bouton propose le sombre : c'est la lune qu'on montre.
+    // Le site ouvre en sombre : le bouton propose donc le clair, et c'est le
+    // soleil qu'on montre. C'est l'état par défaut, celui de `:root` nu.
     .theme-toggle__icon--clair {
-      opacity: 0;
-      rotate: -90deg;
-    }
-    .theme-toggle__icon--sombre {
       opacity: 1;
       rotate: 0deg;
+    }
+    .theme-toggle__icon--sombre {
+      opacity: 0;
+      rotate: 90deg;
     }
   }
 </style>
 
 <style is:global lang="scss">
-  // Ces règles doivent être globales : un style scopé ne peut pas atteindre
+  // Cette règle doit être globale : un style scopé ne peut pas atteindre
   // `:root`, qui porte l'attribut de thème.
   //
-  // L'ordre fait la décision, pas la spécificité : `:root:not([data-theme='light'])`
-  // et `:root[data-theme='dark']` pèsent exactement le même poids (0,2,0). Les
-  // choix explicites viennent donc après la préférence système pour la battre.
+  // Il n'y a plus qu'un seul cas à couvrir, et c'est une conséquence directe
+  // du choix « sombre par défaut ». Le site ne consulte plus
+  // `prefers-color-scheme` : l'état par défaut est le sombre pour tout le
+  // monde, et seul un choix explicite du visiteur le fait basculer. Les trois
+  // blocs qui vivaient ici (préférence système, choix sombre, choix clair)
+  // se réduisent donc à l'unique état qui diffère du défaut.
   @layer astro-components {
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) .theme-toggle {
-        .theme-toggle__icon--clair {
-          opacity: 1;
-          rotate: 0deg;
-        }
-        .theme-toggle__icon--sombre {
-          opacity: 0;
-          rotate: 90deg;
-        }
-      }
-    }
-
-    :root[data-theme='dark'] .theme-toggle {
-      .theme-toggle__icon--clair {
-        opacity: 1;
-        rotate: 0deg;
-      }
-      .theme-toggle__icon--sombre {
-        opacity: 0;
-        rotate: 90deg;
-      }
-    }
-
     :root[data-theme='light'] .theme-toggle {
       .theme-toggle__icon--clair {
         opacity: 0;
@@ -130,12 +114,12 @@ const t = traductions(langue);
     if (!cible?.closest('[data-theme-toggle]')) return;
 
     const racine = document.documentElement;
-    const actuel = racine.dataset.theme;
-    const systemeEstSombre = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    // Sans choix explicite, on part de ce que le système affiche déjà, pour
-    // que le premier clic inverse toujours ce que le visiteur a sous les yeux.
-    const effectif = actuel ?? (systemeEstSombre ? 'dark' : 'light');
+    // Sans choix explicite, le site est en sombre, quelle que soit la
+    // préférence système, qui n'est plus consultée nulle part. Interroger
+    // `matchMedia` ici rendrait le premier clic inopérant sur une machine
+    // réglée en clair : le bouton basculerait vers l'état déjà affiché.
+    const effectif = racine.dataset.theme === 'light' ? 'light' : 'dark';
     const suivant = effectif === 'dark' ? 'light' : 'dark';
 
     racine.dataset.theme = suivant;

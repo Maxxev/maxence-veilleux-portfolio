@@ -11,7 +11,7 @@ faits:
   - "J'ai dirigé une équipe de trois participants qui découvraient la conception de jeux vidéo."
   - 'Thème imposé : « innocence ».'
   - "Développement Unity en C#, et animation des pixel arts sur Krita."
-  - "Encadrer des débutants en 48 heures oblige à découper le travail en tâches réellement réalisables — la planification comptait autant que le code."
+  - "Encadrer des débutants en 48 heures oblige à découper le travail en tâches réellement réalisables."
 couverture:
   src: '/medias/videos/just-sleep.webp'
   alt: 'Séquence de jeu de Just Sleep en pixel art'
@@ -30,8 +30,7 @@ mention: null
 Ma première game jam, et la première fois que je dirigeais quoi que ce soit.
 Les trois autres membres de l'équipe n'avaient jamais touché à Unity.
 
-Ça a changé la nature du problème. En 48 heures avec des débutants, la
-difficulté n'est pas technique : elle est de découper le travail en tâches
-qu'une personne qui apprend l'outil peut réellement finir, et de reconnaître
-vite quand une tâche a été mal découpée. Le jeu est sorti dans les temps, ce
-qui n'allait pas de soi.
+En 48 heures avec des débutants, la difficulté n'est pas technique : il faut
+découper le travail en tâches qu'une personne qui apprend l'outil peut finir,
+et reconnaître vite quand une tâche a été mal découpée. Le jeu est sorti dans
+les temps.

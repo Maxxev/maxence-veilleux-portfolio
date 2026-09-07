@@ -21,4 +21,18 @@
   --container-s: calc(var(--container-width) * 0.8);
 
   --transition-duration: 0.25s;
+
+  // --- Rayons ---------------------------------------------------------------
+  // Une échelle nommée plutôt que `var(--space-xs)` détourné en rayon. Les
+  // deux références visuelles du site (le relief doux et le verre dépoli)
+  // reposent sur des arrondis généreux : un rayon serré transforme une carte
+  // de verre en vitre cassée et un bouton en relief en pavé.
+  //
+  // Ces valeurs sont fixes, pas fluides. Un rayon qui grandit avec l'écran
+  // paraît grossir sans raison sur les petits éléments, qui eux ne bougent pas.
+  --radius-s: 0.5rem;
+  --radius-m: 0.875rem;
+  --radius-l: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999px;
 }

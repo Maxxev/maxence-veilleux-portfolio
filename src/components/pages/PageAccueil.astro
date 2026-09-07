@@ -6,14 +6,12 @@ import Button from '../Button.astro';
 import SectionHeader from '../SectionHeader.astro';
 import ProjetsGrid from '../ProjetsGrid.astro';
 import StackGrid from '../StackGrid.astro';
-import Signature from '../Signature.astro';
 import ContactLinks from '../ContactLinks.astro';
 
 import { traductions, chemin, type Langue } from '../../i18n/index.ts';
 import { projetsVedettes } from '../../utils/projets.ts';
 import { bloc } from '../../utils/blocs.ts';
 import { reglages, cvVisible, contactVisible } from '../../utils/reglages.ts';
-import { STACK } from '../../data/stack.ts';
 
 interface Props {
   langue: Langue;
@@ -24,83 +22,128 @@ const t = traductions(langue);
 
 const vedettes = await projetsVedettes(langue);
 
-// Les outils affichés dans la carte du hero : le premier de chaque groupe du
-// stack, plutôt qu'une liste écrite en double. Ajouter une techno dans
-// src/data/stack.ts suffit donc à la voir remonter ici si elle passe en tête.
-const technosPrincipales = STACK.map((groupe) => groupe.items[0]);
 const apropos = await bloc('a-propos', langue);
+
+// Le titre du hero est découpé en mots pour que chacun occupe sa ligne.
+//
+// C'est bien le `h1` qui porte le grand geste typographique, et non un nom
+// décoratif ajouté derrière lui. La référence #3 pose un nom géant en fond
+// PUIS un titre par-dessus : sur un site réel, cela veut dire deux fois le même
+// texte dans le document, donc un lecteur d'écran qui annonce « Maxence
+// Veilleux Maxence Veilleux ». Un seul élément, stylé en grand, dit la même
+// chose à l'œil sans mentir au balisage.
+const motsDuTitre = t.accueil.titre.split(' ');
 ---
 
 <BaseLayout langue={langue} titrePage={t.accueil.titrePage} description={t.accueil.description}>
   <Section class="hero">
+    {/*
+      Le fond : nappes de couleur + grain, en CSS pur. Il est dans un élément
+      à lui plutôt que dans un pseudo-élément du hero, parce qu'il en faut
+      deux superposés (la nappe, puis le grain par-dessus) et qu'un élément
+      n'a que deux pseudo-éléments, déjà pris par le halo de la souris.
+    */}
+    <div class="hero__fond" aria-hidden="true"></div>
+
     <Container class="hero__container">
+      {/*
+        Le hero portait aussi la signature manuscrite et une sous-accroche.
+        Les deux ont été retirées pour la même raison : elles répétaient une
+        information déjà présente à l'écran.
+
+        La sous-accroche donnait l'établissement et l'année de diplomation, que
+        la carte « en un coup d'œil » énonce deux lignes plus loin.
+
+        La signature était la marque d'identité du site tant qu'il n'y en avait
+        pas d'autre. Depuis que le logo est dans l'en-tête, le haut de page
+        annonçait l'identité trois fois : le logo, la signature, puis le nom en
+        grand. Le composant Signature existe toujours et n'est monté nulle
+        part ; il attend une place où il ne fera pas doublon, le pied de page
+        ou la section « qui je suis » étant les deux candidates.
+      */}
       <div class="hero__principal">
-      <Signature langue={langue} class="hero__signature" />
+        <p class="pre-heading hero__surtitre">{t.accueil.surTitre}</p>
 
-      <hgroup class="hero__titre">
-        <p class="pre-heading">{t.accueil.surTitre}</p>
-        <h1>{t.accueil.titre}</h1>
-      </hgroup>
+        <h1 class="hero__nom">
+          {motsDuTitre.map((mot) => <span>{mot}</span>)}
+        </h1>
 
-      <p class="hero__accroche">{t.accueil.accroche}</p>
-      <p class="hero__sous-accroche">{t.accueil.sousAccroche}</p>
+        <p class="hero__accroche">{t.accueil.accroche}</p>
 
-      <div class="hero__actions">
-        <Button RootTag="a" href={chemin('projets', langue)} glow iconName="fa6-solid:arrow-right">
-          {t.accueil.ctaProjets}
-        </Button>
-        {
-          cvVisible && (
-            <Button
-              RootTag="a"
-              href={reglages.cv.url}
-              outline
-              iconName="fa6-solid:file-arrow-down"
-              reverseIcon
-            >
-              {t.accueil.ctaCv}
-            </Button>
-          )
-        }
-      </div>
+        <div class="hero__actions">
+          <Button RootTag="a" href={chemin('projets', langue)} glow iconName="fa6-solid:arrow-right">
+            {t.accueil.ctaProjets}
+          </Button>
+          {
+            cvVisible && (
+              <Button
+                RootTag="a"
+                href={reglages.cv.url}
+                outline
+                iconName="fa6-solid:file-arrow-down"
+                reverseIcon
+              >
+                {t.accueil.ctaCv}
+              </Button>
+            )
+          }
+        </div>
       </div>
 
       {/*
-        La colonne de droite. Elle existe d'abord parce que le hero laissait
-        les deux tiers de l'écran vides à 1440 px, mais son contenu n'est pas
-        du remplissage : ce sont les quatre questions qu'un employeur se pose
-        avant de lire quoi que ce soit d'autre — où il en est, où il étudie,
-        ce qu'il cherche, avec quoi il travaille.
+        La colonne de droite : le rendu de la souris, puis la carte de verre,
+        l'une SOUS l'autre, sans recouvrement.
+
+        Une version précédente faisait chevaucher les deux, parce qu'une carte
+        translucide posée sur un aplat uni ne montre rien : le flou n'a rien à
+        flouter. Mais le rendu est la seule pièce du site qui appartienne en
+        propre à Maxence, et en cacher le tiers pour illustrer un effet, c'est
+        inverser les priorités.
+
+        Le halo transparent sous la souris ne fait que 4,9 % de la hauteur de
+        l'image (mesuré sur le canal alpha), soit une quinzaine de pixels à la
+        taille d'affichage : il n'existe pas de chevauchement qui épargne
+        l'objet tout en se voyant. Le choix est donc franc.
+
+        Le verre ne perd pas sa raison d'être pour autant : il floute la nappe
+        de couleur et son grain, qui ne sont pas un aplat. C'est simplement
+        plus discret, ce qui est le bon compromis ici.
       */}
-      <aside class="hero__carte">
-        <p class="hero__carte-titre">{t.accueil.carteTitre}</p>
-        <dl class="meta-list">
-          <div>
-            <dt>{t.accueil.carteStatut}</dt>
-            <dd>{t.accueil.carteStatutValeur}</dd>
-          </div>
-          <div>
-            <dt>{t.accueil.carteEtablissement}</dt>
-            <dd>{reglages.formation.etablissement}</dd>
-          </div>
-          <div>
-            <dt>{t.accueil.carteRecherche}</dt>
-            <dd>{t.accueil.carteRechercheValeur}</dd>
-          </div>
-          <div>
-            <dt>{t.accueil.carteLangues}</dt>
-            <dd>{t.accueil.carteLanguesValeur}</dd>
-          </div>
-          <div>
-            <dt>{t.accueil.carteTechnos}</dt>
-            <dd>
-              <ul class="tech-list">
-                {technosPrincipales.map((techno) => <li>{techno}</li>)}
-              </ul>
-            </dd>
-          </div>
-        </dl>
-      </aside>
+      <div class="hero__visuel">
+        <img
+          class="hero__souris"
+          src="/medias/souris.webp"
+          srcset="/medias/souris-800.webp 800w, /medias/souris.webp 1600w"
+          sizes="(min-width: 64rem) 45vw, 92vw"
+          width="1600"
+          height="781"
+          alt={t.accueil.souriAlt}
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <aside class="hero__carte">
+          <p class="hero__carte-titre">{t.accueil.carteTitre}</p>
+          <dl class="meta-list">
+            <div>
+              <dt>{t.accueil.carteStatut}</dt>
+              <dd>{t.accueil.carteStatutValeur}</dd>
+            </div>
+            <div>
+              <dt>{t.accueil.carteEtablissement}</dt>
+              <dd>{reglages.formation.etablissement}</dd>
+            </div>
+            <div>
+              <dt>{t.accueil.carteRecherche}</dt>
+              <dd>{t.accueil.carteRechercheValeur}</dd>
+            </div>
+            <div>
+              <dt>{t.accueil.carteLangues}</dt>
+              <dd>{t.accueil.carteLanguesValeur}</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
     </Container>
   </Section>
 
@@ -166,122 +209,94 @@ const apropos = await bloc('a-propos', langue);
 
 <style lang="scss">
   @use '../../styles/breakpoints' as bp;
+  @use '../../styles/texture' as tx;
+  @use '../../styles/text' as txt;
 
   .hero {
     position: relative;
     isolation: isolate;
-    padding-block: var(--space-xl) var(--space-l);
     overflow: clip;
 
-    // Deux halos de couleur qui dérivent lentement derrière le titre. Pas
-    // d'image, pas de bibliothèque : deux dégradés radiaux et une animation de
-    // translation. Neutralisés par la préférence de mouvement réduit, définie
-    // une seule fois dans _base.scss.
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      z-index: -1;
-      border-radius: 50%;
-      filter: blur(70px);
-      opacity: 0.5;
-      pointer-events: none;
-    }
+    // Le hero remonte sous l'en-tête. L'en-tête est `sticky`, donc il occupe
+    // sa place dans le flux : sans cette marge négative, les nappes de couleur
+    // s'arrêteraient net à sa base et laisseraient un bandeau uni en haut de
+    // page. Le padding compense pour que le contenu, lui, ne passe pas dessous.
+    margin-top: calc(-1 * var(--header-height));
+    padding-block: calc(var(--header-height) + var(--space-m)) var(--space-l);
 
-    &::before {
-      width: min(38rem, 90vw);
-      aspect-ratio: 1.4;
-      top: -18%;
-      left: -12%;
-      background: radial-gradient(
-        circle,
-        hsla(var(--primary-h), var(--primary-s), 55%, 0.4),
-        transparent 68%
-      );
-      animation: hero-derive-a 22s ease-in-out infinite alternate;
-    }
-
-    &::after {
-      width: min(30rem, 80vw);
-      aspect-ratio: 1;
-      top: 8%;
-      right: -10%;
-      background: radial-gradient(
-        circle,
-        hsla(var(--accent-h), var(--accent-s), 55%, 0.24),
-        transparent 66%
-      );
-      animation: hero-derive-b 28s ease-in-out infinite alternate;
-    }
+    // Le hero est la seule surface du site à porter la nappe à pleine force.
+    // Ailleurs, elle est atténuée : quatre halos saturés derrière un paragraphe
+    // le rendent pénible à lire.
+    --aurora-force: 1;
   }
 
-  @keyframes hero-derive-a {
-    to {
-      translate: 8% 12%;
-      scale: 1.12;
-    }
-  }
-
-  @keyframes hero-derive-b {
-    to {
-      translate: -10% 8%;
-      scale: 0.92;
-    }
+  .hero__fond {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    @include tx.aurora;
+    @include tx.grain('after');
   }
 
   .hero__container {
-    gap: var(--space-m);
+    gap: var(--space-l);
     align-items: start;
   }
 
   .hero__principal {
     display: flex;
     flex-direction: column;
-    gap: var(--space-s);
     align-items: start;
+    gap: var(--space-xs);
   }
 
-  .hero__carte {
-    width: 100%;
-    padding: var(--space-s);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--space-xs);
-    background-color: color-mix(in srgb, var(--surface-raised) 70%, transparent);
-    backdrop-filter: blur(8px);
+  .hero__surtitre {
+    margin: 0;
+  }
 
-    .hero__carte-titre {
-      font-family: var(--mono-font-family);
-      font-size: var(--text--2);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--pre-heading-color);
-      padding-bottom: var(--space-xs);
-      margin-bottom: var(--space-xs);
-      border-bottom: 1px solid var(--border-subtle);
+  // --- Le nom ---------------------------------------------------------------
+  .hero__nom {
+    // ---- RÉGLAGE : l'espacement des lettres du nom -------------------------
+    //
+    // Négatif = lettres plus serrées. Positif = plus aérées. 0 = l'espacement
+    // dessiné par le créateur de la police.
+    //
+    // Repères, du plus serré au plus lâche :
+    //   -0.06em   très serré, les lettres se touchent presque
+    //   -0.045em  la valeur actuelle
+    //   -0.02em   resserrement léger
+    //    0        neutre
+    //   +0.02em   aéré
+    //
+    // L'unité `em` est volontaire : elle suit la taille du texte, donc un
+    // seul réglage vaut du téléphone au grand écran. En pixels, il faudrait
+    // le refaire à chaque palier de taille.
+    //
+    // À ne pas confondre avec le crénage, qui est le rattrapage que la police
+    // applique à certaines PAIRES de lettres (le « AX » de MAXENCE, par
+    // exemple). Celui-là vient de Bricolage Grotesque et il est déjà actif ;
+    // si c'est une paire précise qui te dérange plutôt que l'ensemble, dis-le,
+    // ça se corrige autrement.
+    --display-letter-spacing: -0.045em;
+
+    // La largeur des lettres se règle ici, dans le même esprit : 75 très
+    // étroit, 100 normal, tout l'intervalle est disponible.
+    @include txt.display($largeur: 100);
+    // `1lh` cale la taille sur la hauteur de ligne réelle : le titre remplit
+    // la largeur disponible sans qu'on ait à deviner un nombre de caractères.
+    font-size: clamp(2.75rem, 11vw, 7rem);
+    margin-block: var(--space-xxs) var(--space-xs);
+
+    span {
+      display: block;
     }
 
-    .meta-list > div + div {
-      margin-top: var(--space-xs);
-    }
-  }
-
-  .hero__signature {
-    color: var(--primary);
-    margin-bottom: var(--space-xs);
-  }
-
-  .hero__titre {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xxs);
-
-    h1 {
-      // Le nom occupe la ligne : plus gros que l'échelle par défaut, parce que
-      // c'est la première chose que doit confirmer un employeur arrivant du CV.
-      font-size: clamp(2.6rem, 9vw, 5.5rem);
-      line-height: 0.95;
-      letter-spacing: -0.035em;
+    // Le second mot prend le dégradé du CV. Un seul mot, pas les deux : un
+    // titre entier en dégradé perd son contraste mesurable, et l'accent ne
+    // veut plus rien dire s'il est partout.
+    span:last-child {
+      @include tx.texte-degrade;
     }
   }
 
@@ -295,19 +310,62 @@ const apropos = await bloc('a-propos', langue);
     max-width: 34ch;
   }
 
-  .hero__sous-accroche {
-    color: var(--text-muted);
-    max-width: 52ch;
-    text-wrap: pretty;
-  }
-
   .hero__actions {
-    margin-top: var(--space-xs);
+    margin-top: var(--space-s);
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
   }
 
+  // --- La souris et la carte ------------------------------------------------
+  .hero__visuel {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    isolation: isolate;
+  }
+
+  .hero__souris {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    // Le rendu porte déjà son propre halo en pixels ; cette ombre portée le
+    // prolonge dans la nappe de couleur pour que l'objet ne paraisse pas
+    // collé sur le fond. `drop-shadow` suit le canal alpha, donc elle épouse
+    // la silhouette au lieu de dessiner un rectangle flou.
+    filter: drop-shadow(0 24px 48px hsla(var(--violet-h), 80%, 20%, 0.55));
+  }
+
+  .hero__carte {
+    @include tx.verre(
+      $rayon: var(--radius-l),
+      $fond: var(--glass-bg-lisible)
+    );
+    padding: var(--space-s);
+    width: 100%;
+    z-index: 1;
+
+    .hero__carte-titre {
+      font-family: var(--mono-font-family);
+      font-size: var(--text--2);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--pre-heading-color);
+      padding-bottom: var(--space-xs);
+      margin-bottom: var(--space-xs);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .meta-list > div + div {
+      margin-top: var(--space-xs);
+    }
+  }
+
+  // --- Le reste de la page --------------------------------------------------
   .accueil-stack,
   .accueil-apropos {
     background-color: var(--surface-sunken);
@@ -317,36 +375,61 @@ const apropos = await bloc('a-propos', langue);
     margin-top: var(--space-s);
   }
 
+  // La section de contact est le pendant du hero : c'est l'autre moment de la
+  // page où on demande une action. Elle reprend la nappe, à force réduite :
+  // assez pour que l'œil comprenne qu'on est revenu au même registre, pas
+  // assez pour concurrencer le haut de page.
   .accueil-contact {
     padding-block: var(--space-l);
+    position: relative;
+    isolation: isolate;
+    --aurora-force: 0.5;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      @include tx.aurora;
+    }
+
+    @include tx.grain('after');
+
+    &::after {
+      z-index: -1;
+    }
   }
 
   @media (min-width: bp.$md) {
     .hero {
-      padding-block: calc(var(--space-xl) * 1.2) var(--space-xl);
-    }
-
-    .hero__carte {
-      width: fit-content;
-      min-width: 22rem;
+      // `--space-xl` vaut huit fois `--space-s`, soit près de 200 px sur un
+      // grand écran : ajouté à l'en-tête, il repoussait le titre sous la ligne
+      // de flottaison et laissait un vide qu'on lisait comme une erreur de
+      // chargement. Deux crans plus bas suffisent à aérer.
+      padding-block: calc(var(--header-height) + var(--space-m)) var(--space-l);
     }
 
     .hero__accroche {
       font-size: var(--text-3);
-      max-width: 26ch;
+      max-width: 30ch;
     }
   }
 
   @media (min-width: bp.$lg) {
     .hero__container {
+      // La colonne de droite est la plus large des deux. Le rendu ne déborde
+      // plus hors du cadre : il doit donc gagner en largeur ici ce qu'il a
+      // perdu en débordement, sans quoi il rapetisse au lieu d'être dégagé.
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
       column-gap: var(--space-l);
       align-items: center;
     }
 
-    .hero__carte {
-      min-width: 0;
+    .hero__souris {
+      // Entièrement contenue, sans rognage : c'est une pièce qui appartient à
+      // Maxence, pas une texture de fond.
       width: 100%;
     }
   }

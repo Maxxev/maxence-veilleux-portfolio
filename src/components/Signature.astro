@@ -16,13 +16,13 @@ const t = traductions(langue);
   Ce n'est pas une image : c'est un aplat de couleur découpé par deux masques
   superposés. Le premier est la signature elle-même (WebP à canal alpha), le
   second un dégradé qui balaie de gauche à droite. Leur intersection donne
-  l'effet d'écriture — la même impression que le GIF de 375 ko de l'ancien
+  l'effet d'écriture : la même impression que le GIF de 375 ko de l'ancien
   site, pour 12 ko et sans image animée.
 
   Le bénéfice caché du masque : la couleur vient de `currentColor`, donc la
   signature suit le thème. Un PNG noir aurait disparu sur fond sombre.
 
-  Le dégradé est animé via une propriété enregistrée avec `@property` — sans
+  Le dégradé est animé via une propriété enregistrée avec `@property` : sans
   ce typage, les navigateurs ne savent pas interpoler un pourcentage dans un
   `linear-gradient` et l'animation saute d'un état à l'autre.
 */}
@@ -45,6 +45,23 @@ const t = traductions(langue);
   .signature {
     --signature-progression: 0%;
 
+    // Rogne un pixel sur tout le pourtour.
+    //
+    // Sans ça, un liseré clair d'un pixel entoure la signature. Ce n'est pas
+    // le masque qui déborde : son canal alpha est à zéro sur tout le
+    // pourtour, vérifié au pixel. C'est l'aplat `currentColor` de l'élément
+    // qui déborde du masque quand les deux sont rastérisés à des tailles
+    // arrondies différemment.
+    //
+    // Mesuré : le défaut n'existe QUE dans Chromium à densité d'affichage
+    // fractionnaire, c'est-à-dire un écran Windows à 125 % ou 150 %. À
+    // densité 1 et 2, et dans Firefox à toutes les densités, il est absent.
+    // Écart de luminance au bord : +11,6 à densité 1,5, +0 après ce rognage.
+    //
+    // Le tracé dispose de 3 px de marge vide à la taille d'affichage, donc
+    // rogner 1 px ne coupe rien du dessin.
+    clip-path: inset(1px);
+
     width: min(100%, 15rem);
     aspect-ratio: 640 / 293;
     background-color: currentColor;
@@ -66,6 +83,25 @@ const t = traductions(langue);
     -webkit-mask-composite: source-in;
 
     animation: signature-tracer 1.6s 0.25s cubic-bezier(0.5, 0, 0.35, 1) forwards;
+
+    // La signature vit dans le pied de page, donc sous la ligne de flottaison.
+    // Une animation minutée s'y jouerait pendant qu'on lit le haut de page, et
+    // le visiteur n'arriverait que devant un tracé déjà fini.
+    //
+    // Là où la timeline de vue existe, l'animation est donc rattachée au
+    // défilement : le tracé se dessine à mesure que la signature entre dans
+    // l'écran. Le reste du site utilise déjà ce mécanisme pour les apparitions.
+    //
+    // Les navigateurs qui l'ignorent gardent l'animation minutée ci-dessus,
+    // qui reste un repli correct : la signature est simplement déjà tracée
+    // quand on descend.
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        animation-timeline: view();
+        animation-delay: 0s;
+        animation-range: entry 15% cover 32%;
+      }
+    }
   }
 
   @keyframes signature-tracer {

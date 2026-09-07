@@ -2,49 +2,168 @@
 
 // Deux couches, et l'ordre compte.
 //
-// 1. Les *rampes* — générées par `generate-color-variants`, elles produisent
+// 1. Les *rampes*, générées par `generate-color-variants`, elles produisent
 //    `--primary-5` … `--primary-99` à luminosité fixe. Elles ne changent
-//    jamais : `--primary-30` est le même orange en clair comme en sombre.
-// 2. Les *tokens sémantiques* — `--surface-page`, `--text-color`, … Eux
+//    jamais : `--primary-30` est le même corail en clair comme en sombre.
+// 2. Les *tokens sémantiques* : `--surface-page`, `--text-color`, … Eux
 //    pointent vers un barreau différent de la rampe selon le thème.
 //
 // Un composant n'utilise que la couche 2. C'est ce qui rend le mode sombre
 // gratuit : aucune règle de composant ne mentionne de thème.
+//
+// --- D'où viennent ces valeurs ---------------------------------------------
+//
+// Elles ne sont pas choisies à l'œil : elles sont échantillonnées au pixel
+// dans le CV PDF, parce que c'est le document que l'employeur a vu en premier
+// et que le site doit se lire comme sa suite. Les relevés :
+//
+//   barre latérale   #20172d   hsl(270, 32%, 13%)
+//   bandeau, début   #ff5444   hsl(  5, 100%, 63%)   corail
+//   bandeau, milieu  #fe3dab   hsl(326,  99%, 62%)   magenta
+//   bandeau, fin     #9b4afe   hsl(267,  99%, 64%)   violet
+//
+// Le rendu de la souris raconte la même histoire : orange hsl(28, 100%, 60%),
+// magenta hsl(337, 64%, 52%), violet hsl(285, 65%, 29%). Les deux sources
+// concordent, ce qui valide la direction : chaud → magenta → violet.
 
 :root {
-  // Orange vif : la couleur d'action (boutons, liens, accents de titre).
+  // Corail-orange : la couleur d'action (boutons, liens, accents de titre).
   //
-  // La luminosité de base (56 %) n'est pas un choix esthétique mais une
-  // conséquence. Un orange vif avec du texte BLANC ne dépasse jamais 3:1 —
-  // il faudrait descendre à L≤43 %, et l'orange devient alors une rouille
-  // terne. En inversant (texte foncé sur orange, voir `--on-primary`), on
-  // obtient 6,5:1 tout en gardant l'orange éclatant. C'est la décision
-  // structurante de cette palette.
-  @include m.generate-color-variants('primary', 24, 94%, 56%, 1);
-
-  // Neutre CHAUD : les textes, les fonds, les bordures — la structure.
+  // La teinte 16° est un pont assumé entre les deux sources : le CV démarre
+  // son dégradé à 5° (franchement rouge), la souris culmine à 28° (franchement
+  // orange). À 16° la couleur reste reconnaissable depuis le PDF sans devenir
+  // le rouge d'une alerte.
   //
-  // C'est ici que se joue la personnalité du site, plus encore que dans
-  // l'orange. Une ardoise bleutée sous un accent orange rend l'ensemble
-  // banal ; un neutre à 26° donne des gris beiges, un fond papier en clair
-  // et un noir chaud en sombre.
-  @include m.generate-color-variants('secondary', 26, 12%, 24%, 1);
+  // La luminosité de base (58 %) n'est pas un choix esthétique mais une
+  // conséquence. Un corail vif avec du texte BLANC ne dépasse jamais 3:1. Il
+  // faudrait descendre sous L≤43 %, et la couleur devient alors une brique
+  // terne. En inversant (texte foncé sur corail, voir `--on-primary`), on garde
+  // la couleur éclatante ET un contraste confortable.
+  @include m.generate-color-variants('primary', 16, 96%, 58%, 1);
 
-  // Rose profond : la seconde couleur des dégradés du hero et des couvertures
-  // générées. Jamais utilisée pour du texte de contenu.
-  @include m.generate-color-variants('accent', 348, 72%, 54%, 1);
+  // Magenta : le point milieu du dégradé du CV. Jamais utilisé pour du texte
+  // de contenu, uniquement dans les dégradés et les halos.
+  @include m.generate-color-variants('accent', 328, 92%, 60%, 1);
+
+  // Violet : la fin du dégradé du CV, et la teinte dont dérive tout le neutre.
+  @include m.generate-color-variants('violet', 268, 88%, 62%, 1);
+
+  // Neutre VIOLACÉ : les textes, les fonds, les bordures. Toute la structure.
+  //
+  // C'est ici que se joue la personnalité du site, plus encore que dans le
+  // corail. Une ardoise bleutée sous un accent corail rend l'ensemble banal ;
+  // un neutre à 272° donne le violet-noir de la barre latérale du CV en sombre,
+  // et un papier lavande à peine teinté en clair.
+  //
+  // La saturation (24 %) est un compromis mesuré : la barre latérale du CV est
+  // à 32 %, mais cette valeur s'applique à TOUTE la rampe, y compris au texte.
+  // Un texte clair à 32 % vire au lavande et fatigue sur un paragraphe long.
+  @include m.generate-color-variants('secondary', 272, 24%, 22%, 1);
 
   @include m.generate-color-variants('black', 0, 0%, 0%, 1);
   @include m.generate-color-variants('white', 0, 0%, 100%, 1);
+
+  // --- Le dégradé signature -------------------------------------------------
+  // Les trois arrêts du bandeau du CV, à l'identique. Il traverse le site :
+  // filets de section, halo du hero, survols, bordure des cartes de verre.
+  // Défini une seule fois pour que « la couleur de Maxence » ait une adresse.
+  --gradient-signature: linear-gradient(
+    100deg,
+    hsl(5, 100%, 63%) 0%,
+    hsl(326, 99%, 62%) 48%,
+    hsl(267, 99%, 64%) 100%
+  );
+
+  // La même chose en version douce, pour les grandes surfaces où le dégradé
+  // plein écraserait le texte posé dessus.
+  --gradient-signature-doux: linear-gradient(
+    100deg,
+    hsla(5, 100%, 63%, 0.16) 0%,
+    hsla(326, 99%, 62%, 0.16) 48%,
+    hsla(267, 99%, 64%, 0.16) 100%
+  );
 }
 
-// --- Thème clair (défaut) ---------------------------------------------------
-:root {
+// --- Thème sombre (défaut) --------------------------------------------------
+// C'est le thème par défaut du site, et non plus le thème clair : le premier
+// coup d'œil doit rappeler le CV, dont la colonne d'identité est violet foncé.
+@mixin dark-theme {
+  color-scheme: dark;
+
+  // `--secondary-10` reproduit le #20172d de la barre latérale du CV à un
+  // cheveu près. C'est le fond de tout le site.
+  --surface-page: var(--secondary-10);
+  --surface-raised: var(--secondary-15);
+  --surface-sunken: var(--secondary-5);
+  --surface-inverse: var(--secondary-96);
+
+  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.14);
+  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.28);
+
+  --text-color: var(--secondary-90);
+  --text-muted: var(--secondary-65);
+  --text-on-inverse: var(--secondary-15);
+  --heading-color: var(--secondary-99);
+
+  // Le corail à 58 % passe déjà sur le fond violet foncé, mais on remonte la
+  // rampe : sur un fond aussi sombre, un lien gagne à être franchement clair.
+  --link-color: var(--primary-70);
+  --link-color-hover: var(--primary-85);
+
+  --pre-heading-color: var(--primary-65);
+
+  // L'aplat corail garde la même luminosité dans les deux thèmes, donc le
+  // texte qu'on y pose reste le même.
+  --on-primary: var(--secondary-10);
+
+  --tag-bg: hsla(var(--violet-h), var(--violet-s), 60%, 0.14);
+  --tag-color: var(--secondary-90);
+  --tag-border: hsla(var(--violet-h), var(--violet-s), 60%, 0.28);
+
+  --shadow-color: var(--black);
+
+  // --- Verre dépoli ---------------------------------------------------------
+  // Le verre n'existe que s'il y a de la couleur derrière lui : ces valeurs
+  // supposent un fond de dégradé grainé, jamais un aplat.
+  --glass-bg: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.07);
+  --glass-bg-fort: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.12);
+  // Le voile des cartes qui portent du texte AU-DESSUS d'un visuel clair.
+  //
+  // Les deux valeurs ci-dessus sont des teintes claires en transparence : sur
+  // le fond violet elles éclaircissent juste ce qu'il faut. Posées sur le
+  // rendu de la souris, qui monte à 95 % de luminosité, elles éclaircissent
+  // encore, et le texte clair de la carte devient illisible.
+  //
+  // Un voile SOMBRE règle le problème dans les deux cas, et c'est aussi ce que
+  // fait la référence #3 : ses cartes sont des voiles gris posés sur une photo,
+  // pas des vitres transparentes. Mesuré au pire cas (la zone crème de la
+  // souris) : 6,3:1 pour le texte courant.
+  --glass-bg-lisible: hsla(var(--secondary-h), 30%, 8%, 0.72);
+  --glass-border: hsla(var(--secondary-h), var(--secondary-s), 90%, 0.16);
+  // Le filet clair du haut : ce qui fait lire une surface comme du verre
+  // plutôt que comme un rectangle translucide.
+  --glass-reflet: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.34);
+  --glass-ombre: hsla(var(--secondary-h), 40%, 2%, 0.5);
+
+  // --- Relief doux (image #2) -----------------------------------------------
+  // Réservé aux petits contrôles pressables. En sombre, la lumière vient du
+  // haut-gauche et reste discrète : un relief clair trop marqué sur fond
+  // sombre fait de la boue.
+  --emboss-lumiere: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.09);
+  --emboss-ombre: hsla(var(--secondary-h), 45%, 2%, 0.66);
+  --emboss-surface: var(--secondary-15);
+
+  // Le grain doit être plus présent en sombre : un aplat foncé montre son
+  // banding sur les dégradés, et c'est précisément le bruit qui le casse.
+  --grain-opacite: 0.16;
+  --grain-blend: overlay;
+}
+
+// --- Thème clair ------------------------------------------------------------
+// Le verso du CV : la colonne de contenu, papier presque blanc à peine lavande.
+@mixin light-theme {
   color-scheme: light;
 
-  // Un fond papier plutôt qu'un blanc pur : la teinte chaude est à peine
-  // perceptible isolément, mais c'est elle qui empêche le site de ressembler
-  // à tous les autres au premier coup d'œil.
   --surface-page: var(--secondary-97);
   --surface-raised: var(--secondary-99);
   --surface-sunken: var(--secondary-95);
@@ -58,70 +177,59 @@
   --text-on-inverse: var(--secondary-95);
   --heading-color: var(--secondary-10);
 
-  // 35 et non 40 : à 40 %, l'orange tombe à 4,25:1 sur le fond papier, sous
-  // le seuil AA. Un barreau plus bas suffit et donne 5,29:1.
+  // 35 et non 40 : à 40 %, le corail tombe sous le seuil AA sur le fond papier.
+  // Un barreau plus bas suffit. Voir `npm run verifier:contrastes`.
   --link-color: var(--primary-35);
   --link-color-hover: var(--primary-25);
 
   --pre-heading-color: var(--primary-35);
 
-  // Ce qu'on pose SUR un aplat orange. Une seule déclaration, pour que le
-  // choix « texte foncé plutôt que blanc » n'ait pas à être répété.
   --on-primary: var(--secondary-10);
 
-  --tag-bg: var(--primary-96);
-  --tag-color: var(--primary-30);
-  --tag-border: var(--primary-90);
+  --tag-bg: hsla(var(--violet-h), var(--violet-s), 60%, 0.09);
+  --tag-color: var(--secondary-25);
+  --tag-border: hsla(var(--violet-h), var(--violet-s), 45%, 0.22);
 
   --shadow-color: var(--secondary-40);
+
+  // En clair, le verre s'appuie sur du blanc translucide et une bordure foncée,
+  // l'inverse exact du sombre, sinon les cartes disparaissent.
+  --glass-bg: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.5);
+  --glass-bg-fort: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.68);
+  // Même rôle qu'en sombre, valeur inversée : ici c'est un voile CLAIR qu'il
+  // faut, puisque le texte de la carte est foncé.
+  --glass-bg-lisible: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.82);
+  --glass-border: hsla(var(--secondary-h), var(--secondary-s), 30%, 0.14);
+  --glass-reflet: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.9);
+  --glass-ombre: hsla(var(--secondary-h), 30%, 30%, 0.14);
+
+  // Le relief doux de l'image #2 : c'est en thème clair qu'il est chez lui.
+  --emboss-lumiere: hsla(var(--secondary-h), var(--secondary-s), 100%, 0.95);
+  --emboss-ombre: hsla(var(--secondary-h), 22%, 45%, 0.24);
+  --emboss-surface: var(--secondary-96);
+
+  --grain-opacite: 0.1;
+  --grain-blend: multiply;
 
   // Alias conservé pour les composants repris de cccc-maxxev
   --root-bg: var(--surface-page);
 }
 
-// --- Thème sombre -----------------------------------------------------------
-// Écrit une seule fois dans un mixin, puis appliqué aux deux sélecteurs qui
-// doivent le déclencher : le choix explicite et la préférence système.
-@mixin dark-theme {
-  color-scheme: dark;
-
-  --surface-page: var(--secondary-10);
-  --surface-raised: var(--secondary-15);
-  --surface-sunken: var(--secondary-5);
-  --surface-inverse: var(--secondary-96);
-
-  --border-subtle: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.12);
-  --border-strong: hsla(var(--secondary-h), var(--secondary-s), 80%, 0.24);
-
-  --text-color: var(--secondary-90);
-  --text-muted: var(--secondary-65);
-  --text-on-inverse: var(--secondary-15);
-  --heading-color: var(--secondary-97);
-
-  // L'orange à 35 % passe sur fond papier mais disparaît sur fond sombre :
-  // on remonte la rampe.
-  --link-color: var(--primary-70);
-  --link-color-hover: var(--primary-85);
-
-  --pre-heading-color: var(--primary-65);
-
-  // L'aplat orange garde la même luminosité dans les deux thèmes, donc le
-  // texte qu'on y pose reste le même.
-  --on-primary: var(--secondary-10);
-
-  --tag-bg: hsla(var(--primary-h), var(--primary-s), 60%, 0.12);
-  --tag-color: var(--primary-80);
-  --tag-border: hsla(var(--primary-h), var(--primary-s), 60%, 0.24);
-
-  --shadow-color: var(--black);
-}
-
-:root[data-theme='dark'] {
+// --- Application ------------------------------------------------------------
+// Le sombre est posé sur `:root` sans condition : c'est le défaut du site, y
+// compris pour un visiteur dont le système est en clair. Le choix a été fait
+// pour que la première image du site soit celle du CV.
+//
+// Seul un choix explicite du visiteur, stocké par le sélecteur de thème, fait
+// basculer en clair. On ne consulte donc PAS `prefers-color-scheme` : le faire
+// donnerait deux premières impressions différentes selon la machine.
+:root {
   @include dark-theme;
+
+  // Alias conservé pour les composants repris de cccc-maxxev
+  --root-bg: var(--surface-page);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    @include dark-theme;
-  }
+:root[data-theme='light'] {
+  @include light-theme;
 }

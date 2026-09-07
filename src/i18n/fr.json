@@ -22,11 +22,11 @@
     "description": "Maxence Veilleux, étudiant en Techniques de l'informatique au Cégep de Sherbrooke. Applications Web et mobiles, de la maquette Figma au déploiement.",
     "surTitre": "Développeur Web et mobile",
     "titre": "Maxence Veilleux",
-    "accroche": "Je conçois et je développe des applications Web et mobiles — de la maquette Figma jusqu'au déploiement.",
-    "sousAccroche": "Étudiant en Techniques de l'informatique au Cégep de Sherbrooke, voie Conception et programmation. Diplomation prévue en mai 2027.",
+    "accroche": "Je conçois et je développe des applications Web et mobiles, de la maquette Figma jusqu'au déploiement.",
     "ctaProjets": "Voir les projets",
     "ctaCv": "Télécharger le CV",
     "signatureAlt": "Signature manuscrite de Maxence Veilleux",
+    "souriAlt": "Rendu 3D d'une souris d'ordinateur, dégradé orange et violet sur fond de halo lumineux",
     "carteTitre": "En un coup d'œil",
     "carteStatut": "Statut",
     "carteStatutValeur": "Étudiant · diplomation mai 2027",
@@ -35,14 +35,13 @@
     "carteRechercheValeur": "Stage ou emploi en développement Web ou mobile",
     "carteLangues": "Langues",
     "carteLanguesValeur": "Français, anglais",
-    "carteTechnos": "Principaux outils",
     "projetsSurTitre": "Réalisations",
     "projetsTitre": "Projets en vedette",
     "projetsIntro": "Trois projets qui montrent le mieux comment je travaille. Le reste est sur la page des projets.",
     "projetsTous": "Tous les projets",
     "stackSurTitre": "Outils",
     "stackTitre": "Ce avec quoi je travaille",
-    "stackIntro": "Regroupé par usage plutôt que par popularité. Ce qui apparaît ici, je l'ai utilisé dans un projet livré.",
+    "stackIntro": "Regroupé par usage. Ce qui apparaît ici, je l'ai utilisé dans un projet livré.",
     "aproposSurTitre": "En bref",
     "aproposTitre": "Qui je suis",
     "aproposCta": "Voir mon parcours"
@@ -52,7 +51,7 @@
     "description": "Les projets de développement Web, mobile et jeu vidéo de Maxence Veilleux : applications Laravel et Android, sites Astro, prototypes Unity.",
     "surTitre": "Réalisations",
     "titre": "Projets",
-    "intro": "Du travail scolaire, professionnel et personnel. Chaque fiche précise ce que j'ai fait moi-même, parce que c'est la seule information vraiment utile dans un travail d'équipe.",
+    "intro": "Du travail scolaire, professionnel et personnel. Chaque fiche précise ce que j'ai fait moi-même.",
     "categories": {
       "toutes": "Toutes",
       "pro": "Professionnel",
@@ -98,7 +97,7 @@
     "horsDevTitre": "Au-delà du code",
     "distinctionsSurTitre": "Reconnaissances",
     "distinctionsTitre": "Bourses et distinctions",
-    "distinctionsNote": "Distinctions du parcours secondaire, conservées pour ce qu'elles disent de la constance."
+    "distinctionsNote": "Distinctions du parcours secondaire."
   },
   "contact": {
     "surTitre": "La suite",

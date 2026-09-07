@@ -8,10 +8,10 @@ ordre: 20
 vedette: true
 technos: ['TypeScript', 'Zod', 'Astro', 'Cloudflare Workers', 'Claude API']
 faits:
-  - 'One schema per content type, used in three places: compile-time validation, the input schema of the tool offered to the model, and server-side revalidation before writing. Malformed content cannot reach a file, because the only path to a file goes through that schema.'
+  - 'One schema per content type, used in three places: compile-time validation, the input schema of the tool offered to the model, and server-side revalidation before writing. Malformed content cannot reach a file.'
   - 'The model never publishes directly: it proposes. Each proposal becomes a pull request the client reviews before merging.'
   - 'To keep those diffs readable, the YAML emitter is hand-written rather than taken from a library: stable key order, quote style and indentation guarantee that one line moves when one thing changed.'
-  - 'The writable area is restricted by a path allowlist, with a per-folder catalogue of permitted formats — the question "what may be uploaded, and where" has exactly one answer in the code.'
+  - 'The writable area is restricted by a path allowlist, with a per-folder catalogue of permitted formats.'
 couverture:
   src: '/medias/projets/systemes-ia.webp'
   alt: 'Abstract artwork standing in for the AI-augmented internal systems'
@@ -49,4 +49,4 @@ accepts or rejects.
 That review is only worth anything if the diff is readable. Which is why the
 YAML emitter is hand-written instead of taken from a library: stable key order,
 quote style and indentation mean one line moves in the diff when one thing
-changed. A generic emitter reorders keys and turns review into a needle hunt.
+changed. A generic emitter reorders keys.

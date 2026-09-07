@@ -8,10 +8,10 @@ ordre: 20
 vedette: true
 technos: ['TypeScript', 'Zod', 'Astro', 'Cloudflare Workers', 'API Claude']
 faits:
-  - "Un schéma unique par type de contenu, utilisé à trois endroits : validation à la compilation, définition de l'outil offert au modèle, et revalidation côté serveur avant écriture. Un contenu malformé ne peut donc pas atteindre un fichier, parce que le seul chemin vers un fichier passe par ce schéma."
+  - "Un schéma unique par type de contenu, utilisé à trois endroits : validation à la compilation, définition de l'outil offert au modèle, et revalidation côté serveur avant écriture. Un contenu malformé ne peut donc pas atteindre un fichier."
   - "Le modèle ne publie jamais directement : il propose. Chaque proposition devient une demande de tirage que le client relit avant de fusionner."
   - "Pour que ces diffs soient lisibles, l'émetteur YAML est écrit à la main plutôt que repris d'une bibliothèque : ordre de clés, style de guillemets et indentation stables garantissent qu'une seule ligne bouge quand une seule chose a changé."
-  - "Zone d'écriture restreinte par liste blanche de chemins, avec un catalogue de formats autorisés par dossier — la question « que peut-on téléverser, et où » a une seule réponse dans le code."
+  - "Zone d'écriture restreinte par liste blanche de chemins, avec un catalogue de formats autorisés par dossier."
 couverture:
   src: '/medias/projets/systemes-ia.webp'
   alt: "Visuel abstrait représentant les systèmes internes augmentés par l'IA"
@@ -50,5 +50,4 @@ Cette relecture n'a de valeur que si le diff est lisible. C'est pour ça que
 l'émetteur YAML est écrit à la main au lieu d'utiliser celui d'une
 bibliothèque : un ordre de clés, un style de guillemets et une indentation
 stables font qu'une seule ligne bouge dans le diff quand une seule chose a
-changé. Un émetteur générique réordonne les clés et transforme la relecture en
-recherche de l'aiguille.
+changé. Un émetteur générique réordonne les clés.

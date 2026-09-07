@@ -30,7 +30,6 @@ mention: null
 *Oups!* came out of a 48-hour constraint and a randomly drawn theme: "chain
 reaction". There were two of us.
 
-A game jam doesn't teach you to code well — it teaches you to **cut**. Half the
+A game jam doesn't teach you to code well. It teaches you to **cut**. Half the
 work is recognising, around hour thirty, which ideas won't survive the
-deadline, and dropping them early enough for the rest to stand up. That's
-probably the most transferable skill I took from it.
+deadline, and dropping them early enough for the rest to stand up.

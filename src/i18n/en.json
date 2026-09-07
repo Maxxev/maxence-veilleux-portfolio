@@ -22,11 +22,11 @@
     "description": "Maxence Veilleux, Computer Science Technology student at Cégep de Sherbrooke. Web and mobile applications, from Figma mockup to deployment.",
     "surTitre": "Web and mobile developer",
     "titre": "Maxence Veilleux",
-    "accroche": "I design and build web and mobile applications — from the Figma mockup all the way to deployment.",
-    "sousAccroche": "Computer Science Technology student at Cégep de Sherbrooke, Design and Programming stream. Graduating May 2027.",
+    "accroche": "I design and build web and mobile applications, from the Figma mockup all the way to deployment.",
     "ctaProjets": "See the projects",
     "ctaCv": "Download résumé",
     "signatureAlt": "Handwritten signature of Maxence Veilleux",
+    "souriAlt": "3D render of a computer mouse, orange-to-purple gradient on a luminous halo",
     "carteTitre": "At a glance",
     "carteStatut": "Status",
     "carteStatutValeur": "Student · graduating May 2027",
@@ -35,14 +35,13 @@
     "carteRechercheValeur": "An internship or a job in web or mobile development",
     "carteLangues": "Languages",
     "carteLanguesValeur": "French, English",
-    "carteTechnos": "Main tools",
     "projetsSurTitre": "Work",
     "projetsTitre": "Featured projects",
     "projetsIntro": "The three projects that best show how I work. The rest are on the projects page.",
     "projetsTous": "All projects",
     "stackSurTitre": "Tools",
     "stackTitre": "What I build with",
-    "stackIntro": "Grouped by what it's for rather than by popularity. Everything listed here, I've used on a project I shipped.",
+    "stackIntro": "Grouped by what it's for. Everything listed here, I've used on a project I shipped.",
     "aproposSurTitre": "In short",
     "aproposTitre": "Who I am",
     "aproposCta": "See my background"
@@ -52,7 +51,7 @@
     "description": "Web, mobile and game development projects by Maxence Veilleux: Laravel and Android applications, Astro sites, Unity prototypes.",
     "surTitre": "Work",
     "titre": "Projects",
-    "intro": "School, professional and personal work. Every entry states what I did myself, because on a team project that's the only genuinely useful information.",
+    "intro": "School, professional and personal work. Every entry states what I did myself.",
     "categories": {
       "toutes": "All",
       "pro": "Professional",
@@ -98,7 +97,7 @@
     "horsDevTitre": "Beyond code",
     "distinctionsSurTitre": "Recognition",
     "distinctionsTitre": "Scholarships and distinctions",
-    "distinctionsNote": "Distinctions from high school, kept for what they say about consistency."
+    "distinctionsNote": "Distinctions from high school."
   },
   "contact": {
     "surTitre": "Next",

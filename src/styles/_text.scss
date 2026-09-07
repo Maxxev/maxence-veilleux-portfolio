@@ -4,11 +4,20 @@
 // fichier ne s'occupe que des familles, des graisses et de l'échelle.
 
 :root {
-  // Titres — Space Grotesk : une grotesque aux terminaisons coupées net, qui
-  // lit « technique » sans sacrifier la lisibilité aux grandes tailles.
-  --heading-font-family: 'Space Grotesk', 'Archivo', Arial, Helvetica, sans-serif;
+  // Titres : Bricolage Grotesque, une grotesque contemporaine dont les
+  // détails sont légèrement irréguliers (le `a`, le `g`, les coupes en
+  // diagonale). Sur un portfolio, c'est exactement ce qu'on veut dire : le
+  // choix de la police est lui-même un travail de conception, pas un défaut
+  // d'éditeur de texte.
+  //
+  // Elle est variable sur trois axes : `wght`, `wdth` et `opsz`. C'est `wdth`
+  // qui rend le hero possible : le nom peut s'étirer jusqu'à remplir la ligne
+  // sans être déformé par une mise à l'échelle, ce qu'aucune police statique
+  // ne permet.
+  --heading-font-family: 'Bricolage Grotesque', 'Archivo', 'Space Grotesk', Arial,
+    Helvetica, sans-serif;
   --heading-font-weight: 600;
-  --heading-line-height: 1.08;
+  --heading-line-height: 1.06;
   --heading-letter-spacing: -0.02em;
   --h1: #{f.fluid-ms(4)};
   --h2: #{f.fluid-ms(3)};
@@ -18,7 +27,7 @@
   --h6: #{f.fluid-ms(0)};
   --h1-font-weight: 700;
 
-  // Texte courant — Inter, déjà la police de l'ancien portfolio
+  // Texte courant : Inter, déjà la police de l'ancien portfolio
   --text-font-family: 'Inter', Arial, Helvetica, sans-serif;
   --text-font-weight: 400;
   --text-line-height: 1.6;
@@ -35,7 +44,7 @@
   --text-8: #{f.fluid-ms(4)};
   --text-9: #{f.fluid-ms(4.5)};
 
-  // Monospace — les étiquettes de technologies, les chiffres, les métadonnées.
+  // Monospace : les étiquettes de technologies, les chiffres, les métadonnées.
   // Sur un portfolio de développeur, c'est un signal, pas une décoration.
   --mono-font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 }
@@ -54,6 +63,28 @@
   font-weight: var(--heading-font-weight);
   line-height: var(--heading-line-height);
   letter-spacing: var(--heading-letter-spacing);
+  // Bricolage Grotesque porte un axe `opsz` : la police épaissit ses déliés
+  // aux petites tailles et affine ses détails aux grandes. Une ligne suffit
+  // à l'activer, et sans elle on n'utilise qu'une moitié de la police.
+  font-optical-sizing: auto;
+}
+
+// Le registre « affiche » : le nom du hero, le 404, tout ce qui doit occuper
+// la largeur plutôt que se lire ligne à ligne.
+//
+// L'axe `wdth` fait ici le travail qu'on confie d'habitude à un `scaleX`, en
+// mieux : élargir une police par transformation étire aussi l'épaisseur des
+// traits verticaux et donne cette impression de logo mal redimensionné. L'axe
+// de largeur redessine les lettres, les fûts gardent leur graisse.
+@mixin display($largeur: 100) {
+  @include heading;
+  font-weight: 800;
+  font-variation-settings: 'wdth' $largeur;
+  line-height: 0.86;
+  // Réglable de l'extérieur, sans toucher au mixin : voir `.hero__nom` dans
+  // PageAccueil.astro, qui documente la valeur et ses repères.
+  letter-spacing: var(--display-letter-spacing, -0.045em);
+  text-transform: uppercase;
 }
 
 // Le sur-titre : une ligne courte, en majuscules et en monospace, posée

@@ -8,7 +8,7 @@
 
   // Le thème bascule sur un attribut, donc les couleurs changent d'un coup.
   // Une courte transition évite le clignotement brutal, mais elle ne doit
-  // toucher que les propriétés de couleur — sinon chaque mise en page animée
+  // toucher que les propriétés de couleur, sinon chaque mise en page animée
   // du site hériterait d'une transition qu'elle n'a pas demandée.
   :root[data-theme],
   :root[data-theme] * {

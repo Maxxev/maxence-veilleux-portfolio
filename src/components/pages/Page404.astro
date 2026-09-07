@@ -41,10 +41,37 @@ const tAutre = traductions(autre);
 </BaseLayout>
 
 <style lang="scss">
+  @use '../../styles/texture' as tx;
+
   .erreur {
     flex-grow: 1;
     justify-content: center;
     padding-block: var(--space-xl);
+
+    // La 404 était la seule page à ne recevoir aucune couleur. Sur un site
+    // dont l'identité EST la couleur, une page nue ne se lit pas comme sobre
+    // mais comme cassée. Sur une page d'erreur, c'est exactement le doute
+    // qu'il ne faut pas installer chez le visiteur.
+    position: relative;
+    isolation: isolate;
+    margin-top: calc(-1 * var(--header-height));
+    padding-top: calc(var(--header-height) + var(--space-xl));
+    --aurora-force: 0.6;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      @include tx.aurora;
+    }
+
+    @include tx.grain('after');
+
+    &::after {
+      z-index: -1;
+    }
   }
 
   .erreur__container {

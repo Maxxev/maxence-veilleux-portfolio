@@ -1,6 +1,6 @@
 ---
 titre: 'Amazoom'
-resume: "Une boutique en ligne d'appareils photo — catalogue, panier, commandes et back-office de gestion — écrite en PHP et JavaScript natifs, sans cadriciel."
+resume: "Une boutique en ligne d'appareils photo : catalogue, panier, commandes et back-office de gestion. Écrite en PHP et JavaScript natifs, sans cadriciel."
 categorie: 'etudes'
 annee: '2025'
 role: "Maquette Figma et intégration. Travail d'équipe à trois."
@@ -32,19 +32,15 @@ back-office.
 Tout est en PHP et JavaScript natifs. Le routage, les sessions, la persistance
 du panier et les requêtes vers la base de données sont écrits à la main.
 
-C'est plus lent à construire, et c'est le point. Quand on écrit soi-même la
-gestion de session avant d'avoir vu Laravel la faire, on comprend ce que le
-cadriciel fait à notre place — et ça se voit plus tard, quand quelque chose se
-comporte mal et qu'il faut savoir où regarder. Ludix, l'année suivante, est
-passé à Laravel ; le contraste entre les deux projets est la partie la plus
-instructive.
+Écrire soi-même la gestion de session avant d'avoir vu Laravel la faire montre
+ce que le cadriciel fait à notre place. Ludix, l'année suivante, est passé à
+Laravel.
 
 ## La maquette d'abord
 
 Comme pour Ludix, j'ai dessiné l'interface dans Figma avant d'écrire du code.
 Sur un projet à trois avec une échéance scolaire, une maquette arrêtée épargne
-la moitié des discussions : on ne débat plus de ce à quoi la page devrait
-ressembler pendant qu'on est en train de l'écrire.
+la moitié des discussions.
 
 <!-- TODO Maxence : c'est le projet que tu décris comme « très plaisant
      visuellement ». C'est exactement celui qui perd le plus à ne pas avoir de

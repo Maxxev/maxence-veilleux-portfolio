@@ -24,7 +24,7 @@ export const STACK: GroupeStack[] = [
     cle: 'mobile',
     libelle: { fr: 'Mobile', en: 'Mobile' },
     // TODO Maxence : Ludix était en Java ou en Kotlin? Retire celui qui ne
-    // s'applique pas — les deux affichés donnent l'impression d'un remplissage.
+    // s'applique pas : les deux affichés donnent l'impression d'un remplissage.
     items: ['Android Studio', 'Java', 'Kotlin'],
   },
   {

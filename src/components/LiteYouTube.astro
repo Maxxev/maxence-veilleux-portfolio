@@ -23,7 +23,7 @@ const urlVideo = `https://www.youtube.com/watch?v=${id}`;
   Façade YouTube : une image et un bouton. L'iframe n'est créée qu'au clic.
 
   L'ancien portfolio chargeait deux iframes YouTube et trois modules Facebook
-  au premier rendu — environ 1,5 Mo de scripts tiers et une douzaine de cookies
+  au premier rendu : environ 1,5 Mo de scripts tiers et une douzaine de cookies
   pour du contenu que la plupart des visiteurs ne regardent pas. Ici, le coût
   avant clic est celui d'un JPEG.
 
@@ -43,7 +43,7 @@ const urlVideo = `https://www.youtube.com/watch?v=${id}`;
     />
     <a class="lite-yt__bouton" href={urlVideo} target="_blank" rel="noopener noreferrer">
       <Icon name="fa6-brands:youtube" class="lite-yt__icone" aria-hidden="true" />
-      <span class="sr-only">{t.projets.chargerYoutube} — {titre}</span>
+      <span class="sr-only">{t.projets.chargerYoutube} : {titre}</span>
     </a>
   </div>
   <figcaption>

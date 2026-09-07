@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "verifier:traductions": "node scripts/verifier-traductions.js",
+    "verifier:contrastes": "node scripts/verifier-contrastes.js",
     "convertir:medias": "node scripts/convertir-medias.js",
     "verifier:interface": "node scripts/verifier-interface.mjs"
   },

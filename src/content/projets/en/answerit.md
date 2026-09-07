@@ -1,6 +1,6 @@
 ---
 titre: 'AnswerIt'
-resume: 'A minimal social network — posts, replies, accounts — built as the final project for HarvardX CS50x.'
+resume: 'A minimal social network: posts, replies, accounts. Built as the final project for HarvardX CS50x.'
 categorie: 'perso'
 annee: '2023'
 role: 'Sole developer: design, database, Flask back end and interface.'
@@ -10,7 +10,7 @@ technos: ['Python', 'Flask', 'SQLite', 'JavaScript', 'HTML', 'CSS']
 faits:
   - "Final project for CS50x, HarvardX's introduction to computer science, taken online and completed in full."
   - 'User accounts with authentication, content publishing, and interaction with other users posts.'
-  - 'A relational schema in SQLite, queried from Flask — my first encounter with designing a schema that has to survive its own data.'
+  - 'First relational schema designed end to end: SQLite, queried from Flask.'
 couverture:
   src: '/medias/videos/answerit.webp'
   alt: 'AnswerIt home page showing a feed of posts'
@@ -33,7 +33,6 @@ AnswerIt is a simple social platform: you post, you reply, you interact with
 other people's posts. It was my final project for **CS50x**, HarvardX's
 introduction to computer science, which I took online and completed in full.
 
-In hindsight, what matters about this project isn't the code — it's from 2023
-and I'd write it differently today. It's that it was where I first touched the
-whole stack at once: a relational schema, a server querying it, and an
-interface that has to reflect a state it doesn't control.
+The code is from 2023 and I'd write it differently today. It was where I first
+touched the whole stack at once: a relational schema, a server querying it, and
+an interface that has to reflect a state it doesn't control.

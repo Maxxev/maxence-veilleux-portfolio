@@ -23,7 +23,7 @@ export const settingsSchema = z.strictObject({
   // --- Profils publics -----------------------------------------------------
   // GitHub, itch.io et YouTube sont des *preuves de travail* avant d'être des
   // moyens de contact : ils montrent du code et des jeux jouables. D'où un
-  // interrupteur distinct — tu peux masquer le courriel tout en gardant la
+  // interrupteur distinct : tu peux masquer le courriel tout en gardant la
   // partie du portfolio qui démontre quelque chose.
   //
   // Un profil laissé à la chaîne vide n'est simplement pas affiché.

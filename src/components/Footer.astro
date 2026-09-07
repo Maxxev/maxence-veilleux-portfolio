@@ -2,6 +2,7 @@
 import Container from './Container.astro';
 import Section from './Section.astro';
 import ContactLinks from './ContactLinks.astro';
+import Signature from './Signature.astro';
 
 import { traductions, chemin, type Langue } from '../i18n/index.ts';
 import { navigationPrincipale } from '../utils/navigation.ts';
@@ -19,7 +20,13 @@ const annee = new Date().getFullYear();
 
 <Section RootTag="footer" class="footer">
   <Container class="footer__container">
+    {/*
+      La signature ferme le document, comme on signe une lettre. C'est la place
+      qu'elle a gagnée en quittant le hero : là-haut elle concurrençait le logo
+      et le nom en grand, ici elle est la seule marque manuscrite de la page.
+    */}
     <div class="footer__brand">
+      <Signature langue={langue} class="footer__signature" />
       <p class="footer__nom">{nom}</p>
       <p class="footer__role">{t.accueil.surTitre}</p>
     </div>
@@ -61,18 +68,56 @@ const annee = new Date().getFullYear();
 
 <style lang="scss">
   @use '../styles/breakpoints' as bp;
+  @use '../styles/texture' as tx;
 
   @layer astro-components {
     .footer {
       margin-top: auto;
       padding-block: var(--space-l) var(--space-m);
       background-color: var(--surface-sunken);
-      border-top: 1px solid var(--border-subtle);
+      position: relative;
+      isolation: isolate;
+
+      // Le dégradé du CV en filet de 2 px, à la place d'une bordure grise.
+      //
+      // C'est le geste le moins coûteux du site et l'un des plus utiles : il
+      // referme la page sur la couleur qui l'a ouverte. Un pied de page borné
+      // par un trait neutre se lit comme la fin du gabarit ; borné par le
+      // dégradé, comme la fin du document.
+      border-top: none;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 2px;
+        background-image: var(--gradient-signature);
+      }
+
+      // Une nappe très diluée, pour que le bas de page ne retombe pas dans
+      // l'aplat après un site entier en couleur.
+      --aurora-force: 0.22;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        @include tx.aurora;
+      }
 
       .footer__container {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: var(--space-m);
+      }
+
+      .footer__signature {
+        // Plus discrète que dans le hero : c'est un paraphe, pas un titre.
+        width: min(100%, 9.5rem);
+        color: var(--text-muted);
+        margin-bottom: var(--space-xs);
       }
 
       .footer__nom {

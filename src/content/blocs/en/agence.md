@@ -1,7 +1,7 @@
 ---
 ---
 I build websites for an agency's clients: institutional organisations,
-professionals, community groups. Mostly rebuilds — a site that has aged and
+professionals, community groups. Mostly rebuilds: a site that has aged and
 needs redoing without losing its content or its search ranking.
 
 Depending on the project, that means **Astro** with an in-house SCSS foundation

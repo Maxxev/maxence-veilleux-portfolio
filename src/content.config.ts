@@ -16,7 +16,7 @@ const projets = defineCollection({
 
 // Les blocs de prose : les paragraphes de /parcours et la courte bio de
 // l'accueil. Ce sont des textes à liens, donc du Markdown plutôt qu'un champ
-// dans un fichier de données — c'est ce qui te permet d'y glisser un
+// dans un fichier de données : c'est ce qui te permet d'y glisser un
 // hyperlien sans toucher au code.
 const blocs = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/blocs' }),

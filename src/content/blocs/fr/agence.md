@@ -2,7 +2,7 @@
 ---
 Je développe des sites pour les clients d'une agence : des organisations
 institutionnelles, des professionnels, des organismes communautaires. Surtout
-des refontes — un site qui a vieilli, qu'il faut reprendre sans perdre son
+des refontes : un site qui a vieilli, qu'il faut reprendre sans perdre son
 contenu ni son référencement.
 
 Selon le projet, c'est de l'**Astro** avec un socle SCSS maison et du contenu

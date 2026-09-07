@@ -3,7 +3,7 @@
 // Toutes datent du secondaire, et c'est assumé : elles sont reléguées en bas
 // de /parcours et présentées comme une note de constance, pas comme un
 // argument professionnel. Les iframes Facebook de l'ancien portfolio ont été
-// remplacées par de simples liens — elles ne se chargeaient pas sur mobile,
+// remplacées par de simples liens : elles ne se chargeaient pas sur mobile,
 // posaient trois cookies tiers et ajoutaient une seconde au chargement.
 export type Distinction = {
   annee: string;
