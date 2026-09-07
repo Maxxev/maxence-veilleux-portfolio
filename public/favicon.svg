@@ -1,22 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <style>
     :root { color-scheme: light dark; }
-    /* Aplat orange, lettres foncées — la même inversion que les boutons du
-       site : l'orange est trop clair pour porter du blanc lisiblement. */
-    .fond { fill: #f87a25; }
-    .lettres { fill: #1d1916; }
+    /* Aplat corail, lettres foncées : la même inversion que les boutons du
+       site, où l'orange est trop clair pour porter du blanc lisiblement.
+       Les valeurs sont les tokens de _colors.scss convertis en hexadécimal,
+       primary hsl(16, 96%, 58%) et secondary hsl(272, 24%, 10%). */
+    .fond { fill: #fb642d; }
+    .lettres { fill: #1a1320; }
     @media (prefers-color-scheme: dark) {
-      .fond { fill: #fa9552; }
+      .fond { fill: #fb7e50; }
     }
   </style>
-  <rect class="fond" width="64" height="64" rx="14" />
+  <rect class="fond" width="64" height="64" rx="16" />
   <text
     class="lettres"
     x="32" y="43"
     text-anchor="middle"
-    font-family="'Space Grotesk', 'Archivo', Helvetica, Arial, sans-serif"
+    font-family="'Bricolage Grotesque', 'Archivo', Helvetica, Arial, sans-serif"
     font-size="30"
-    font-weight="700"
+    font-weight="800"
     letter-spacing="-1.5"
   >MV</text>
 </svg>

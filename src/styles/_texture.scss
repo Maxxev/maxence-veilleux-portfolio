@@ -1,0 +1,223 @@
+@use 'sass:map';
+
+// La couche « matière » du site : grain, dégradés en nappe, verre dépoli,
+// relief doux. Quatre effets, quatre mixins, aucune image et aucun JavaScript.
+//
+// Pourquoi pas d'image : un fond exporté depuis un générateur comme
+// neat.firecms.co est figé : il faut un fichier par thème, par orientation et
+// par densité d'écran, et il pèse plusieurs centaines de kilo-octets. Les
+// mêmes effets en CSS coûtent moins de 2 Ko, s'adaptent seuls à la taille de
+// la fenêtre et suivent le thème sans qu'on ait à y penser.
+//
+// Les couleurs viennent toutes de `_colors.scss`. Rien ici ne décide d'une
+// teinte : ce fichier ne décide que de la *matière*.
+
+:root {
+  // --- Le grain -------------------------------------------------------------
+  //
+  // Un `feTurbulence` SVG en URI de données, désaturé par `feColorMatrix`.
+  // C'est le même bruit fractal que celui des générateurs de dégradés, mais
+  // calculé par le navigateur au lieu d'être livré en pixels.
+  //
+  // Il n'est pas décoratif. Un dégradé sur un fond sombre montre toujours des
+  // bandes : l'écran n'a pas assez de valeurs entre deux violets proches pour
+  // les relier en douceur. Le bruit casse ces bandes en les faisant tramer.
+  // C'est la raison technique pour laquelle les dégradés grainés sont partout
+  // en ce moment, et pourquoi `--grain-opacite` est plus élevé en sombre.
+  //
+  // La tuile fait 200 px et `stitchTiles='stitch'` raccorde ses bords : elle
+  // se répète sans couture visible.
+  --grain-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  // Le flou du verre. Une seule adresse : si le rendu est trop laiteux sur une
+  // machine lente, c'est ici qu'on baisse, pas dans quinze composants.
+  --glass-flou: 18px;
+  --glass-saturation: 1.5;
+}
+
+// --- Grain ------------------------------------------------------------------
+// À poser sur un élément qui a déjà `position: relative` ou `isolate`. Le
+// pseudo-élément est paramétrable parce que beaucoup de composants du site
+// utilisent déjà `::before` ou `::after` pour autre chose.
+@mixin grain($pseudo: 'after', $opacite: null, $echelle: 200px) {
+  &::#{$pseudo} {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: var(--grain-image);
+    background-size: $echelle $echelle;
+    background-repeat: repeat;
+    opacity: if($opacite == null, var(--grain-opacite), $opacite);
+    mix-blend-mode: var(--grain-blend);
+  }
+}
+
+// --- Nappes de couleur ------------------------------------------------------
+// L'équivalent statique d'un dégradé en maille : quatre halos radiaux aux trois
+// couleurs du CV, posés à des endroits qui ne se recouvrent pas tout à fait.
+// C'est le chevauchement partiel qui donne les teintes intermédiaires : on ne
+// les déclare pas, elles apparaissent.
+//
+// `--aurora-force` module l'ensemble depuis l'extérieur : 1 pour le hero,
+// 0,4 pour une section de contenu qui ne doit pas voler la vedette au texte.
+@mixin aurora {
+  background-image:
+    radial-gradient(
+      62% 78% at 10% 4%,
+      hsla(
+          var(--primary-h),
+          var(--primary-s),
+          58%,
+          calc(0.34 * var(--aurora-force, 1))
+        )
+        0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      52% 68% at 90% 10%,
+      hsla(
+          var(--accent-h),
+          var(--accent-s),
+          60%,
+          calc(0.3 * var(--aurora-force, 1))
+        )
+        0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      74% 92% at 72% 96%,
+      hsla(
+          var(--violet-h),
+          var(--violet-s),
+          62%,
+          calc(0.34 * var(--aurora-force, 1))
+        )
+        0%,
+      transparent 64%
+    ),
+    radial-gradient(
+      46% 62% at 26% 84%,
+      hsla(300, 90%, 60%, calc(0.2 * var(--aurora-force, 1))) 0%,
+      transparent 62%
+    );
+}
+
+// Nappe + grain en une seule déclaration, pour les fonds pleine largeur.
+// Le contenu doit se placer au-dessus : le mixin isole l'empilement lui-même.
+@mixin aurora-grainee($pseudo: 'after') {
+  position: relative;
+  isolation: isolate;
+  @include aurora;
+  @include grain($pseudo);
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// --- Verre dépoli -----------------------------------------------------------
+// Trois ingrédients, et il en manque un dans la plupart des imitations :
+//
+//   1. le flou de l'arrière-plan (`backdrop-filter`) ;
+//   2. la sursaturation : un vrai verre concentre la couleur qu'il laisse
+//      passer ; sans elle le flou donne un gris sale ;
+//   3. le filet clair sur l'arête supérieure, le reflet. C'est lui qui fait
+//      lire une épaisseur plutôt qu'un simple rectangle translucide.
+//
+// Le repli compte autant : sans `backdrop-filter`, un fond translucide sur un
+// dégradé rend le texte illisible. On repasse alors à une surface opaque.
+// `$fond` : quel voile poser. `--glass-bg` pour une carte sur le fond de page,
+// `--glass-bg-lisible` dès qu'elle chevauche un visuel dont on ne contrôle pas
+// la luminosité. Le second n'est pas « moins joli » : c'est celui qui rend le
+// flou visible, parce qu'un voile assez dense laisse lire ce qu'il déforme.
+@mixin verre($rayon: var(--radius-l), $fond: var(--glass-bg), $flou: null) {
+  position: relative;
+  border-radius: $rayon;
+  background-color: $fond;
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-reflet),
+    0 20px 44px -26px var(--glass-ombre);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    $f: if($flou == null, var(--glass-flou), $flou);
+    -webkit-backdrop-filter: blur($f) saturate(var(--glass-saturation));
+    backdrop-filter: blur($f) saturate(var(--glass-saturation));
+  }
+
+  @supports not (
+    (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+  ) {
+    background-color: var(--surface-raised);
+  }
+}
+
+// --- Relief doux ------------------------------------------------------------
+// L'image #2, restreinte à ce qu'elle sait faire : les petits contrôles qu'on
+// presse. Deux ombres opposées (lumière en haut à gauche, ombre en bas à
+// droite) et l'objet paraît sortir de la surface.
+//
+// Volontairement absent des cartes et de tout ce qui porte du texte : le
+// relief encode l'information dans des écarts de luminosité de quelques
+// pour cent, ce qui est en dessous du seuil de perception d'une bonne partie
+// des visiteurs. Un bouton reste identifiable par son libellé et sa couleur ;
+// le relief n'est qu'un supplément tactile.
+@mixin relief($rayon: var(--radius-m), $force: 1) {
+  background-color: var(--emboss-surface);
+  border: 1px solid transparent;
+  border-radius: $rayon;
+  box-shadow:
+    calc(-2px * #{$force}) calc(-2px * #{$force}) calc(5px * #{$force})
+      var(--emboss-lumiere),
+    calc(3px * #{$force}) calc(4px * #{$force}) calc(9px * #{$force})
+      var(--emboss-ombre);
+}
+
+// L'état pressé : les mêmes ombres, rentrées. C'est le retour tactile qui
+// justifie tout l'effet : un relief qui ne s'enfonce pas est un dessin, pas
+// un bouton.
+@mixin relief-enfonce($force: 1) {
+  box-shadow:
+    inset calc(2px * #{$force}) calc(3px * #{$force}) calc(6px * #{$force})
+      var(--emboss-ombre),
+    inset calc(-2px * #{$force}) calc(-2px * #{$force}) calc(4px * #{$force})
+      var(--emboss-lumiere);
+}
+
+// --- Texte en dégradé -------------------------------------------------------
+// Le dégradé du CV appliqué à du texte. Réservé aux mots isolés d'un titre :
+// un paragraphe entier en dégradé est illisible, et le repli ci-dessous existe
+// parce que `background-clip: text` échoue en silence, sans lui le texte
+// disparaît purement et simplement.
+@mixin texte-degrade($degrade: var(--gradient-signature)) {
+  color: var(--link-color);
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    background-image: $degrade;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    // Sans cette ligne, une police à contreforme ouverte laisse voir le fond
+    // à travers les lettres sur certains moteurs.
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@layer stylesheet-utilities {
+  .texte-degrade {
+    @include texte-degrade;
+  }
+
+  // Un filet horizontal aux couleurs du CV. Remplace `.fade-rule` quand la
+  // séparation mérite d'être remarquée.
+  .filet-signature {
+    height: 2px;
+    border: none;
+    border-radius: 2px;
+    background-image: var(--gradient-signature);
+    opacity: 0.85;
+  }
+}
