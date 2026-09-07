@@ -47,7 +47,7 @@ const urlAutreLangue = new URL(
 );
 
 // Données structurées. Le courriel n'y figure que si les coordonnées sont
-// affichées — un JSON-LD est du texte comme un autre, et le masquer dans le
+// affichées : un JSON-LD est du texte comme un autre, et le masquer dans le
 // balisage tout en le laissant ici ne masquerait rien du tout.
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -94,8 +94,14 @@ const jsonLd = {
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/*
+      Bricolage Grotesque est demandée avec ses trois axes variables : `opsz`,
+      `wdth`, `wght`. C'est une seule requête et un seul fichier : une police
+      variable coûte moins cher que les quatre graisses statiques qu'elle
+      remplace, et c'est l'axe de largeur qui rend le titre du hero possible.
+    */}
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
@@ -117,10 +123,16 @@ const jsonLd = {
     {/*
       Le thème, appliqué avant le premier rendu.
 
-      Ce script est volontairement `is:inline` et placé dans le <head> : s'il
-      était différé, la page peindrait le thème clair une frame avant de
-      basculer, et ce clignotement blanc est exactement ce qu'un mode sombre
-      est censé éviter.
+      Le site ouvre en SOMBRE pour tout le monde : c'est le thème posé sur
+      `:root` sans condition dans `_colors.scss`, et la préférence système
+      n'est plus consultée. La raison est éditoriale, pas technique : le CV
+      qu'on a reçu avant d'arriver ici a une colonne violet foncé, et la
+      première image du site doit être la même sur toutes les machines.
+
+      Ce script ne sert donc plus qu'à restaurer le choix *explicite* d'un
+      visiteur qui a déjà basculé en clair. Il reste `is:inline` dans le
+      <head> : différé, il peindrait le sombre une frame avant de repasser au
+      clair, et ce clignotement est exactement ce qu'on cherche à éviter.
 
       `astro:after-swap` le rejoue : les transitions de vue remplacent
       l'élément <html>, donc l'attribut posé par ce script disparaîtrait à
