@@ -4,12 +4,12 @@
 //
 // Le problème qu'elles résolvent : trois cartes affichant un monogramme sur un
 // aplat, côte à côte sur la page d'accueil, ne lisent pas « captures à venir ».
-// Elles lisent « site inachevé » — et c'est la première chose que voit un
+// Elles lisent « site inachevé », et c'est la première chose que voit un
 // employeur. Un visuel abstrait, lui, se lit comme un choix.
 //
 // Ces images sont volontairement NON informatives : elles décorent, le titre
 // et le résumé sont dans le HTML juste en dessous. Elles sont donc à remplacer
-// dès qu'une vraie capture existe, et rien ne casse quand on le fait — il
+// dès qu'une vraie capture existe, et rien ne casse quand on le fait : il
 // suffit de changer `couverture.src` dans le Markdown du projet.
 //
 // Chaque composition est déterministe : le même slug donne toujours la même
@@ -27,22 +27,36 @@ mkdirSync(CIBLE, { recursive: true });
 const LARGEUR = 1200;
 const HAUTEUR = 675;
 
-// Teintes de base, toutes dans la bande rouge → orange → ambre.
+// Les teintes : une tranche du dégradé signature, pas une famille de couleur.
 //
-// Deux bornes apprises à l'œil, et pas déductibles de la théorie :
+// La version précédente restait dans la bande rouge → orange → ambre, avec
+// deux garde-fous appris à l'œil : au-dessus de ~40° un jaune assombri vire à
+// l'olive, et en dessous de ~350° on entrait « par erreur » dans le magenta.
 //
-//   · au-dessus de ~40°, un jaune assombri ne devient pas « ambre foncé » mais
-//     OLIVE. Le dégradé d'une couverture ambre partait donc dans le vert.
-//   · en dessous de ~350°, on entre dans le magenta, et la couverture cesse de
-//     se lire comme orange — ce qui est précisément ce qu'on cherche à éviter.
+// Ce second garde-fou n'a plus lieu d'être : le magenta et le violet SONT la
+// palette maintenant, puisqu'ils viennent du bandeau du CV. On raisonne donc
+// sur un axe déplié qui parcourt le dégradé signature d'un bout à l'autre :
 //
-// D'où la règle du dégradé plus bas : la seconde teinte descend TOUJOURS vers
-// le rouge, jamais vers le jaune. Orange → rouge profond s'assombrit
-// proprement ; orange → ambre, non.
-const TEINTES = [24, 12, 34, 2, 18];
-const TEINTE_PLANCHER = 350; // sur l'axe déplié : 350 = -10°
+//     365° corail   →   326° magenta   →   267° violet
+//
+// et chaque couverture en prélève un segment continu. Deux couvertures
+// diffèrent par l'endroit où elles commencent, jamais par la famille : l'une
+// sera corail-magenta, l'autre magenta-violet, et les deux appartiennent
+// visiblement au même document que le CV.
+//
+// L'axe est décroissant et jamais ramené dans [0,360[ avant le rendu final :
+// c'est ce qui permet de traverser 360° sans que la soustraction reparte à
+// l'autre bout du cercle.
+const AXE_DEBUT = 365; // corail
+const AXE_FIN = 267; // violet
+const AMPLITUDE = AXE_DEBUT - AXE_FIN;
 
-/** Hachage stable d'une chaîne — même slug, même image, à chaque exécution. */
+/** Ramène une teinte de l'axe déplié dans l'intervalle CSS [0, 360[. */
+function surLeCercle(h) {
+  return ((h % 360) + 360) % 360;
+}
+
+/** Hachage stable d'une chaîne : même slug, même image, à chaque exécution. */
 function graine(texte) {
   let h = 2166136261;
   for (let i = 0; i < texte.length; i += 1) {
@@ -123,55 +137,92 @@ function diagonales(rnd, teinte) {
 
 const MOTIFS = [arcs, cartesEmpilees, grillePoints, diagonales];
 
+// --- Pourquoi il n'y a PAS de grain ici ------------------------------------
+//
+// Le fond du site est grainé, et une première version de ce script composait
+// le même bruit fractal par-dessus chaque couverture, en fusion « overlay ».
+// La composition fonctionnait : écart-type de 1,34 sur un aplat, mesuré sur la
+// sortie PNG. Mais après encodage WebP à qualité 82, l'écart-type retombait à
+// 0,00 : le grain avait purement et simplement disparu.
+//
+// C'est le comportement normal d'un codec avec pertes. Un bruit de faible
+// amplitude et de haute fréquence est exactement ce qu'il est conçu à jeter en
+// premier, parce que l'œil ne le réclame pas. Il aurait fallu monter à qualité
+// 95 pour en conserver un tiers, et grossir chaque fichier pour un effet
+// invisible à la taille où ces images sont affichées, 400 px de large dans
+// une carte.
+//
+// La conclusion : le grain reste une affaire de CSS, calculée par le
+// navigateur sur les fonds de page (voir `_texture.scss`). Une image n'a pas
+// besoin d'en porter.
+//
+// La qualité est en revanche relevée à 90 : ces couvertures sont des dégradés
+// lisses de synthèse, le cas précis où un encodeur produit des bandes
+// visibles. Trois kilo-octets de plus par fichier, et elles disparaissent.
+const QUALITE_WEBP = 90;
+
 // `index` sert au choix du motif, `slug` à tout le reste.
 //
 // Le motif était tiré du même flux pseudo-aléatoire que les couleurs, et deux
-// projets sur quatre tombaient sur les diagonales — quatre couvertures dont
+// projets sur quatre tombaient sur les diagonales, quatre couvertures dont
 // deux presque identiques. Passer par la position garantit qu'elles diffèrent
 // tant qu'il y a moins de projets que de motifs, et ajouter un projet à la fin
 // de la liste ne change pas les précédents.
-async function couverture(slug, index) {
+async function couverture(slug, index, total) {
   const g = graine(slug);
   const rnd = aleatoire(g || 1);
 
-  const teinte = TEINTES[g % TEINTES.length];
-  // Décalage borné et signé : la seconde teinte reste une voisine de la
-  // première, jamais une couleur d'une autre famille.
-  // Toujours vers le rouge, jamais vers le jaune. On raisonne sur un axe
-  // déplié pour que la soustraction traverse 0° sans repasser par 359.
-  const deplie = teinte + 360;
-  const brut = deplie - (12 + Math.floor(rnd() * 18));
-  const teinte2 = Math.max(TEINTE_PLANCHER, brut) % 360;
+  // Où commence le segment sur l'axe, et quelle longueur il parcourt.
+  //
+  // Le départ vient de la POSITION, pas du hachage, pour la même raison que
+  // le motif juste en dessous, et l'erreur mérite d'être racontée : tirée du
+  // hachage FNV, la valeur tombait entre 0,34 et 0,43 pour les quatre slugs
+  // existants, et les quatre couvertures sortaient du même magenta. Un
+  // hachage disperse bien sur des milliers d'entrées, pas sur quatre.
+  //
+  // Réparti par position, l'écart est garanti : chaque couverture occupe sa
+  // part de l'axe, de la corail à la violette. Ajouter un projet redistribue
+  // l'ensemble, ce qui est acceptable pour des images décoratives régénérées
+  // en une commande.
+  const depart = total > 1 ? (index / (total - 1)) * 0.62 : 0;
+  const course = 0.3 + rnd() * 0.2;
+
+  const teinteClaire = surLeCercle(AXE_DEBUT - depart * AMPLITUDE);
+  const teinteFoncee = surLeCercle(
+    AXE_DEBUT - Math.min(1, depart + course) * AMPLITUDE,
+  );
   const motif = MOTIFS[index % MOTIFS.length];
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${LARGEUR}" height="${HAUTEUR}" viewBox="0 0 ${LARGEUR} ${HAUTEUR}">
     <defs>
       <linearGradient id="fond" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="hsl(${teinte}, 82%, 52%)" />
-        <stop offset="52%" stop-color="hsl(${teinte2}, 72%, 36%)" />
-        <stop offset="100%" stop-color="hsl(${teinte2}, 60%, 20%)" />
+        <stop offset="0%" stop-color="hsl(${teinteClaire}, 92%, 58%)" />
+        <stop offset="52%" stop-color="hsl(${teinteFoncee}, 80%, 40%)" />
+        <stop offset="100%" stop-color="hsl(${teinteFoncee}, 68%, 22%)" />
       </linearGradient>
       <radialGradient id="lueur" cx="74%" cy="22%" r="58%">
-        <stop offset="0%" stop-color="hsl(${teinte}, 95%, 68%)" stop-opacity="0.5" />
-        <stop offset="100%" stop-color="hsl(${teinte}, 95%, 68%)" stop-opacity="0" />
+        <stop offset="0%" stop-color="hsl(${teinteClaire}, 96%, 70%)" stop-opacity="0.5" />
+        <stop offset="100%" stop-color="hsl(${teinteClaire}, 96%, 70%)" stop-opacity="0" />
       </radialGradient>
     </defs>
     <rect width="${LARGEUR}" height="${HAUTEUR}" fill="url(#fond)" />
-    <g>${motif(rnd, teinte)}</g>
+    <g>${motif(rnd, teinteClaire)}</g>
     <rect width="${LARGEUR}" height="${HAUTEUR}" fill="url(#lueur)" />
   </svg>`;
 
   const sortie = join(CIBLE, `${slug}.webp`);
-  await sharp(Buffer.from(svg)).webp({ quality: 82, effort: 6 }).toFile(sortie);
+  await sharp(Buffer.from(svg))
+    .webp({ quality: QUALITE_WEBP, effort: 6 })
+    .toFile(sortie);
   return sortie;
 }
 
 // Les projets sans capture réelle. Retire un slug de cette liste dès que le
-// projet a une vraie image — le fichier généré n'a alors plus de raison d'être.
+// projet a une vraie image : le fichier généré n'a alors plus de raison d'être.
 const SANS_CAPTURE = ['ludix', 'systemes-ia', 'sites-agence', 'amazoom'];
 
 for (const [index, slug] of SANS_CAPTURE.entries()) {
-  const fichier = await couverture(slug, index);
+  const fichier = await couverture(slug, index, SANS_CAPTURE.length);
   console.log(`  ✓ ${fichier.replace(RACINE + '/', '')}`);
 }
 console.log('\nCes images sont décoratives. Remplace-les par de vraies captures dès que possible.');
