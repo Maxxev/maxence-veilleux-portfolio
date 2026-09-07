@@ -1,12 +1,26 @@
 @use './mixins' as m;
+@use './texture' as tx;
 
 // Le style du bouton, sorti de `Button.astro` pour que l'interface
 // d'administration puisse le porter elle aussi. Elle n'a pas d'Astro : elle sert
 // une page en dur depuis le Worker, et ne peut donc pas importer un composant.
 //
-// Ce fichier est la seule définition. `Button.astro` le charge — le composant
+// Ce fichier est la seule définition, et `Button.astro` le charge. Le composant
 // reste le seul point d'entrée côté site, et le mixin `m.button` reste ce qu'il
 // était : un raccourci pour les cas où un vrai bouton ne convient pas.
+//
+// --- Pourquoi le relief s'arrête ici ----------------------------------------
+//
+// Le relief doux de la référence #2 est appliqué aux boutons et à rien
+// d'autre. Ce n'est pas une demi-mesure, c'est ce que la référence montre
+// elle-même : quatre boutons, pas quatre cartes.
+//
+// Un bouton est le seul objet d'une page dont on attend qu'il réponde au
+// doigt. Lui donner une épaisseur qui s'enfonce au clic, c'est ajouter de
+// l'information : l'état pressé devient visible sans couleur. Le même relief
+// sur une carte n'ajoute rien : il remplace une bordure nette par un halo mou,
+// et rend le contour illisible pour qui distingue mal les faibles écarts de
+// luminosité. D'où la règle : le relief là où on presse, le verre là où on lit.
 @layer astro-components {
   .button {
     --currentBg: var(--bgColor);
@@ -16,7 +30,9 @@
     width: fit-content;
     padding-inline: var(--space-s);
     padding-block: var(--space-xs);
-    border-radius: var(--space-xxs);
+    // Le rayon généreux vient de la référence #2 : c'est lui qui fait lire un
+    // galet plutôt qu'un rectangle. Un rayon serré annule tout le relief.
+    border-radius: var(--radius-pill);
 
     display: flex;
     align-items: center;
@@ -24,19 +40,33 @@
     gap: 1ch;
 
     font-weight: 600;
+    line-height: 1.2;
 
     background: var(--currentBg);
-    border: var(--border-width) solid var(--bgColor);
+    border: var(--border-width) solid transparent;
     overflow-clip-margin: var(--border-width);
     color: var(--color);
     cursor: pointer;
 
-    transition: all var(--transition-duration);
+    // Deux ombres opposées : lumière en haut à gauche, ombre en bas à droite.
+    // Elles se lisent comme une épaisseur parce qu'elles décrivent une seule
+    // source de lumière cohérente avec le reste de la page.
+    box-shadow:
+      -2px -2px 5px var(--emboss-lumiere),
+      3px 4px 10px var(--emboss-ombre);
+
+    transition:
+      box-shadow var(--transition-duration),
+      translate var(--transition-duration),
+      background-color var(--transition-duration),
+      color var(--transition-duration);
 
     isolation: isolate;
     position: relative;
     overflow: clip;
 
+    // Le voile de survol. Il reste en `::before` : le bouton n'a pas d'autre
+    // pseudo-élément, et animer une opacité coûte moins qu'animer une couleur.
     &::before {
       content: '';
       position: absolute;
@@ -48,39 +78,88 @@
     }
 
     &:hover {
-      /* --currentBg: color-mix(in srgb, var(--bgColor), var(--white) 25%); */
+      translate: 0 -1px;
+      box-shadow:
+        -3px -3px 7px var(--emboss-lumiere),
+        4px 6px 14px var(--emboss-ombre);
+
       &::before {
-        opacity: 0.25;
+        opacity: 0.22;
       }
+    }
+
+    // L'état pressé : les ombres rentrent. C'est le retour tactile qui
+    // justifie tout l'effet : un relief qui ne s'enfonce pas est un dessin.
+    &:active {
+      translate: 0 0;
+      @include tx.relief-enfonce($force: 1.2);
     }
 
     .content {
       z-index: 2;
     }
 
+    // --- Variante creuse ---
+    // Pas de relief : un bouton creux n'a pas de matière à soulever. Il prend
+    // la bordure et se remplit au survol.
     &.button--outline {
       background: transparent;
       color: var(--bgColor);
+      border-color: var(--bgColor);
+      box-shadow: none;
 
       &:hover {
         background: var(--bgColor);
         color: var(--color);
+        box-shadow:
+          -2px -2px 5px var(--emboss-lumiere),
+          3px 4px 10px var(--emboss-ombre);
+      }
+
+      &:active {
+        @include tx.relief-enfonce;
       }
     }
 
+    // --- Variante « halo » ---
+    // L'aplat corail projette sa propre couleur sous lui. Réservé au bouton
+    // principal du hero : deux boutons qui rayonnent sur la même page, et
+    // aucun des deux ne rayonne plus.
     &.button--glow {
-      @include m.elevation(
-        $level: 10,
-        $color: var(--currentBg),
-        $opacityMultiplier: 2
-      );
+      box-shadow:
+        -2px -2px 5px var(--emboss-lumiere),
+        3px 4px 10px var(--emboss-ombre),
+        0 10px 34px -8px color-mix(in srgb, var(--currentBg) 60%, transparent);
+
+      &:hover {
+        box-shadow:
+          -3px -3px 7px var(--emboss-lumiere),
+          4px 6px 14px var(--emboss-ombre),
+          0 14px 42px -8px color-mix(in srgb, var(--currentBg) 75%, transparent);
+      }
     }
 
+    // --- Variante « lien » ---
+    // Ni relief ni fond : c'est un lien qui a la forme d'un bouton dans le
+    // balisage, pas un bouton.
     &.button--link {
       padding: 0;
       border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+
+      &::before {
+        content: none;
+      }
+
       &:hover {
-        color: color-mix(in srgb, var(--color) 75%, var(--white));
+        translate: 0;
+        box-shadow: none;
+        color: var(--link-color-hover);
+      }
+
+      &:active {
+        box-shadow: none;
       }
     }
   }
