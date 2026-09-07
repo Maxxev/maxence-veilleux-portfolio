@@ -61,13 +61,44 @@ const annee = new Date().getFullYear();
 
 <style lang="scss">
   @use '../styles/breakpoints' as bp;
+  @use '../styles/texture' as tx;
 
   @layer astro-components {
     .footer {
       margin-top: auto;
       padding-block: var(--space-l) var(--space-m);
       background-color: var(--surface-sunken);
-      border-top: 1px solid var(--border-subtle);
+      position: relative;
+      isolation: isolate;
+
+      // Le dégradé du CV en filet de 2 px, à la place d'une bordure grise.
+      //
+      // C'est le geste le moins coûteux du site et l'un des plus utiles : il
+      // referme la page sur la couleur qui l'a ouverte. Un pied de page borné
+      // par un trait neutre se lit comme la fin du gabarit ; borné par le
+      // dégradé, comme la fin du document.
+      border-top: none;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 2px;
+        background-image: var(--gradient-signature);
+      }
+
+      // Une nappe très diluée, pour que le bas de page ne retombe pas dans
+      // l'aplat après un site entier en couleur.
+      --aurora-force: 0.22;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        @include tx.aurora;
+      }
 
       .footer__container {
         display: grid;
