@@ -19,3 +19,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .captures/
+
+# boîte de dépôt pour les fichiers sources passés en cours de session
+depot-local/
