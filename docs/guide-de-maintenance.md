@@ -70,11 +70,10 @@ couverture:
   position: '50% 50%'   # cadrage si l'image est rognée
 ```
 
-Les projets Ludix, Amazoom, « systèmes IA » et « sites d'agence » portent
-aujourd'hui une **couverture abstraite générée**, purement décorative. Elles
-sont là parce qu'une grille de cartes sans image lit « site inachevé ». Dès
-que tu as une vraie capture, remplace `src` et retire le slug de la liste
-`SANS_CAPTURE` dans `scripts/generer-couvertures.js`.
+Tous les projets ont aujourd'hui une vraie capture. `scripts/generer-couvertures.js`
+reste dans le dépôt : il génère une couverture abstraite décorative pour un
+projet qui n'en a pas encore, à retirer de la liste `SANS_CAPTURE` du script
+une fois la vraie capture en place.
 
 > Attention au YAML : si ton texte contient une apostrophe, utilise des
 > guillemets **doubles**. `alt: 'l'IA'` casse la compilation.
@@ -384,28 +383,17 @@ l'enfant. Un sélecteur qui traverse les deux doit donc vivre dans le **parent**
 
 ## Déploiement
 
-Rien n'est configuré : c'est une décision en attente. `public/CNAME` contient
-toujours `maxenceveilleux.com` pour que GitHub Pages reste branchable.
-
-- **GitHub Pages** : un workflow qui lance `npm run build` et publie `dist/`.
-  Le CNAME est déjà en place.
-- **Cloudflare Pages** : commande `npm run build`, dossier `dist`, et le DNS de
-  `maxenceveilleux.com` à repointer.
-
-Dans les deux cas, mets à jour `site` dans `astro.config.mjs` si le domaine
-change : les URL canoniques, les `hreflang` et le sitemap en dépendent.
+Netlify build et publie `dist/` à chaque commit sur `main`. Si le domaine
+change un jour, mets à jour `site` dans `astro.config.mjs` : les URL
+canoniques, les `hreflang` et le sitemap en dépendent.
 
 ## Ce qui reste à faire
 
 Cherche `TODO Maxence` dans `src/` : chaque occurrence explique ce qui manque
 et pourquoi ça compte. En résumé :
 
-- Des **captures** pour Ludix et Amazoom. Ce sont les deux projets qui perdent
-  le plus à ne pas en avoir.
 - Le **CV** en PDF, puis `cv.afficher: true`.
 - L'URL de la **chaîne YouTube** dans `profils.youtube`, si tu la veux.
-- Java ou Kotlin pour Ludix : `src/data/stack.ts` liste les deux, retire celui
-  qui ne s'applique pas.
 - Une **image de partage social** dans `public/medias/og/apercu.png`
   (1200 × 630). Sans elle, les liens partagés vers le site n'ont pas d'aperçu.
   Le rendu de la souris sur le dégradé du hero ferait une bonne base.

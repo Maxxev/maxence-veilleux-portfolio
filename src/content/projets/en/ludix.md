@@ -6,7 +6,7 @@ annee: '2026'
 role: 'Owned the interface and the design system, from the Figma mockup through to its implementation in both clients.'
 ordre: 10
 vedette: true
-technos: ['Laravel', 'PHP', 'Android Studio', 'REST API', 'MySQL', 'Figma']
+technos: ['Laravel', 'PHP', 'Android Studio', 'Java', 'REST API', 'MySQL', 'Figma']
 faits:
   - 'Two clients, one API: the Android app and the admin site consume the same REST endpoints, which forced us to settle the data contracts before writing any screens.'
   - 'An authenticated back office where administrators manage products, comments, events and user accounts.'
@@ -15,7 +15,7 @@ faits:
   - 'Ten weeks, run as a waterfall: requirements, feature table and context diagram first, then five weeks of development (two for the website, two for the app, one buffer week). Deployment was not part of the scope.'
 couverture:
   src: '/medias/projets/ludix.webp'
-  alt: 'Abstract artwork standing in for the Ludix project'
+  alt: 'Screenshot of the Ludix back office, editing a job posting'
   position: '50% 50%'
 videos: []
 youtube: []

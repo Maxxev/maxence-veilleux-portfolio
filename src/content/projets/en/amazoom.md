@@ -14,7 +14,7 @@ faits:
   - 'I designed the mockup in Figma before integration, as on Ludix. A team of three.'
 couverture:
   src: '/medias/projets/amazoom.webp'
-  alt: 'Abstract artwork standing in for the Amazoom project'
+  alt: 'Screenshot of creating a product listing on Amazoom'
   position: '50% 50%'
 videos: []
 youtube: []

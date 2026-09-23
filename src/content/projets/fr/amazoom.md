@@ -14,7 +14,7 @@ faits:
   - "J'ai conçu la maquette dans Figma avant l'intégration, comme pour Ludix. Travail à trois."
 couverture:
   src: '/medias/projets/amazoom.webp'
-  alt: 'Visuel abstrait représentant le projet Amazoom'
+  alt: "Capture d'écran de la création d'une fiche produit sur Amazoom"
   position: '50% 50%'
 videos: []
 youtube: []

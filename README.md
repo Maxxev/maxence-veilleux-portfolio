@@ -154,13 +154,9 @@ Le guide d'édition complet, la marche à suivre pour ajouter un projet, une pag
 ou une couleur, et le détail des réglages sont dans
 [`docs/guide-de-maintenance.md`](docs/guide-de-maintenance.md).
 
-## État
+## Déploiement
 
-Le site est complet et compile ; le déploiement reste à brancher, sur GitHub
-Pages ou Cloudflare Pages, le `CNAME` étant déjà en place. Tous les projets ont
-maintenant une vraie couverture. Restent à venir le CV en PDF et une image de
-partage social. Les points ouverts sont marqués `TODO Maxence` dans les
-sources, chacun accompagné de la raison pour laquelle il compte.
+Chaque commit sur `main` déclenche un déploiement automatique sur Netlify.
 
 ---
 
