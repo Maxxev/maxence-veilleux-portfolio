@@ -16,7 +16,7 @@ faits:
   - "Déployé comme service sur le serveur Windows du client plutôt que sur un hébergement infogéré : un seul processus pour ne pas dupliquer la session ouverte dans le système tiers, et des chemins de profil de navigateur qui doivent rester absolus pour survivre à une tâche planifiée."
 couverture:
   src: '/medias/projets/systemes-ia.webp'
-  alt: "Visuel abstrait représentant les systèmes internes augmentés par l'IA"
+  alt: "Rendu 3D néon d'une barre de saisie de prompt IA, avec le curseur en attente de texte"
   position: '50% 50%'
 videos: []
 youtube: []

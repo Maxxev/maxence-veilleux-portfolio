@@ -14,12 +14,12 @@ faits:
   - 'Also several WordPress sites, from theme to deployment.'
 couverture:
   src: '/medias/projets/sites-agence.webp'
-  alt: 'Abstract artwork standing in for the agency websites'
+  alt: 'Montage of several agency-delivered websites'
   position: '50% 50%'
 videos: []
 youtube: []
 liens: []
-mention: 'These sites belong to their clients and several are not yet live. The banner is a montage of excerpts that does not identify any single client.'
+mention: null
 ---
 
 Part of my paid work is building sites for an agency's clients: institutional
