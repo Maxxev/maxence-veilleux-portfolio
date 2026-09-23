@@ -16,7 +16,7 @@ faits:
   - "Deployed as a service on the client's own Windows server rather than managed hosting: a single process, to avoid duplicating the session held open in the third-party system, and absolute browser-profile paths, to survive a scheduled task that doesn't always start in the same directory."
 couverture:
   src: '/medias/projets/systemes-ia.webp'
-  alt: 'Abstract artwork standing in for the AI-augmented internal systems'
+  alt: 'Neon 3D render of an AI prompt input bar, cursor waiting for text'
   position: '50% 50%'
 videos: []
 youtube: []

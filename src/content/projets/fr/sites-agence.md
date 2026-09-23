@@ -14,12 +14,12 @@ faits:
   - 'Aussi plusieurs sites WordPress, du thème à la mise en ligne.'
 couverture:
   src: '/medias/projets/sites-agence.webp'
-  alt: 'Visuel abstrait représentant les sites livrés en agence'
+  alt: 'Montage de plusieurs sites livrés en agence'
   position: '50% 50%'
 videos: []
 youtube: []
 liens: []
-mention: "Ces sites appartiennent à leurs clients et plusieurs ne sont pas encore en ligne. La bannière est un montage d'extraits qui n'identifie aucun client en particulier."
+mention: null
 ---
 
 Une partie de mon travail rémunéré consiste à construire des sites pour les
