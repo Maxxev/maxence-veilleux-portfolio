@@ -12,6 +12,7 @@ faits:
   - 'An authenticated back office where administrators manage products, comments, events and user accounts.'
   - 'I built the reusable component library in Figma, then ported it twice: as Blade components on the Laravel side, as layouts and views on the Android side.'
   - 'A team of four. A significant share of my time went to unblocking teammates in their own code.'
+  - 'Ten weeks, run as a waterfall: requirements, feature table and context diagram first, then five weeks of development (two for the website, two for the app, one buffer week). Deployment was not part of the scope.'
 couverture:
   src: '/medias/projets/ludix.webp'
   alt: 'Abstract artwork standing in for the Ludix project'
@@ -43,6 +44,17 @@ Porting the same system into two technologies teaches you quickly which parts
 of a mockup are principles and which are details. A colour or a spacing value
 transposes without thinking; a hover state does not: it doesn't exist on
 mobile, and you have to decide what replaces it.
+
+## A waterfall, on purpose
+
+The project ran ten weeks, only five of them development: two for the
+website, two for the app, one buffer week. The rest went upstream, in
+classic waterfall fashion — requirements, feature table, context diagram,
+task breakdown and time estimates — before writing a line of code.
+
+The final product was never deployed; that wasn't the point of the course.
+I've since closed that gap on other projects, including a Laravel app
+shipped with continuous integration and deployment.
 
 <!-- TODO Maxence: this project would gain enormously from screenshots. Two
      would do: one Android screen and one back-office view. Drop them in

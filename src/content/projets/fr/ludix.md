@@ -12,6 +12,7 @@ faits:
   - "Un back-office authentifié où les administrateurs gèrent les produits, les commentaires, les événements et les comptes utilisateurs."
   - "J'ai monté la bibliothèque de composants réutilisables dans Figma, puis je l'ai portée deux fois : en composants Blade côté Laravel, en layouts et vues côté Android."
   - "Travail à quatre. J'ai passé une part importante du projet à débloquer mes coéquipiers sur leur propre code."
+  - "Dix semaines en cascade : cahier des charges, tableau des fonctionnalités et diagramme de contexte d'abord, puis cinq semaines de développement (deux pour le site, deux pour l'application, une semaine tampon). Le déploiement n'était pas au programme."
 couverture:
   src: '/medias/projets/ludix.webp'
   alt: 'Visuel abstrait représentant le projet Ludix'
@@ -45,6 +46,18 @@ Porter le même système dans deux technologies apprend vite ce qui, dans une
 maquette, relève du principe et ce qui relève du détail. Une couleur ou un
 espacement se transposent sans réfléchir ; un comportement de survol, non : il
 n'existe pas sur mobile, et il faut décider par quoi le remplacer.
+
+## Une cascade, volontairement
+
+Le projet a duré dix semaines, dont cinq seulement de développement : deux
+pour le site, deux pour l'application, une semaine tampon. Le reste est passé
+en amont, en cascade classique — cahier des charges, tableau des
+fonctionnalités, diagramme de contexte, répartition des tâches et estimation
+du temps — avant d'écrire la moindre ligne de code.
+
+Le produit final n'a pas été déployé ; ce n'était pas l'objet du cours.
+J'ai depuis comblé ce manque sur d'autres projets, notamment une application
+Laravel livrée en intégration et déploiement continus.
 
 <!-- TODO Maxence : ce projet gagnerait énormément à avoir des captures.
      Deux suffiraient : un écran de l'application Android et une vue du
