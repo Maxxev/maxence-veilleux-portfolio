@@ -19,7 +19,7 @@ couverture:
 videos: []
 youtube: []
 liens: []
-mention: "Ces sites appartiennent à leurs clients et plusieurs ne sont pas encore en ligne. Aucun nom ni capture ici tant que ce n'est pas le cas."
+mention: "Ces sites appartiennent à leurs clients et plusieurs ne sont pas encore en ligne. La bannière est un montage d'extraits qui n'identifie aucun client en particulier."
 ---
 
 Une partie de mon travail rémunéré consiste à construire des sites pour les

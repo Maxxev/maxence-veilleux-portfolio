@@ -19,7 +19,7 @@ couverture:
 videos: []
 youtube: []
 liens: []
-mention: 'These sites belong to their clients and several are not yet live. No names or screenshots here until they are.'
+mention: 'These sites belong to their clients and several are not yet live. The banner is a montage of excerpts that does not identify any single client.'
 ---
 
 Part of my paid work is building sites for an agency's clients: institutional
