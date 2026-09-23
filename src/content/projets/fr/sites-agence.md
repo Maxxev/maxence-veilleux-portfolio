@@ -2,7 +2,7 @@
 titre: 'Sites vitrines et institutionnels'
 resume: "Plusieurs sites livrés pour des clients d'agence : institutionnels, professionnels et communautaires, en Astro et en WordPress."
 categorie: 'pro'
-annee: '2024-2025'
+annee: '2025-2026'
 role: "Intégration et développement front-end, architecture de contenu, et pour les refontes Astro, la conception du système de design."
 ordre: 30
 vedette: true
