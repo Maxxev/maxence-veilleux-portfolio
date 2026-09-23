@@ -14,7 +14,7 @@ faits:
   - 'I designed the mockup in Figma before integration, as on Ludix. A team of three.'
 couverture:
   src: '/medias/projets/amazoom.webp'
-  alt: 'Abstract artwork standing in for the Amazoom project'
+  alt: 'Screenshot of creating a product listing on Amazoom'
   position: '50% 50%'
 videos: []
 youtube: []
@@ -40,8 +40,3 @@ Laravel.
 As on Ludix, I designed the interface in Figma before writing any code. On a
 three-person project with an academic deadline, a settled mockup saves half the
 discussions.
-
-<!-- TODO Maxence: this is the project you describe as "visually pleasing". It's
-     exactly the one that loses most from having no screenshot. One image of the
-     catalogue would do. Drop it in public/medias/projets/ and fill in
-     `couverture` above. -->

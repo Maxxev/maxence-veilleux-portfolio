@@ -6,7 +6,7 @@ annee: '2026'
 role: "Responsable de l'interface et du design system, de la maquette Figma jusqu'à son implémentation dans les deux clients."
 ordre: 10
 vedette: true
-technos: ['Laravel', 'PHP', 'Android Studio', 'API REST', 'MySQL', 'Figma']
+technos: ['Laravel', 'PHP', 'Android Studio', 'Java', 'API REST', 'MySQL', 'Figma']
 faits:
   - "Deux clients pour une seule API : l'application Android et le site d'administration consomment les mêmes points d'accès REST, ce qui a imposé de fixer les contrats de données avant d'écrire les écrans."
   - "Un back-office authentifié où les administrateurs gèrent les produits, les commentaires, les événements et les comptes utilisateurs."
@@ -15,7 +15,7 @@ faits:
   - "Dix semaines en cascade : cahier des charges, tableau des fonctionnalités et diagramme de contexte d'abord, puis cinq semaines de développement (deux pour le site, deux pour l'application, une semaine tampon). Le déploiement n'était pas au programme."
 couverture:
   src: '/medias/projets/ludix.webp'
-  alt: 'Visuel abstrait représentant le projet Ludix'
+  alt: "Capture d'écran du back-office Ludix, modification d'une offre d'emploi"
   position: '50% 50%'
 videos: []
 youtube: []
@@ -58,9 +58,3 @@ du temps, avant d'écrire la moindre ligne de code.
 Le produit final n'a pas été déployé ; ce n'était pas l'objet du cours.
 J'ai depuis comblé ce manque sur d'autres projets, notamment une application
 Laravel livrée en intégration et déploiement continus.
-
-<!-- TODO Maxence : ce projet gagnerait énormément à avoir des captures.
-     Deux suffiraient : un écran de l'application Android et une vue du
-     back-office. Dépose-les dans public/medias/projets/ et renseigne
-     `couverture` ci-dessus. Une carte sans image dans la grille est celle
-     qu'on regarde le moins. -->

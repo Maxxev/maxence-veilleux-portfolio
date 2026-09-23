@@ -219,7 +219,7 @@ async function couverture(slug, index, total) {
 
 // Les projets sans capture réelle. Retire un slug de cette liste dès que le
 // projet a une vraie image : le fichier généré n'a alors plus de raison d'être.
-const SANS_CAPTURE = ['ludix', 'systemes-ia', 'sites-agence', 'amazoom'];
+const SANS_CAPTURE = [];
 
 for (const [index, slug] of SANS_CAPTURE.entries()) {
   const fichier = await couverture(slug, index, SANS_CAPTURE.length);
