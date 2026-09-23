@@ -51,9 +51,9 @@ n'existe pas sur mobile, et il faut décider par quoi le remplacer.
 
 Le projet a duré dix semaines, dont cinq seulement de développement : deux
 pour le site, deux pour l'application, une semaine tampon. Le reste est passé
-en amont, en cascade classique — cahier des charges, tableau des
+en amont, en cascade classique : cahier des charges, tableau des
 fonctionnalités, diagramme de contexte, répartition des tâches et estimation
-du temps — avant d'écrire la moindre ligne de code.
+du temps, avant d'écrire la moindre ligne de code.
 
 Le produit final n'a pas été déployé ; ce n'était pas l'objet du cours.
 J'ai depuis comblé ce manque sur d'autres projets, notamment une application

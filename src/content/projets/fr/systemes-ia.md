@@ -52,8 +52,8 @@ chose a changé.
 
 ## L'automate de demandes : extraire, valider, puis seulement agir
 
-Ce système reçoit un courriel, en extrait l'essentiel avec le modèle — en
-mode outil, donc une structure de données définie plutôt qu'un texte libre —
+Ce système reçoit un courriel, en extrait l'essentiel avec le modèle (en
+mode outil, donc une structure de données définie plutôt qu'un texte libre),
 puis fait passer cette extraction par des règles de validation dures et une
 détection de doublons avant de retenir la demande.
 
