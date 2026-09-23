@@ -55,8 +55,3 @@ task breakdown and time estimates, before writing a line of code.
 The final product was never deployed; that wasn't the point of the course.
 I've since closed that gap on other projects, including a Laravel app
 shipped with continuous integration and deployment.
-
-<!-- TODO Maxence: this project would gain enormously from screenshots. Two
-     would do: one Android screen and one back-office view. Drop them in
-     public/medias/projets/ and fill in `couverture` above. A card without an
-     image is the one people look at least. -->

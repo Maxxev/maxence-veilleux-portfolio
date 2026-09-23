@@ -58,9 +58,3 @@ du temps, avant d'écrire la moindre ligne de code.
 Le produit final n'a pas été déployé ; ce n'était pas l'objet du cours.
 J'ai depuis comblé ce manque sur d'autres projets, notamment une application
 Laravel livrée en intégration et déploiement continus.
-
-<!-- TODO Maxence : ce projet gagnerait énormément à avoir des captures.
-     Deux suffiraient : un écran de l'application Android et une vue du
-     back-office. Dépose-les dans public/medias/projets/ et renseigne
-     `couverture` ci-dessus. Une carte sans image dans la grille est celle
-     qu'on regarde le moins. -->

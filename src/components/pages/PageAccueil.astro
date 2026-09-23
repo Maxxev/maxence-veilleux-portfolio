@@ -35,18 +35,25 @@ const apropos = await bloc('a-propos', langue);
 const motsDuTitre = t.accueil.titre.split(' ');
 ---
 
-<BaseLayout langue={langue} titrePage={t.accueil.titrePage} description={t.accueil.description}>
+<BaseLayout
+  langue={langue}
+  titrePage={t.accueil.titrePage}
+  description={t.accueil.description}
+>
   <Section class="hero">
-    {/*
+    {
+      /*
       Le fond : nappes de couleur + grain, en CSS pur. Il est dans un élément
       à lui plutôt que dans un pseudo-élément du hero, parce qu'il en faut
       deux superposés (la nappe, puis le grain par-dessus) et qu'un élément
       n'a que deux pseudo-éléments, déjà pris par le halo de la souris.
-    */}
+    */
+    }
     <div class="hero__fond" aria-hidden="true"></div>
 
     <Container class="hero__container">
-      {/*
+      {
+        /*
         Le hero portait aussi la signature manuscrite et une sous-accroche.
         Les deux ont été retirées pour la même raison : elles répétaient une
         information déjà présente à l'écran.
@@ -60,7 +67,8 @@ const motsDuTitre = t.accueil.titre.split(' ');
         grand. Le composant Signature existe toujours et n'est monté nulle
         part ; il attend une place où il ne fera pas doublon, le pied de page
         ou la section « qui je suis » étant les deux candidates.
-      */}
+      */
+      }
       <div class="hero__principal">
         <p class="pre-heading hero__surtitre">{t.accueil.surTitre}</p>
 
@@ -71,7 +79,12 @@ const motsDuTitre = t.accueil.titre.split(' ');
         <p class="hero__accroche">{t.accueil.accroche}</p>
 
         <div class="hero__actions">
-          <Button RootTag="a" href={chemin('projets', langue)} glow iconName="fa6-solid:arrow-right">
+          <Button
+            RootTag="a"
+            href={chemin('projets', langue)}
+            glow
+            iconName="fa6-solid:arrow-right"
+          >
             {t.accueil.ctaProjets}
           </Button>
           {
@@ -90,7 +103,8 @@ const motsDuTitre = t.accueil.titre.split(' ');
         </div>
       </div>
 
-      {/*
+      {
+        /*
         La colonne de droite : le rendu de la souris, puis la carte de verre,
         l'une SOUS l'autre, sans recouvrement.
 
@@ -108,7 +122,8 @@ const motsDuTitre = t.accueil.titre.split(' ');
         Le verre ne perd pas sa raison d'être pour autant : il floute la nappe
         de couleur et son grain, qui ne sont pas un aplat. C'est simplement
         plus discret, ce qui est le bon compromis ici.
-      */}
+      */
+      }
       <div class="hero__visuel">
         <img
           class="hero__souris"
@@ -175,7 +190,10 @@ const motsDuTitre = t.accueil.titre.split(' ');
     apropos && (
       <Section class="accueil-apropos">
         <Container>
-          <SectionHeader surTitre={t.accueil.aproposSurTitre} titre={t.accueil.aproposTitre} />
+          <SectionHeader
+            surTitre={t.accueil.aproposSurTitre}
+            titre={t.accueil.aproposTitre}
+          />
           <div class="prose">
             <apropos.Content />
           </div>
@@ -278,7 +296,7 @@ const motsDuTitre = t.accueil.titre.split(' ');
     // exemple). Celui-là vient de Bricolage Grotesque et il est déjà actif ;
     // si c'est une paire précise qui te dérange plutôt que l'ensemble, dis-le,
     // ça se corrige autrement.
-    --display-letter-spacing: -0.045em;
+    --display-letter-spacing: -0.02em;
 
     // La largeur des lettres se règle ici, dans le même esprit : 75 très
     // étroit, 100 normal, tout l'intervalle est disponible.
@@ -340,10 +358,7 @@ const motsDuTitre = t.accueil.titre.split(' ');
   }
 
   .hero__carte {
-    @include tx.verre(
-      $rayon: var(--radius-l),
-      $fond: var(--glass-bg-lisible)
-    );
+    @include tx.verre($rayon: var(--radius-l), $fond: var(--glass-bg-lisible));
     padding: var(--space-s);
     width: 100%;
     z-index: 1;

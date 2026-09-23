@@ -41,8 +41,3 @@ Laravel.
 Comme pour Ludix, j'ai dessiné l'interface dans Figma avant d'écrire du code.
 Sur un projet à trois avec une échéance scolaire, une maquette arrêtée épargne
 la moitié des discussions.
-
-<!-- TODO Maxence : c'est le projet que tu décris comme « très plaisant
-     visuellement ». C'est exactement celui qui perd le plus à ne pas avoir de
-     capture. Une image du catalogue suffirait. Dépose-la dans
-     public/medias/projets/ et renseigne `couverture` ci-dessus. -->
