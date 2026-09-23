@@ -2,7 +2,7 @@
 titre: 'Showcase and institutional websites'
 resume: 'Several sites delivered for agency clients: institutional, professional and community organisations, in Astro and WordPress.'
 categorie: 'pro'
-annee: '2024-2025'
+annee: '2025-2026'
 role: 'Front-end development and integration, content architecture, and on the Astro rebuilds, the design system itself.'
 ordre: 30
 vedette: true
