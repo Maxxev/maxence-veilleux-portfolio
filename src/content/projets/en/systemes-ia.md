@@ -9,11 +9,11 @@ vedette: true
 technos:
   ['TypeScript', 'Zod', 'Astro', 'Cloudflare Workers', 'Python', 'Flask', 'Playwright', 'Claude API']
 faits:
-  - "On the content assistant, one schema per content type serves three purposes: compile-time validation, the input schema of the tool offered to the model, and server-side revalidation before writing. Malformed content cannot reach a file."
-  - "The model never publishes directly there: it proposes. Each proposal becomes a pull request the client reviews before merging. The YAML emitter is hand-written so the diff only ever moves one line when one thing changed."
-  - "On the request-processing automation, an inbound email is first extracted by the model in tool-use mode (a data structure, never free text), then run through hard validation rules and duplicate detection before being accepted."
-  - "Entry into the third-party system is decoupled from receiving the email: it runs as a recurring job, driven by an automated browser, so the acknowledgement never depends on a slow operation or an unreachable external service."
-  - "Deployed as a service on the client's own Windows server rather than managed hosting: a single process, to avoid duplicating the session held open in the third-party system, and absolute browser-profile paths, to survive a scheduled task that doesn't always start in the same directory."
+  - "Content assistant: one schema per content type serves three purposes, compile-time validation, the input schema of the tool offered to the model, and server-side revalidation before writing. Malformed content cannot reach a file."
+  - "Content assistant: the model never publishes directly, it proposes. Each proposal becomes a pull request the client reviews before merging. The YAML emitter is hand-written so the diff only ever moves one line when one thing changed."
+  - "Request-processing automation: an inbound email is first extracted by the model in tool-use mode (a data structure, never free text), then run through hard validation rules and duplicate detection before being accepted."
+  - "Request-processing automation: entry into the third-party system is decoupled from receiving the email. It runs as a recurring job, driven by an automated browser, so the acknowledgement never depends on a slow operation or an unreachable external service."
+  - "Request-processing automation: deployed as a service on the client's own Windows server rather than managed hosting, a single process to avoid duplicating the session held open in the third-party system, and absolute browser-profile paths to survive a scheduled task that doesn't always start in the same directory."
 couverture:
   src: '/medias/projets/systemes-ia.webp'
   alt: 'Neon 3D render of an AI prompt input bar, cursor waiting for text'
