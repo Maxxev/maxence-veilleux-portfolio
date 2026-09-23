@@ -27,7 +27,7 @@ liens:
 mention: null
 ---
 
-My first game jam, and the first time I led anything. The other three team
+My first game jam, and the first time I led anything. The other two team
 members had never touched Unity.
 
 In 48 hours with beginners, the difficulty isn't technical: you have to break

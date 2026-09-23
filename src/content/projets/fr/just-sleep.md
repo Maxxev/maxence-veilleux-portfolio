@@ -28,7 +28,7 @@ mention: null
 ---
 
 Ma première game jam, et la première fois que je dirigeais quoi que ce soit.
-Les trois autres membres de l'équipe n'avaient jamais touché à Unity.
+Les deux autres membres de l'équipe n'avaient jamais touché à Unity.
 
 En 48 heures avec des débutants, la difficulté n'est pas technique : il faut
 découper le travail en tâches qu'une personne qui apprend l'outil peut finir,
