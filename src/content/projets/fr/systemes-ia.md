@@ -9,11 +9,11 @@ vedette: true
 technos:
   ['TypeScript', 'Zod', 'Astro', 'Cloudflare Workers', 'Python', 'Flask', 'Playwright', 'API Claude']
 faits:
-  - "Sur l'assistant de contenu, un schéma unique par type de contenu sert à trois endroits : validation à la compilation, définition de l'outil offert au modèle, et revalidation côté serveur avant écriture. Un contenu malformé ne peut donc pas atteindre un fichier."
-  - "Le modèle n'y publie jamais directement : il propose. Chaque proposition devient une demande de tirage que le client relit avant de fusionner. L'émetteur YAML est écrit à la main pour que le diff ne bouge que d'une ligne quand une seule chose a changé."
-  - "Sur l'automate de demandes, un courriel entrant est d'abord extrait par le modèle en mode outil (une structure de données, jamais du texte libre), puis passé à des règles de validation dures et à une détection de doublons avant d'être retenu."
-  - "La saisie dans le système tiers est séparée de la réception du courriel : elle tourne en tâche récurrente, pilotée par navigateur automatisé, pour ne jamais faire dépendre l'accusé de réception d'une opération lente ou d'un service externe injoignable."
-  - "Déployé comme service sur le serveur Windows du client plutôt que sur un hébergement infogéré : un seul processus pour ne pas dupliquer la session ouverte dans le système tiers, et des chemins de profil de navigateur qui doivent rester absolus pour survivre à une tâche planifiée."
+  - "Assistant de contenu : un schéma unique par type de contenu sert à trois endroits, validation à la compilation, définition de l'outil offert au modèle, et revalidation côté serveur avant écriture. Un contenu malformé ne peut donc pas atteindre un fichier."
+  - "Assistant de contenu : le modèle ne publie jamais directement, il propose. Chaque proposition devient une demande de tirage que le client relit avant de fusionner. L'émetteur YAML est écrit à la main pour que le diff ne bouge que d'une ligne quand une seule chose a changé."
+  - "Automate de demandes : un courriel entrant est d'abord extrait par le modèle en mode outil (une structure de données, jamais du texte libre), puis passé à des règles de validation dures et à une détection de doublons avant d'être retenu."
+  - "Automate de demandes : la saisie dans le système tiers est séparée de la réception du courriel. Elle tourne en tâche récurrente, pilotée par navigateur automatisé, pour ne jamais faire dépendre l'accusé de réception d'une opération lente ou d'un service externe injoignable."
+  - "Automate de demandes : déployé comme service sur le serveur Windows du client plutôt que sur un hébergement infogéré, un seul processus pour ne pas dupliquer la session ouverte dans le système tiers, et des chemins de profil de navigateur qui doivent rester absolus pour survivre à une tâche planifiée."
 couverture:
   src: '/medias/projets/systemes-ia.webp'
   alt: "Rendu 3D néon d'une barre de saisie de prompt IA, avec le curseur en attente de texte"
