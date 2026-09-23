@@ -52,8 +52,8 @@ guarantee that one line moves when one thing changed.
 
 ## The request-processing automation: extract, validate, then act
 
-This system receives an email, has the model extract the essentials — in
-tool-use mode, so a defined data structure rather than free text — then
+This system receives an email, has the model extract the essentials (in
+tool-use mode, so a defined data structure rather than free text), then
 runs that extraction through hard validation rules and duplicate detection
 before accepting the request.
 

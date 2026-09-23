@@ -49,8 +49,8 @@ mobile, and you have to decide what replaces it.
 
 The project ran ten weeks, only five of them development: two for the
 website, two for the app, one buffer week. The rest went upstream, in
-classic waterfall fashion — requirements, feature table, context diagram,
-task breakdown and time estimates — before writing a line of code.
+classic waterfall fashion: requirements, feature table, context diagram,
+task breakdown and time estimates, before writing a line of code.
 
 The final product was never deployed; that wasn't the point of the course.
 I've since closed that gap on other projects, including a Laravel app
