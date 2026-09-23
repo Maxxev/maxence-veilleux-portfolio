@@ -38,6 +38,7 @@ const {
   @layer astro-components {
     .alert {
       @include m.box($col: var(--alert-bg), $padding: var(--space-s));
+      display: flex;
       flex-direction: row;
       align-items: center;
       gap: var(--space-xs);
