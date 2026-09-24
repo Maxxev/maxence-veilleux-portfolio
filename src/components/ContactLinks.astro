@@ -30,6 +30,7 @@ const t = traductions(langue);
 
 const ICONES = {
   courriel: 'fa6-solid:envelope',
+  messenger: 'fa6-brands:facebook-messenger',
   linkedin: 'fa6-brands:linkedin-in',
   github: 'fa6-brands:github',
   itch: 'fa6-brands:itch-io',
@@ -45,12 +46,26 @@ type Entree = { cle: keyof typeof ICONES; libelle: string; url: string; externe:
 const entrees: Entree[] = [
   ...(contactVisible
     ? ([
+        // L'adresse sert de libellé : sans client de courriel configuré, le
+        // lien `mailto:` ne fait rien, et le visiteur doit pouvoir la copier.
         {
           cle: 'courriel',
-          libelle: t.contact.courriel,
+          libelle: reglages.contact.courriel,
           url: `mailto:${reglages.contact.courriel}`,
           externe: false,
         },
+        ...(reglages.contact.messenger.url
+          ? [
+              {
+                cle: 'messenger' as const,
+                libelle: reglages.contact.messenger.utilisateur
+                  ? `${t.contact.messenger} (${reglages.contact.messenger.utilisateur})`
+                  : t.contact.messenger,
+                url: reglages.contact.messenger.url,
+                externe: true,
+              },
+            ]
+          : []),
         ...(reglages.contact.linkedin
           ? [
               {
@@ -97,7 +112,7 @@ const entrees: Entree[] = [
                 href={entree.url}
                 iconName={ICONES[entree.cle]}
                 reverseIcon
-                outline={entree.cle !== 'courriel' && entree.cle !== 'cv'}
+                outline={!['courriel', 'messenger', 'cv'].includes(entree.cle)}
                 bgColor="var(--primary)"
                 color="var(--on-primary)"
                 target={entree.externe ? '_blank' : undefined}
