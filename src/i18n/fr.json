@@ -102,8 +102,9 @@
   "contact": {
     "surTitre": "La suite",
     "titre": "Parlons-en",
-    "intro": "Je cherche un stage ou un emploi en développement Web ou mobile. Le plus simple est de m'écrire.",
+    "intro": "Je cherche un stage ou un emploi en développement Web ou mobile. Le plus simple est de m'écrire, par courriel ou sur Messenger.",
     "courriel": "Écrire un courriel",
+    "messenger": "Messenger",
     "linkedin": "LinkedIn",
     "github": "GitHub",
     "itch": "itch.io",

@@ -17,6 +17,14 @@ export const settingsSchema = z.strictObject({
   contact: z.strictObject({
     afficher: z.boolean(),
     courriel: z.string(),
+    // Le nom d'utilisateur est affiché à côté du bouton : il permet de me
+    // retrouver dans Messenger même si le lien direct ne s'ouvre pas.
+    // Une `url` vide retire Messenger du site.
+    messenger: z.strictObject({
+      utilisateur: z.string(),
+      url: z.string(),
+    }),
+    // Chaîne vide : LinkedIn n'est pas affiché.
     linkedin: z.string(),
   }),
 

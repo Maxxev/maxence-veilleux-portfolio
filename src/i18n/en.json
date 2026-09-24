@@ -102,8 +102,9 @@
   "contact": {
     "surTitre": "Next",
     "titre": "Let's talk",
-    "intro": "I'm looking for an internship or a job in web or mobile development. The simplest way is to email me.",
+    "intro": "I'm looking for an internship or a job in web or mobile development. The simplest way is to write to me, by email or on Messenger.",
     "courriel": "Send an email",
+    "messenger": "Messenger",
     "linkedin": "LinkedIn",
     "github": "GitHub",
     "itch": "itch.io",

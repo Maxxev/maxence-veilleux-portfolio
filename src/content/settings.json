@@ -1,9 +1,13 @@
 {
   "nom": "Maxence Veilleux",
   "contact": {
-    "afficher": false,
+    "afficher": true,
     "courriel": "maxence.veilleux@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/maxence-veilleux-396229297/"
+    "messenger": {
+      "utilisateur": "maxence.veilleux.1",
+      "url": "https://www.messenger.com/e2ee/t/924532730078366"
+    },
+    "linkedin": ""
   },
   "profils": {
     "afficherMalgreContactMasque": true,
