@@ -17,11 +17,12 @@ export const settingsSchema = z.strictObject({
   contact: z.strictObject({
     afficher: z.boolean(),
     courriel: z.string(),
-    // Le nom d'utilisateur est affiché à côté du bouton : il permet de me
-    // retrouver dans Messenger même si le lien direct ne s'ouvre pas.
+    // Sur iPhone, le lien ouvre l'application Messenger sans aller jusqu'à la
+    // conversation. `nom` est donc affiché en note sous les boutons, pour
+    // qu'on puisse me chercher dans l'app. Chaîne vide : pas de note.
     // Une `url` vide retire Messenger du site.
     messenger: z.strictObject({
-      utilisateur: z.string(),
+      nom: z.string(),
       url: z.string(),
     }),
     // Chaîne vide : LinkedIn n'est pas affiché.

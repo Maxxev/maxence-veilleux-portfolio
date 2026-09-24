@@ -58,9 +58,7 @@ const entrees: Entree[] = [
           ? [
               {
                 cle: 'messenger' as const,
-                libelle: reglages.contact.messenger.utilisateur
-                  ? `${t.contact.messenger} (${reglages.contact.messenger.utilisateur})`
-                  : t.contact.messenger,
+                libelle: t.contact.messenger,
                 url: reglages.contact.messenger.url,
                 externe: true,
               },
@@ -90,6 +88,12 @@ const entrees: Entree[] = [
     ? ([{ cle: 'cv', libelle: t.contact.cv, url: reglages.cv.url, externe: false }] satisfies Entree[])
     : []),
 ];
+
+// Seulement sous les boutons : le pied de page reste une simple liste de liens.
+const noteMessenger =
+  variante === 'boutons' && entrees.some((entree) => entree.cle === 'messenger')
+    ? reglages.contact.messenger.nom
+    : '';
 ---
 
 <div class={`contact-links contact-links--${variante} ${className}`}>
@@ -112,7 +116,7 @@ const entrees: Entree[] = [
                 href={entree.url}
                 iconName={ICONES[entree.cle]}
                 reverseIcon
-                outline={!['courriel', 'messenger', 'cv'].includes(entree.cle)}
+                outline={!['courriel', 'messenger', 'linkedin', 'cv'].includes(entree.cle)}
                 bgColor="var(--primary)"
                 color="var(--on-primary)"
                 target={entree.externe ? '_blank' : undefined}
@@ -137,6 +141,14 @@ const entrees: Entree[] = [
       </ul>
     )
   }
+
+  {
+    noteMessenger && (
+      <p class="contact-links__note">
+        {t.contact.messengerNote} {noteMessenger}
+      </p>
+    )
+  }
 </div>
 
 <style lang="scss">
@@ -153,6 +165,12 @@ const entrees: Entree[] = [
         display: flex;
         flex-wrap: wrap;
         gap: var(--space-xs);
+      }
+
+      .contact-links__note {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: var(--text--1);
       }
     }
 

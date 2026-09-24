@@ -118,7 +118,9 @@ npm run build && grep -r "@gmail" dist/ ; echo "aucune sortie = rien ne fuit"
 ne convertit pas un employeur, et c'est tout l'intérêt du CTA au bas de ton CV.
 
 À `true`, le site affiche le courriel (l'adresse sert de libellé au bouton) et
-Messenger, avec le nom d'utilisateur entre parenthèses. LinkedIn n'apparaît que
+Messenger. Sous les boutons, une note indique `contact.messenger.nom`, le nom à
+chercher dans l'app : sur iPhone, le lien ouvre Messenger sans aller jusqu'à la
+conversation. LinkedIn n'apparaît que
 si `contact.linkedin` est renseigné, et Messenger que si `contact.messenger.url`
 l'est.
 

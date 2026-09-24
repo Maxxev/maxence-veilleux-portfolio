@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import type { HTMLTag } from 'astro/types';
 
 const VARIANT_ICONS = {
   // « neutre » n'est pas un état du système mais une note explicative : le
@@ -14,6 +15,14 @@ const VARIANT_ICONS = {
   warning: 'fa6-solid:triangle-exclamation',
   error: 'fa6-solid:circle-exclamation',
 };
+
+interface Props {
+  variant?: keyof typeof VARIANT_ICONS;
+  RootTag?: HTMLTag;
+  iconName?: string;
+  class?: string;
+  [attribut: string]: unknown;
+}
 
 const {
   variant = 'info',
